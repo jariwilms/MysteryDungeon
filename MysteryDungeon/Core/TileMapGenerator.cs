@@ -87,14 +87,11 @@ namespace MysteryDungeon.Core
             LevelHeight = 32;
 
             _borderSize = 2;
-            _minSpaceBetweenRooms = 0;
+            _minSpaceBetweenRooms = 3;
 
             _minRooms = 2;
             _horizontalRooms = 4;
             _verticalRooms = 3;
-
-            _horizontalRoomBoxSize = (LevelWidth - 2 * _borderSize - _minSpaceBetweenRooms * (_horizontalRooms - 1)) / _horizontalRooms;
-            _verticalRoomBoxSize = (LevelHeight - 2 * _borderSize - _minSpaceBetweenRooms * (_verticalRooms - 1)) / _verticalRooms;
 
             _minRoomHorizontalSize = 5;
             _minRoomVerticalSize = 4;
@@ -102,8 +99,17 @@ namespace MysteryDungeon.Core
             _maxRoomHorizontalSize = 9;
             _maxRoomVerticalSize = 8;
 
+            _horizontalRoomBoxSize = (LevelWidth - 2 * _borderSize - _minSpaceBetweenRooms * (_horizontalRooms - 1)) / _horizontalRooms;
+            _verticalRoomBoxSize = (LevelHeight - 2 * _borderSize - _minSpaceBetweenRooms * (_verticalRooms - 1)) / _verticalRooms;
+
+            if (_maxRoomHorizontalSize > _horizontalRoomBoxSize)
+                _maxRoomHorizontalSize = _horizontalRoomBoxSize;
+
+            if (_maxRoomVerticalSize > _verticalRoomBoxSize)
+                _maxRoomVerticalSize = _verticalRoomBoxSize;
+
             _roomSpawnChance = 50;
-            _connectorSpawnChance = 50;
+            _connectorSpawnChance = 100 - _roomSpawnChance;
 
             _minimumConnections = 1;
 
@@ -187,7 +193,7 @@ namespace MysteryDungeon.Core
                         room.Bounds.Width = 1;
                         room.Bounds.Height = 1;
 
-                        room.IsConnector = true;
+                        room.isJunction = true;
                     }
                     else //Create a normal room
                     {
@@ -196,8 +202,8 @@ namespace MysteryDungeon.Core
                         room.Bounds.Height = _random.Next(_minRoomVerticalSize, _maxRoomVerticalSize);
                     }
 
-                    room.Bounds.X = _random.Next(0, _maxRoomHorizontalSize - room.Bounds.Width) + h * _horizontalRoomBoxSize + _borderSize + h * _minSpaceBetweenRooms;
-                    room.Bounds.Y = _random.Next(0, _maxRoomVerticalSize - room.Bounds.Height) + v * _verticalRoomBoxSize + _borderSize + v * _minSpaceBetweenRooms;
+                    room.Bounds.X = _random.Next(0, _maxRoomHorizontalSize - room.Bounds.Width) + h * _horizontalRoomBoxSize + _borderSize + h * _minSpaceBetweenRooms - 1;
+                    room.Bounds.Y = _random.Next(0, _maxRoomVerticalSize - room.Bounds.Height) + v * _verticalRoomBoxSize + _borderSize + v * _minSpaceBetweenRooms - 1;
 
                     room.CreateConnectors(h, _horizontalRooms, v, _verticalRooms);
                     _tileMap.Rooms.Add(room);

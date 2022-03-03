@@ -21,6 +21,7 @@ namespace MysteryDungeon.Core
         public int HorizontalRooms;
         public int VerticalRooms;
 
+        public bool isComplete;
         public Vector2 SpawnPoint;
 
         public int Width { get { return CharMap.GetLength(0); } }
@@ -38,6 +39,8 @@ namespace MysteryDungeon.Core
             Rooms = new List<Room>();
             Hallways = new List<Hallway>();
 
+            isComplete = true;
+
             _random = new Random(Guid.NewGuid().GetHashCode());
         }
 
@@ -48,19 +51,92 @@ namespace MysteryDungeon.Core
 
             Rooms.ForEach(room =>
             {
-                room.Connectors.ForEach(sourceConnector =>
+                if (!room.isJunction)
                 {
-                    Connector destinationConnector = GetAdjacentConnector(room, sourceConnector);
-                    Connect(sourceConnector, destinationConnector);
-                });
+                    room.Connectors.ForEach(sourceConnector =>
+                    {
+                        Room destinationRoom = GetDestinationRoom(room, sourceConnector); //Room apart opvragen is required voor HashSet
+                        Connector destinationConnector = GetDestinationConnector(destinationRoom, sourceConnector);
+
+                        Connect(sourceConnector, destinationConnector);
+
+                        room.AdjacencyList.Add(destinationRoom);
+                        destinationRoom.AdjacencyList.Add(room);
+                    });
+                }
+            });
+
+            CheckGraph();
+
+            //RemoveUnconnectedJunctions();
+        }
+
+        private void CheckGraph()
+        {
+            Dictionary<int, bool> connectedRoomsAlpha = new Dictionary<int, bool>();
+            Rooms.ForEach(room => { connectedRoomsAlpha.Add(room.Id, false); });
+
+            Stack<Room> roomStack = new Stack<Room>(Rooms.Count);
+            roomStack.Push(Rooms.First());
+            bool isVisited;
+
+            while (roomStack.Count > 0)
+            {
+                Room removedRoom = roomStack.Pop();
+
+                foreach (Room r in removedRoom.AdjacencyList)
+                {
+                    isVisited = false;
+
+                    if (connectedRoomsAlpha.TryGetValue(r.Id, out isVisited))
+                    {
+                        if (!isVisited)
+                        {
+                            connectedRoomsAlpha[r.Id] = true;
+                            roomStack.Push(r);
+                        }
+                    }
+                }
+            }
+
+            List<bool> l = connectedRoomsAlpha.Values.ToList();
+            l.ForEach(b =>
+            {
+                if (!b)
+                    isComplete = false;
             });
         }
 
-        public Connector GetAdjacentConnector(Room room, Connector connector)
+        private void RemoveUnconnectedJunctions()
+        {
+            bool anyConnected;
+
+            for (int i = Rooms.Count - 1; i > -1; i--)
+            {
+                anyConnected = false;
+
+                if (!Rooms[i].isJunction)
+                    continue;
+
+                Rooms[i].Connectors.ForEach(connector =>
+                {
+                    if (connector.IsConnected)
+                        anyConnected = true;
+                });
+
+                if (!anyConnected)
+                {
+                    CharMap[Rooms[i].Bounds.X, Rooms[i].Bounds.Y] = '#';
+                    Rooms.RemoveAt(i);
+                }
+            }
+        }
+
+        public Room GetDestinationRoom(Room room, Connector sourceConnector)
         {
             int roomIndex = room.Id;
 
-            roomIndex = connector.Direction switch
+            roomIndex = sourceConnector.Direction switch
             {
                 Direction.Up => roomIndex - HorizontalRooms,
                 Direction.Right => roomIndex + 1,
@@ -69,7 +145,12 @@ namespace MysteryDungeon.Core
                 _ => throw new Exception()
             };
 
-            Direction inverse = connector.Direction switch
+            return Rooms[roomIndex];
+        }
+
+        public Connector GetDestinationConnector(Room adjacentRoom, Connector sourceConnector)
+        {
+            Direction inverse = sourceConnector.Direction switch
             {
                 Direction.Up => Direction.Down,
                 Direction.Right => Direction.Left,
@@ -78,7 +159,7 @@ namespace MysteryDungeon.Core
                 _ => throw new Exception()
             };
 
-            return Rooms[roomIndex].Connectors.FirstOrDefault(connector => connector.Direction.HasFlag(inverse));
+            return adjacentRoom.Connectors.First(connector => connector.Direction.HasFlag(inverse));
 
             throw new Exception();
         }
@@ -110,7 +191,7 @@ namespace MysteryDungeon.Core
             }
 
             int minBranchingDistance = 2; //TODO: check level generation for minimum room distance + juiste offsets => minBranchingDistance is soms groter dan totalDistanceA
-            int stepsBeforeBranching = _random.Next(0, Math.Abs(totalDistanceA));
+            int stepsBeforeBranching = _random.Next(minBranchingDistance, Math.Abs(totalDistanceA) - minBranchingDistance);
 
             int stepsA = stepsBeforeBranching;
             int stepsB = Math.Abs(totalDistanceB);

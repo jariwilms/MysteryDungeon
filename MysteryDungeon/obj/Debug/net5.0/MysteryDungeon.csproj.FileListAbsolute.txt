@@ -74,3 +74,4 @@ C:\Users\jariw\Documents\Programming\Languages\C#\MysteryDungeon\MysteryDungeon\
 C:\Users\jariw\Documents\Programming\Languages\C#\MysteryDungeon\MysteryDungeon\obj\Debug\net5.0\ref\MysteryDungeon.dll
 C:\Users\jariw\Documents\Programming\Languages\C#\MysteryDungeon\MysteryDungeon\obj\Debug\net5.0\MysteryDungeon.pdb
 C:\Users\jariw\Documents\Programming\Languages\C#\MysteryDungeon\MysteryDungeon\obj\Debug\net5.0\MysteryDungeon.genruntimeconfig.cache
+C:\Users\jariw\Documents\Programming\Languages\C#\MysteryDungeon\MysteryDungeon\obj\Debug\net5.0\MysteryDungeon.csproj.AssemblyReference.cache

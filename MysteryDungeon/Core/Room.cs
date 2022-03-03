@@ -22,15 +22,19 @@ namespace MysteryDungeon.Core
 
         public Rectangle Bounds;
 
+        public HashSet<Room> AdjacencyList;
         public List<Connector> Connectors;
-        public bool IsConnector;
+        public bool isJunction;
 
         private readonly Random _random; //Random item generation to be implemented
 
         public Room()
         {
             Bounds = new Rectangle();
+
+            AdjacencyList = new HashSet<Room>();
             Connectors = new List<Connector>();
+
             _random = new Random();
         }
 

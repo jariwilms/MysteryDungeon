@@ -28,7 +28,6 @@ namespace MysteryDungeon
         public static KeyboardState KeyboardState;
         public static KeyboardState LastkeyboardState;
 
-
         // ### THE CUM ZONE ###
 
         Camera camera;

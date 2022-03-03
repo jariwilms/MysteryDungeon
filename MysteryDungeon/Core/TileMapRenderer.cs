@@ -16,6 +16,7 @@ namespace MysteryDungeon.Core
 
         private int _unitSize;
         private Texture2D _temp;
+        private SpriteFont _font;
 
         private readonly ContentManager _content;
 
@@ -25,6 +26,7 @@ namespace MysteryDungeon.Core
 
             _unitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
             _temp = _content.Load<Texture2D>("tiles/Platform");
+            _font = _content.Load<SpriteFont>("font");
         }
 
         public TileMapRenderer(TileMap tileMap, ContentManager content) : this(content)
@@ -66,6 +68,8 @@ namespace MysteryDungeon.Core
                     spriteBatch.Draw(_temp, new Rectangle((int)tilePosition.X, (int)tilePosition.Y, _unitSize, _unitSize), Color.White);
                 });
             });
+
+            spriteBatch.DrawString(_font, _tileMap.isComplete ? "Complete" : "Not Complete", new Vector2(100, 100), Color.White);
         }
 
         public void Dispose()
