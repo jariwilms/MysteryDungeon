@@ -1,0 +1,169 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+
+using Microsoft.Xna.Framework;
+
+namespace MysteryDungeon.Core
+{
+    /// <summary>
+    /// Contains a representation of a map in a 2-dimensional tile array
+    /// </summary>
+    class TileMap
+    {
+        public Tile[,] Tiles;           //Complete array of all tiles
+        public char[,] CharMap;         //Text representation of the map
+
+        public List<Room> Rooms;        //Array of rooms
+        public List<Hallway> Hallways;  //List of hallways
+
+        public int HorizontalRooms;
+        public int VerticalRooms;
+
+        public Vector2 SpawnPoint;
+
+        public int Width { get { return CharMap.GetLength(0); } }
+        public int Height { get { return CharMap.GetLength(1); }  }
+
+        private Random _random;
+
+        private delegate void ConnectFunction(Connector source, Connector destination);
+
+        public TileMap()
+        {
+            Tiles = new Tile[0, 0];
+            CharMap = new char[0, 0];
+
+            Rooms = new List<Room>();
+            Hallways = new List<Hallway>();
+
+            _random = new Random(Guid.NewGuid().GetHashCode());
+        }
+
+        public void ConnectRooms()
+        {
+            if (HorizontalRooms == 0 || VerticalRooms == 0)
+                throw new NullReferenceException("Roomsize has not been set");
+
+            Rooms.ForEach(room =>
+            {
+                room.Connectors.ForEach(sourceConnector =>
+                {
+                    Connector destinationConnector = GetAdjacentConnector(room, sourceConnector);
+                    Connect(sourceConnector, destinationConnector);
+                });
+            });
+        }
+
+        public Connector GetAdjacentConnector(Room room, Connector connector)
+        {
+            int roomIndex = room.Id;
+
+            roomIndex = connector.Direction switch
+            {
+                Direction.Up => roomIndex - HorizontalRooms,
+                Direction.Right => roomIndex + 1,
+                Direction.Down => roomIndex + HorizontalRooms,
+                Direction.Left => roomIndex - 1,
+                _ => throw new Exception()
+            };
+
+            Direction inverse = connector.Direction switch
+            {
+                Direction.Up => Direction.Down,
+                Direction.Right => Direction.Left,
+                Direction.Down => Direction.Up,
+                Direction.Left => Direction.Right, 
+                _ => throw new Exception()
+            };
+
+            return Rooms[roomIndex].Connectors.FirstOrDefault(connector => connector.Direction.HasFlag(inverse));
+
+            throw new Exception();
+        }
+
+        public void Connect(Connector source, Connector destination)
+        {
+            if (source.IsConnected || destination.IsConnected)
+                return;
+
+            Vector2 currentPosition = new Vector2(source.Position.Item1, source.Position.Item2);
+            Vector2 positionIncrement;
+
+            int totalDistanceA;
+            int totalDistanceB;
+
+            if (source.Direction.HasFlag(Direction.Up) || source.Direction.HasFlag(Direction.Down))
+            {
+                totalDistanceA = destination.Position.Item2 - source.Position.Item2;
+                totalDistanceB = destination.Position.Item1 - source.Position.Item1;
+            }
+            else if (source.Direction.HasFlag(Direction.Left) || source.Direction.HasFlag(Direction.Right))
+            {
+                totalDistanceA = destination.Position.Item1 - source.Position.Item1;
+                totalDistanceB = destination.Position.Item2 - source.Position.Item2;
+            }
+            else
+            {
+                throw new Exception();
+            }
+
+            int minBranchingDistance = 2; //TODO: check level generation for minimum room distance + juiste offsets => minBranchingDistance is soms groter dan totalDistanceA
+            int stepsBeforeBranching = _random.Next(0, Math.Abs(totalDistanceA));
+
+            int stepsA = stepsBeforeBranching;
+            int stepsB = Math.Abs(totalDistanceB);
+            int stepsC = Math.Abs(totalDistanceA) - stepsBeforeBranching;
+
+            positionIncrement = source.Direction switch
+            {
+                Direction.Up => new Vector2(0, -1),
+                Direction.Right => new Vector2(1, 0),
+                Direction.Down => new Vector2(0, 1),
+                Direction.Left => new Vector2(-1, 0),
+                _ => throw new Exception()
+            };
+
+            for (int a = 0; a < stepsA; a++)
+            {
+                currentPosition.X += positionIncrement.X;
+                currentPosition.Y += positionIncrement.Y;
+                CharMap[(int)currentPosition.X, (int)currentPosition.Y] = '.';
+            }
+
+            positionIncrement = source.Direction switch
+            {
+                Direction.Up or Direction.Down => totalDistanceB > 0 ? new Vector2(1, 0) : new Vector2(-1, 0),
+                Direction.Left or Direction.Right => totalDistanceB > 0 ? new Vector2(0, 1) : new Vector2(0, -1),
+                _ => throw new Exception()
+            };
+
+            for (int b = 0; b < stepsB; b++)
+            {
+                currentPosition.X += positionIncrement.X;
+                currentPosition.Y += positionIncrement.Y;
+                CharMap[(int)currentPosition.X, (int)currentPosition.Y] = '.';
+            }
+
+            positionIncrement = source.Direction switch
+            {
+                Direction.Up => new Vector2(0, -1),
+                Direction.Right => new Vector2(1, 0),
+                Direction.Down => new Vector2(0, 1),
+                Direction.Left => new Vector2(-1, 0),
+                _ => throw new Exception()
+            };
+
+            for (int c = 0; c < stepsC; c++)
+            {
+                currentPosition.X += positionIncrement.X;
+                currentPosition.Y += positionIncrement.Y;
+                CharMap[(int)currentPosition.X, (int)currentPosition.Y] = '.';
+            }
+
+            source.IsConnected = true;
+            destination.IsConnected = true;
+        }
+    }
+}

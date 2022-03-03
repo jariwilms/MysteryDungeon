@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Users/jariw/Documents/Programming/Languages/C#/MysteryDungeon/MysteryDungeon/Content/font.spritefont</SourceFile>
+  <SourceTime>2022-02-22T15:04:31.5056751+01:00</SourceTime>
+  <DestFile>C:/Users/jariw/Documents/Programming/Languages/C#/MysteryDungeon/MysteryDungeon/Content/bin/DesktopGL/Content/font.xnb</DestFile>
+  <DestTime>2022-02-28T14:41:36.2916135+01:00</DestTime>
+  <Importer>FontDescriptionImporter</Importer>
+  <ImporterTime>2020-08-10T18:17:54+02:00</ImporterTime>
+  <Processor>FontDescriptionProcessor</Processor>
+  <ProcessorTime>2020-08-10T18:17:54+02:00</ProcessorTime>
+  <Parameters>
+    <Key>PremultiplyAlpha</Key>
+    <Value>True</Value>
+  </Parameters>
+  <Parameters>
+    <Key>TextureFormat</Key>
+    <Value>Compressed</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
