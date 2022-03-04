@@ -12,12 +12,37 @@ namespace MysteryDungeon.Core
         private Matrix _position;
         private Matrix _offset;
         private Matrix _zoom;
+        private float _zoomValue;
 
         private Sprite _target;
+
+        public Camera()
+        {
+            TransformMatrix = new Matrix();
+            _position = new Matrix();
+            _offset = new Matrix();
+            _zoom = new Matrix();
+            _zoomValue = 0.1f;
+        }
 
         public void Follow(Sprite target)
         {
             _target = target;
+        }
+
+        public void zoomIn()
+        {
+            _zoomValue = _zoomValue + 0.1f > 1.5f ? 1.5f : _zoomValue + 0.1f;
+        }
+
+        public void zoomOut()
+        {
+            _zoomValue = _zoomValue - 0.1f < 0.1f ? 0.1f : _zoomValue - 0.1f;
+        }
+
+        public void setZoom(float zoom)
+        {
+            _zoom = Matrix.CreateScale(zoom);
         }
 
         public void Update()
@@ -32,7 +57,7 @@ namespace MysteryDungeon.Core
                 MysteryDungeon._windowHeight / 2,
                 0.0f);
 
-            _zoom = Matrix.CreateScale(0.1f);
+            _zoom = Matrix.CreateScale(_zoomValue);
 
             TransformMatrix = _position * _zoom * _offset;
         }

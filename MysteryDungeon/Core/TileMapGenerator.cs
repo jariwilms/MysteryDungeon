@@ -14,8 +14,8 @@ namespace MysteryDungeon.Core
         Standard,
         HorizontalCorridor,
         VerticalCorridor,
-        CorridorInside, 
-        CorridorOutside, 
+        CorridorInside,
+        CorridorOutside,
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace MysteryDungeon.Core
         public int LevelWidth;                  //Total width of the level
         public int LevelHeight;                 //Total height of the level
 
-        private int _borderSize = 2;            //Size of border around the level
+        private int _borderSize;            //Size of border around the level
         private int _minSpaceBetweenRooms;      //Minimum amount of space between rooms
 
         private int _minRooms;                  //Minimum amount of rooms
@@ -67,10 +67,10 @@ namespace MysteryDungeon.Core
             _generator = _levelType switch
             {
                 LevelType.Standard => GenerateStandard,
-                LevelType.HorizontalCorridor => GenerateHorizontalCorridor, 
-                LevelType.VerticalCorridor => GenerateVerticalCorridor, 
-                LevelType.CorridorInside => GenerateCorridorsInside, 
-                LevelType.CorridorOutside => GenerateCorridorsOutside, 
+                LevelType.HorizontalCorridor => GenerateHorizontalCorridor,
+                LevelType.VerticalCorridor => GenerateVerticalCorridor,
+                LevelType.CorridorInside => GenerateCorridorsInside,
+                LevelType.CorridorOutside => GenerateCorridorsOutside,
                 _ => throw new Exception("An invalid LevelType has been given.")
             };
         }
@@ -292,43 +292,7 @@ namespace MysteryDungeon.Core
                 }
             });
 
-            CheckGraph();
-        }
-
-        private void CheckGraph()
-        {
-            Dictionary<int, bool> connectedRoomsAlpha = new Dictionary<int, bool>();
-            _tileMap.Rooms.ForEach(room => { connectedRoomsAlpha.Add(room.Id, false); });
-
-            Stack<Room> roomStack = new Stack<Room>(_tileMap.Rooms.Count);
-            roomStack.Push(_tileMap.Rooms.First());
-            bool isVisited;
-
-            while (roomStack.Count > 0)
-            {
-                Room removedRoom = roomStack.Pop();
-
-                foreach (Room r in removedRoom.AdjacencyList)
-                {
-                    isVisited = false;
-
-                    if (connectedRoomsAlpha.TryGetValue(r.Id, out isVisited))
-                    {
-                        if (!isVisited)
-                        {
-                            connectedRoomsAlpha[r.Id] = true;
-                            roomStack.Push(r);
-                        }
-                    }
-                }
-            }
-
-            List<bool> l = connectedRoomsAlpha.Values.ToList();
-            l.ForEach(b =>
-            {
-                if (!b)
-                    _tileMap.isComplete = false;
-            });
+            _tileMap.CheckGraph();
         }
 
         public void RemoveUnconnectedJunctions()

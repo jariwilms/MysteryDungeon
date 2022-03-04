@@ -44,7 +44,6 @@ namespace MysteryDungeon.Core
                 Player.SetPosition(TileMap.SpawnPoint);
                 _tileMapRenderer.Render(TileMap);
             }
-
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

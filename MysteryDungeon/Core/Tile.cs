@@ -16,12 +16,19 @@ namespace MysteryDungeon.Core
     class Tile
     {
         public Texture2D Texture;
+        public Rectangle? TextureRectangle;
         public TileCollision TileCollision;
 
         public Tile(Texture2D texture, TileCollision tileCollision)
         {
             Texture = texture;
+            TextureRectangle = null;
             TileCollision = tileCollision;
+        }
+
+        public Tile(Texture2D texture, Rectangle textureRectangle, TileCollision tileCollision) : this(texture, tileCollision)
+        {
+            TextureRectangle = textureRectangle;
         }
     }
 }

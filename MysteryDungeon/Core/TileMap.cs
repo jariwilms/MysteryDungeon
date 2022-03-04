@@ -158,5 +158,43 @@ namespace MysteryDungeon.Core
             source.IsConnected = true;
             destination.IsConnected = true;
         }
+
+        public void CheckGraph()
+        {
+            Dictionary<int, bool> connectedRoomsAlpha = new Dictionary<int, bool>();
+            Rooms.ForEach(room => { connectedRoomsAlpha.Add(room.Id, false); });
+
+            Stack<Room> roomStack = new Stack<Room>(Rooms.Count);
+            roomStack.Push(Rooms.First());
+            bool isVisited;
+
+            while (roomStack.Count > 0)
+            {
+                Room removedRoom = roomStack.Pop();
+
+                foreach (Room r in removedRoom.AdjacencyList)
+                {
+                    isVisited = false;
+
+                    if (connectedRoomsAlpha.TryGetValue(r.Id, out isVisited))
+                    {
+                        if (!isVisited)
+                        {
+                            connectedRoomsAlpha[r.Id] = true;
+                            roomStack.Push(r);
+                        }
+                    }
+                }
+            }
+
+            foreach (bool value in connectedRoomsAlpha.Values)
+            {
+                if (!value)
+                {
+                    isComplete = false;
+                    break;
+                }
+            }
+        }
     }
 }
