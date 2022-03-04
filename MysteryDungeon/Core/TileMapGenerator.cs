@@ -61,7 +61,7 @@ namespace MysteryDungeon.Core
             _content = content;
             _texture = _content.Load<Texture2D>("tiles/BlockA0");
 
-            _random = new Random(Guid.NewGuid().GetHashCode());
+            _random = new Random();
 
             _levelType = levelType;
             _generator = _levelType switch
@@ -113,10 +113,17 @@ namespace MysteryDungeon.Core
 
             _minimumConnections = 1;
 
-            FillCharMap();
-            GenerateRooms();
-            GenerateTilesFromCharMap();
-            GenerateSpawnPoint();
+            FillCharMap();                  //Fill Char Map with '#'
+
+            GenerateRooms();                //Generate rooms with random size and location
+            GenerateConnectors();           //Generate room connectors
+            ConnectRooms();                 //Connect rooms together
+            RemoveUnconnectedJunctions();   //Remove junctions that are not connected to any room
+
+            DrawRoomsOnCharMap();           //Draw every room and hallway on the charmap, this means changing every '#' to '.'
+            GenerateTilesFromCharMap();     //Generate tile textures according to charmap data
+
+            GenerateSpawnPoint();           //Generate a spawnpoint in a random room
 
             return _tileMap;
         }
@@ -160,11 +167,68 @@ namespace MysteryDungeon.Core
                     _tileMap.CharMap[x, y] = '#';
         }
 
-        private void GenerateRooms() //Move naar charmap class?
+        private void GenerateRooms()
+        {
+            int largeRooms = 0;
+            List<int> roomIds = new List<int>(Enumerable.Range(0, _horizontalRooms * _verticalRooms)); //0 - 11
+            roomIds = roomIds.OrderBy(id => Guid.NewGuid()).ToList();
+
+            int xIndex = 0;
+            int yIndex = 0;
+            int roomId;
+
+            foreach (int v in Enumerable.Range(0, _verticalRooms))
+            {
+                foreach (int h in Enumerable.Range(0, _horizontalRooms))
+                {
+                    roomId = roomIds.Last();
+                    roomIds.RemoveAt(roomIds.Count - 1);
+
+                    xIndex = roomId % _horizontalRooms;
+                    yIndex = roomId / _horizontalRooms;
+
+                    Room room = new Room(roomId);
+
+                    if (_random.Next(0, 99) < _connectorSpawnChance && largeRooms > _minRooms - 1) //Create a junction room
+                    {
+                        room.Bounds.Width = 1;
+                        room.Bounds.Height = 1;
+
+                        room.isJunction = true;
+                    }
+                    else //Create a normal room
+                    {
+                        largeRooms++;
+                        room.Bounds.Width = _random.Next(_minRoomHorizontalSize, _maxRoomHorizontalSize);
+                        room.Bounds.Height = _random.Next(_minRoomVerticalSize, _maxRoomVerticalSize);
+                    }
+
+                    room.Bounds.X = _random.Next(0, _maxRoomHorizontalSize - room.Bounds.Width) + xIndex * _horizontalRoomBoxSize + _borderSize + xIndex * _minSpaceBetweenRooms - 1;
+                    room.Bounds.Y = _random.Next(0, _maxRoomVerticalSize - room.Bounds.Height) + yIndex * _verticalRoomBoxSize + _borderSize + yIndex * _minSpaceBetweenRooms - 1;
+
+                    _tileMap.Rooms.Add(room);
+                }
+            }
+
+            _tileMap.Rooms = _tileMap.Rooms.OrderBy(room => room.Id).ToList();
+            _tileMap.HorizontalRooms = _horizontalRooms;
+            _tileMap.VerticalRooms = _verticalRooms;
+        }
+
+        private void DrawRoomsOnCharMap()
+        {
+            _tileMap.Rooms.ForEach(room =>
+            {
+                for (int y = 0; y < room.Bounds.Height; y++)
+                    for (int x = 0; x < room.Bounds.Width; x++)
+                        _tileMap.CharMap[x + room.Bounds.X, y + room.Bounds.Y] = '.';
+            });
+        }
+
+        private void GenerateConnectors()
         {
             Direction direction = Direction.Up | Direction.Right | Direction.Down | Direction.Left;
             int roomNumber = 0;
-            int bigRooms = 0;
 
             for (int v = 0; v < _verticalRooms; v++)
             {
@@ -186,70 +250,110 @@ namespace MysteryDungeon.Core
                     if (h == _horizontalRooms - 1)
                         direction &= ~Direction.Right;
 
-                    Room room = new Room(roomNumber);
-                   
-                    if (_random.Next(0, 99) < _connectorSpawnChance && bigRooms > _minRooms - 1) //Create a connector room
-                    {
-                        room.Bounds.Width = 1;
-                        room.Bounds.Height = 1;
-
-                        room.isJunction = true;
-                    }
-                    else //Create a normal room
-                    {
-                        bigRooms++;
-                        room.Bounds.Width = _random.Next(_minRoomHorizontalSize, _maxRoomHorizontalSize);
-                        room.Bounds.Height = _random.Next(_minRoomVerticalSize, _maxRoomVerticalSize);
-                    }
-
-                    room.Bounds.X = _random.Next(0, _maxRoomHorizontalSize - room.Bounds.Width) + h * _horizontalRoomBoxSize + _borderSize + h * _minSpaceBetweenRooms - 1;
-                    room.Bounds.Y = _random.Next(0, _maxRoomVerticalSize - room.Bounds.Height) + v * _verticalRoomBoxSize + _borderSize + v * _minSpaceBetweenRooms - 1;
-
-                    room.CreateConnectors(h, _horizontalRooms, v, _verticalRooms);
-                    _tileMap.Rooms.Add(room);
+                    Room room = _tileMap.Rooms[roomNumber];
+                    room.Id = roomNumber;
 
                     roomNumber++;
                 }
             }
 
-            //_tileMap.Rooms = _tileMap.Rooms.OrderBy(room => Guid.NewGuid()).ToList();
+            roomNumber = 0;
+
+            for (int v = 0; v < _verticalRooms; v++)
+            {
+                for (int h = 0; h < _horizontalRooms; h++)
+                {
+                    Room room = _tileMap.Rooms[roomNumber];
+                    room.CreateConnectors(h, _horizontalRooms, v, _verticalRooms);
+                    roomNumber++;
+                }
+            }
+        }
+
+        public void ConnectRooms()
+        {
+            if (_tileMap.HorizontalRooms == 0 || _tileMap.VerticalRooms == 0)
+                throw new NullReferenceException("Roomsize has not been set");
 
             _tileMap.Rooms.ForEach(room =>
             {
-                for (int y = 0; y < room.Bounds.Height; y++)
-                    for (int x = 0; x < room.Bounds.Width; x++)
-                        _tileMap.CharMap[x + room.Bounds.X, y + room.Bounds.Y] = '.';
+                if (!room.isJunction)
+                {
+                    room.Connectors.ForEach(sourceConnector =>
+                    {
+                        Room destinationRoom = _tileMap.GetDestinationRoom(room, sourceConnector); //Room apart opvragen is required voor HashSet
+                        Connector destinationConnector = _tileMap.GetDestinationConnector(destinationRoom, sourceConnector);
+
+                        _tileMap.Connect(sourceConnector, destinationConnector);
+
+                        room.AdjacencyList.Add(destinationRoom);
+                        destinationRoom.AdjacencyList.Add(room);
+                    });
+                }
             });
 
-
-
-            //Slechste programming in known history wrs
-            _tileMap.HorizontalRooms = _horizontalRooms;
-            _tileMap.VerticalRooms = _verticalRooms;
-            _tileMap.ConnectRooms();
+            CheckGraph();
         }
 
-        private void GenerateHallways()
+        private void CheckGraph()
         {
+            Dictionary<int, bool> connectedRoomsAlpha = new Dictionary<int, bool>();
+            _tileMap.Rooms.ForEach(room => { connectedRoomsAlpha.Add(room.Id, false); });
 
+            Stack<Room> roomStack = new Stack<Room>(_tileMap.Rooms.Count);
+            roomStack.Push(_tileMap.Rooms.First());
+            bool isVisited;
+
+            while (roomStack.Count > 0)
+            {
+                Room removedRoom = roomStack.Pop();
+
+                foreach (Room r in removedRoom.AdjacencyList)
+                {
+                    isVisited = false;
+
+                    if (connectedRoomsAlpha.TryGetValue(r.Id, out isVisited))
+                    {
+                        if (!isVisited)
+                        {
+                            connectedRoomsAlpha[r.Id] = true;
+                            roomStack.Push(r);
+                        }
+                    }
+                }
+            }
+
+            List<bool> l = connectedRoomsAlpha.Values.ToList();
+            l.ForEach(b =>
+            {
+                if (!b)
+                    _tileMap.isComplete = false;
+            });
         }
 
-        private void CreateRoomWallsOnCharMap()
+        public void RemoveUnconnectedJunctions()
         {
-            //_tileMap.Rooms.ForEach(room => //Idem
-            //{
-            //    for (int x = -1; x < room.Bounds.Width + 1; x++)
-            //    {
-            //        _tileMap.CharMap[x + room.Bounds.X, room.Bounds.Y - 1] = '*';
-            //        _tileMap.CharMap[x + room.Bounds.X, room.Bounds.Y + room.Bounds.Height] = '*';
-            //    }
+            bool anyConnected;
 
-            //    for (int y = -1; y < room.Bounds.Height + 1; y++)
-            //    {
-            //        _tileMap.CharMap[room.Bounds.X - 1, y + room.Bounds.Y] = '*';
-            //        _tileMap.CharMap[room.Bounds.X + room.Bounds.Width, y + room.Bounds.Y] = '*';
-            //    }
-            //});
+            for (int i = _tileMap.Rooms.Count - 1; i > -1; i--)
+            {
+                anyConnected = false;
+
+                if (!_tileMap.Rooms[i].isJunction)
+                    continue;
+
+                _tileMap.Rooms[i].Connectors.ForEach(connector =>
+                {
+                    if (connector.IsConnected)
+                        anyConnected = true;
+                });
+
+                if (!anyConnected)
+                {
+                    _tileMap.CharMap[_tileMap.Rooms[i].Bounds.X, _tileMap.Rooms[i].Bounds.Y] = '#';
+                    _tileMap.Rooms.RemoveAt(i);
+                }
+            }
         }
 
         public void LoadMapFromFile(string levelPath)
@@ -304,7 +408,8 @@ namespace MysteryDungeon.Core
 
         public void GenerateSpawnPoint()
         {
-            Room room = _tileMap.Rooms[_random.Next(0, _tileMap.Rooms.Count - 1)];
+            List<Room> bigRooms = _tileMap.Rooms.Where(room => !room.isJunction).ToList();
+            Room room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
 
             int x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
             int y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;

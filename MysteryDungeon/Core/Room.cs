@@ -17,7 +17,7 @@ namespace MysteryDungeon.Core
 
     class Room
     {
-        public int Id { get; }
+        public int Id;
         public Tuple<int, int> Index;
 
         public Rectangle Bounds;
@@ -54,7 +54,7 @@ namespace MysteryDungeon.Core
             Connectors = connectors;
         }
 
-        public void CreateConnectors(int x, int xMax, int y, int yMax) //Creates entraces that connect rooms to each other
+        public void CreateConnectors(int x, int xMax, int y, int yMax)
         {
             Index = new Tuple<int, int>(x, y);
 
@@ -71,7 +71,7 @@ namespace MysteryDungeon.Core
                 Connectors.Add(new Connector(_random.Next(0, Bounds.Width - 1) + Bounds.X, Bounds.Y + Bounds.Height - 1, Direction.Down));
         }
 
-        public Connector? GetConnector(Direction direction)
+        public Connector GetConnector(Direction direction)
         {
             foreach (Connector c in Connectors)
                 if (c.Direction.HasFlag(direction))

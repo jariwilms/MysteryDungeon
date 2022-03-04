@@ -41,6 +41,7 @@ namespace MysteryDungeon.Core
             if (Utility.KeyPressedOnce(Keys.R))
             {
                 TileMap = _tileMapGenerator.Generate();
+                Player.SetPosition(TileMap.SpawnPoint);
                 _tileMapRenderer.Render(TileMap);
             }
 
