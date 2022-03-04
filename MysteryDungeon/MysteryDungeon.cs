@@ -89,6 +89,12 @@ namespace MysteryDungeon
 
             // #####
 
+            if (Utility.KeyPressedOnce(Keys.Q))
+                camera.zoomOut();
+
+            if (Utility.KeyPressedOnce(Keys.E))
+                camera.zoomIn();
+
             level.Update(gameTime);
             camera.Update();
 
