@@ -7,7 +7,40 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MysteryDungeon.Core
 {
-    enum TileCollision
+    public enum TileType
+    {
+        None, 
+
+        Floor,
+        Wall,
+        Ceiling, 
+
+        LedgeTop,
+        LedgeRight,
+        LedgeBottom,
+        LedgeLeft,
+
+        CornerTopLeft,
+        CornerTopRight,
+        CornerBottomRight,
+        CornerBottomLeft,
+
+        RidgeTopLeft,
+        RidgeTopRight,
+        RidgeBottomRight,
+        RidgeBottomLeft,
+
+        ConnectorHorizontal, 
+        ConnectorVertical, 
+
+        TopCap,
+        RightCap,
+        BottomCap,
+        LeftCap,
+
+    }
+
+    public enum TileCollision
     {
         Passable = 0, 
         Impassable = 1
@@ -15,20 +48,13 @@ namespace MysteryDungeon.Core
 
     class Tile
     {
-        public Texture2D Texture;
-        public Rectangle? TextureRectangle;
+        public TileType TileType;
         public TileCollision TileCollision;
 
-        public Tile(Texture2D texture, TileCollision tileCollision)
+        public Tile(TileType tileType, TileCollision tileCollision)
         {
-            Texture = texture;
-            TextureRectangle = null;
+            TileType = tileType;
             TileCollision = tileCollision;
-        }
-
-        public Tile(Texture2D texture, Rectangle textureRectangle, TileCollision tileCollision) : this(texture, tileCollision)
-        {
-            TextureRectangle = textureRectangle;
         }
     }
 }

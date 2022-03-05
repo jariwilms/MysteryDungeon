@@ -23,6 +23,7 @@ namespace MysteryDungeon.Core
     /// </summary>
     class TileMapGenerator
     {
+        #region variables
         private TileMap _tileMap;
         private delegate TileMap Generator();
         private Generator _generator;
@@ -55,6 +56,7 @@ namespace MysteryDungeon.Core
         private Texture2D _texture;
 
         private readonly Random _random;
+        #endregion
 
         public TileMapGenerator(ContentManager content, LevelType levelType = LevelType.Standard)
         {
@@ -203,8 +205,8 @@ namespace MysteryDungeon.Core
                         room.Bounds.Height = _random.Next(_minRoomVerticalSize, _maxRoomVerticalSize);
                     }
 
-                    room.Bounds.X = _random.Next(0, _maxRoomHorizontalSize - room.Bounds.Width) + xIndex * _horizontalRoomBoxSize + _borderSize + xIndex * _minSpaceBetweenRooms - 1;
-                    room.Bounds.Y = _random.Next(0, _maxRoomVerticalSize - room.Bounds.Height) + yIndex * _verticalRoomBoxSize + _borderSize + yIndex * _minSpaceBetweenRooms - 1;
+                    room.Bounds.X = _random.Next(0, _maxRoomHorizontalSize - room.Bounds.Width) + xIndex * _horizontalRoomBoxSize + _borderSize + xIndex * _minSpaceBetweenRooms;
+                    room.Bounds.Y = _random.Next(0, _maxRoomVerticalSize - room.Bounds.Height) + yIndex * _verticalRoomBoxSize + _borderSize + yIndex * _minSpaceBetweenRooms;
 
                     _tileMap.Rooms.Add(room);
                 }
@@ -349,24 +351,94 @@ namespace MysteryDungeon.Core
         {
             _tileMap.Tiles = new Tile[LevelWidth, LevelHeight];
 
-            for (int y = 0; y < LevelHeight; y++)
+            Tile borderTile = new Tile(TileType.Wall, TileCollision.Impassable);
+
+            char currentTile;
+            string surroundingTiles;
+
+            foreach (int topBorderX in Enumerable.Range(0, LevelWidth))
             {
-                for (int x = 0; x < LevelWidth; x++)
+                _tileMap.Tiles[topBorderX, 0] = borderTile;
+            }
+
+            foreach (int bottomBorderX in Enumerable.Range(0, LevelWidth))
+            {
+                _tileMap.Tiles[bottomBorderX, LevelHeight - 1] = borderTile;
+            }
+
+            foreach (int leftBorderY in Enumerable.Range(0, LevelHeight))
+            {
+                _tileMap.Tiles[0, leftBorderY] = borderTile;
+            }
+
+            foreach (int rightBorderY in Enumerable.Range(0, LevelHeight))
+            {
+                _tileMap.Tiles[LevelWidth - 1, rightBorderY] = borderTile;
+            }
+
+            foreach (int y in Enumerable.Range(1, LevelHeight - 2))
+            {
+                foreach (int x in Enumerable.Range(1, LevelWidth - 2))
                 {
-                    char tileType = _tileMap.CharMap[x, y];
-                    _tileMap.Tiles[x, y] = LoadTile(tileType, x, y);
+                    surroundingTiles = "";
+
+                    currentTile = _tileMap.CharMap[x, y];
+                    surroundingTiles += _tileMap.CharMap[x, y - 1]; //Add tile above
+                    surroundingTiles += _tileMap.CharMap[x + 1, y]; //Add tile right
+                    surroundingTiles += _tileMap.CharMap[x, y + 1]; //Add tile below
+                    surroundingTiles += _tileMap.CharMap[x - 1, y]; //Add tile left
+
+                    _tileMap.Tiles[x, y] = LoadTile2(currentTile, surroundingTiles);
                 }
             }
+
+            //foreach (int y in Enumerable.Range(1, LevelHeight - 2))
+            //{
+            //    foreach (int x in Enumerable.Range(1, LevelWidth - 2))
+            //    {
+            //        char tileType = _tileMap.CharMap[x, y];
+            //        _tileMap.Tiles[x, y] = LoadTile(tileType, x, y);
+            //    }
+            //}
         }
 
-        private Tile LoadTile(char tileType, int x, int y)
+        //private Tile LoadTile(char tileType)
+        //{
+        //    return tileType switch
+        //    {
+        //        '.' => new Tile(null, TileCollision.Passable),//"Air" tiles have no texture or hitbox
+        //        '#' => new Tile(_texture, TileCollision.Impassable),
+        //        '*' => new Tile(_texture, TileCollision.Impassable),
+        //        _ => throw new InvalidDataException("Unsupported tile type character."),
+        //    };
+        //}
+
+        private Tile LoadTile2(char currentTile, string surroundingTiles)
         {
-            return tileType switch
+            if (currentTile == '.')
             {
-                '.' => new Tile(null, TileCollision.Passable),//"Air" tiles have no texture or hitbox
-                '#' => new Tile(_texture, TileCollision.Impassable),
-                '*' => new Tile(_texture, TileCollision.Impassable),
-                _ => throw new InvalidDataException(String.Format("Unsupported tile type character '{0}' at position {1}, {2}.", tileType, x, y)),
+                return new Tile(TileType.Floor, TileCollision.Passable); ; //Floor tile
+            }
+
+            return surroundingTiles switch //first = above, second = right, third = below, fourth = left
+            {
+                "...." => new Tile(TileType.Ceiling, TileCollision.Impassable),             // 0
+                "...#" => new Tile(TileType.RightCap, TileCollision.Impassable),            // 1
+                "..#." => new Tile(TileType.TopCap, TileCollision.Impassable),              // 2
+                "..##" => new Tile(TileType.CornerTopRight, TileCollision.Impassable),      // 3
+                ".#.." => new Tile(TileType.LeftCap, TileCollision.Impassable),             // 4
+                ".#.#" => new Tile(TileType.Wall, TileCollision.Impassable),                // 5
+                ".##." => new Tile(TileType.CornerTopLeft, TileCollision.Impassable),       // 6
+                ".###" => new Tile(TileType.LedgeTop, TileCollision.Impassable),            // 7
+                "#..." => new Tile(TileType.BottomCap, TileCollision.Impassable),           // 8
+                "#..#" => new Tile(TileType.CornerBottomRight, TileCollision.Impassable),   // 9
+                "#.#." => new Tile(TileType.Wall, TileCollision.Impassable),                //10
+                "#.##" => new Tile(TileType.Wall, TileCollision.Impassable),                //11
+                "##.." => new Tile(TileType.Wall, TileCollision.Impassable),                //12
+                "##.#" => new Tile(TileType.Wall, TileCollision.Impassable),                //13
+                "###." => new Tile(TileType.Wall, TileCollision.Impassable),                //14
+                "####" => new Tile(TileType.Wall, TileCollision.Impassable),                //15
+                _ => throw new InvalidDataException(String.Format("The given character sequence is not valid: {0}", surroundingTiles))
             };
         }
 

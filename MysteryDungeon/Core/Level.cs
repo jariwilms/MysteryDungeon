@@ -28,7 +28,7 @@ namespace MysteryDungeon.Core
 
             _tileMapGenerator = new TileMapGenerator(content, LevelType.Standard);
             TileMap = _tileMapGenerator.Generate();
-            _tileMapRenderer = new TileMapRenderer(TileMap, content);
+            _tileMapRenderer = new TileMapRenderer(content);
 
             Player.SetPosition(TileMap.SpawnPoint);
         }
