@@ -28,18 +28,6 @@ namespace MysteryDungeon.Core
             SpriteSize = spriteSize;
         }
 
-        //public SpriteAtlas(ContentManager content, Texture2D sourceTexture, int textureSize) : this(sourceTexture, textureSize)
-        //{
-        //    _content = content;
-        //}
-
-        //public SpriteAtlas(ContentManager content, string texturePath, int textureSize) : this()
-        //{
-        //    _content = content;
-        //    SourceTexture = _content.Load<Texture2D>(texturePath);
-        //    TextureSize = textureSize;
-        //}
-
         public void SetCurrentSprite(T identifier)
         {
             bool found = SourceRectangles.TryGetValue(identifier, out Rectangle source);

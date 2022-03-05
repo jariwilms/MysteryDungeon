@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MysteryDungeon.Core
 {
-    class Level
+    class Level : IDisposable
     {
         public Player Player;
 
@@ -26,9 +26,11 @@ namespace MysteryDungeon.Core
 
             Player = new Player(_content.Load<Texture2D>("sprites/player"), this);
 
-            _tileMapGenerator = new TileMapGenerator(content, LevelType.Standard);
+            _tileMapGenerator = new TileMapGenerator(LevelType.Standard);
             TileMap = _tileMapGenerator.Generate();
+
             _tileMapRenderer = new TileMapRenderer(content);
+            _tileMapRenderer.Render(TileMap);
 
             Player.SetPosition(TileMap.SpawnPoint);
         }
@@ -50,6 +52,11 @@ namespace MysteryDungeon.Core
         {
             _tileMapRenderer.Draw(spriteBatch, gameTime);
             Player.Draw(spriteBatch, gameTime);
+        }
+
+        public void Dispose()
+        {
+            _content.Unload();
         }
     }
 }

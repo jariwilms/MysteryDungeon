@@ -28,6 +28,10 @@ namespace MysteryDungeon
         public static KeyboardState KeyboardState;
         public static KeyboardState LastkeyboardState;
 
+        private double[] _frameTimes;
+        private double _averageFrameTime;
+        private int _frameIndex;
+
         // ### THE CUM ZONE ###
 
         Camera camera;
@@ -46,10 +50,9 @@ namespace MysteryDungeon
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            Rectangle a = new Rectangle(0, 0, 10, 10);
-            Rectangle b = new Rectangle(1, 1, 2, 2);
-            bool c = a.Intersects(b);
-            Console.WriteLine("");
+            _frameTimes = new double[16];
+            _averageFrameTime = 0;
+            _frameIndex = 0;
         }
 
         protected override void Initialize()
@@ -59,6 +62,9 @@ namespace MysteryDungeon
             _graphics.PreferredBackBufferHeight = _windowHeight;
             _graphics.PreferMultiSampling = true;
             _graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
+
+            _graphics.SynchronizeWithVerticalRetrace = false;
+            this.IsFixedTimeStep = false;
 
             _graphics.ApplyChanges();
 
@@ -85,6 +91,17 @@ namespace MysteryDungeon
         protected override void Update(GameTime gameTime)
         {
             _deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
+
+            _frameTimes[_frameIndex] = _deltaTime;
+            _frameIndex = (_frameIndex + 1) % _frameTimes.Length;
+            _averageFrameTime = 0;
+
+            for (int i = 0; i < _frameTimes.Length; i++)
+                _averageFrameTime += _frameTimes[i];
+
+            _averageFrameTime /= 16;
+            _averageFrameTime = 1 / _averageFrameTime;
+
             KeyboardState = Keyboard.GetState();
 
             // #####
@@ -112,6 +129,7 @@ namespace MysteryDungeon
             // #####
 
             level.Draw(_spriteBatch, gameTime);
+            _spriteBatch.DrawString(_spriteFont, Math.Round(_averageFrameTime).ToString(), new Vector2(100, 100), Color.White);
 
             // #####
 

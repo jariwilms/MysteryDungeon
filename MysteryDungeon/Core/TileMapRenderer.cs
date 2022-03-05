@@ -107,7 +107,7 @@ namespace MysteryDungeon.Core
                 });
             });
 
-            spriteBatch.DrawString(_spriteFontArial, _tileMap.isComplete ? "Complete" : "Not Complete", new Vector2(100, 100), Color.White);
+            //spriteBatch.DrawString(_spriteFontArial, _tileMap.isComplete ? "Complete" : "Not Complete", new Vector2(100, 100), Color.White);
         }
 
         public void Dispose()

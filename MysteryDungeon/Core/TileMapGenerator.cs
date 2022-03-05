@@ -52,19 +52,11 @@ namespace MysteryDungeon.Core
         private int _roomSpawnChance;           //Decides the chance
         private int _connectorSpawnChance;
 
-        private readonly ContentManager _content;
-        private Texture2D _texture;
-
         private readonly Random _random;
         #endregion
 
-        public TileMapGenerator(ContentManager content, LevelType levelType = LevelType.Standard)
+        public TileMapGenerator(LevelType levelType = LevelType.Standard)
         {
-            _content = content;
-            _texture = _content.Load<Texture2D>("tiles/BlockA0");
-
-            _random = new Random();
-
             _levelType = levelType;
             _generator = _levelType switch
             {
@@ -75,6 +67,8 @@ namespace MysteryDungeon.Core
                 LevelType.CorridorOutside => GenerateCorridorsOutside,
                 _ => throw new Exception("An invalid LevelType has been given.")
             };
+
+            _random = new Random();
         }
 
         public TileMap Generate()
@@ -432,12 +426,12 @@ namespace MysteryDungeon.Core
                 ".###" => new Tile(TileType.LedgeTop, TileCollision.Impassable),            // 7
                 "#..." => new Tile(TileType.BottomCap, TileCollision.Impassable),           // 8
                 "#..#" => new Tile(TileType.CornerBottomRight, TileCollision.Impassable),   // 9
-                "#.#." => new Tile(TileType.Wall, TileCollision.Impassable),                //10
-                "#.##" => new Tile(TileType.Wall, TileCollision.Impassable),                //11
-                "##.." => new Tile(TileType.Wall, TileCollision.Impassable),                //12
-                "##.#" => new Tile(TileType.Wall, TileCollision.Impassable),                //13
-                "###." => new Tile(TileType.Wall, TileCollision.Impassable),                //14
-                "####" => new Tile(TileType.Wall, TileCollision.Impassable),                //15
+                "#.#." => new Tile(TileType.Ceiling, TileCollision.Impassable),                //10
+                "#.##" => new Tile(TileType.Ceiling, TileCollision.Impassable),                //11
+                "##.." => new Tile(TileType.Ceiling, TileCollision.Impassable),                //12
+                "##.#" => new Tile(TileType.Ceiling, TileCollision.Impassable),                //13
+                "###." => new Tile(TileType.Ceiling, TileCollision.Impassable),                //14
+                "####" => new Tile(TileType.Ceiling, TileCollision.Impassable),                //15
                 _ => throw new InvalidDataException(String.Format("The given character sequence is not valid: {0}", surroundingTiles))
             };
         }
