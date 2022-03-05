@@ -39,7 +39,7 @@ namespace MysteryDungeon.Core
             _isPlaying = false;
         }
 
-        public void togglePlay()
+        public void TogglePlay()
         {
             _isPlaying = !_isPlaying;
         }

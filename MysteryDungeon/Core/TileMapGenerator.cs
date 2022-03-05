@@ -47,8 +47,8 @@ namespace MysteryDungeon.Core
         private int _horizontalRoomBoxSize;     //Horizontal size of level subdivision => LevelWidth - (2 * _borderSize) / _horizontalRooms
         private int _verticalRoomBoxSize;       //Vertical size of level subdivision => LevelHeight - (2 * _borderSize) / _verticalRooms
 
-        private int _minimumConnections;        //Minimum amount of connections per room
-        private List<int> _connectionBias;      //Decides what direction connections are likely to form to
+        //private int _minimumConnections;        //Minimum amount of connections per room
+        //private List<int> _connectionBias;      //Decides what direction connections are likely to form to
         private int _roomSpawnChance;           //Decides the chance
         private int _connectorSpawnChance;
 
@@ -107,7 +107,7 @@ namespace MysteryDungeon.Core
             _roomSpawnChance = 50;
             _connectorSpawnChance = 100 - _roomSpawnChance;
 
-            _minimumConnections = 1;
+            //_minimumConnections = 1;
 
             FillCharMap();                  //Fill Char Map with '#'
 
@@ -382,32 +382,12 @@ namespace MysteryDungeon.Core
                     surroundingTiles += _tileMap.CharMap[x, y + 1]; //Add tile below
                     surroundingTiles += _tileMap.CharMap[x - 1, y]; //Add tile left
 
-                    _tileMap.Tiles[x, y] = LoadTile2(currentTile, surroundingTiles);
+                    _tileMap.Tiles[x, y] = MatchTile(currentTile, surroundingTiles);
                 }
             }
-
-            //foreach (int y in Enumerable.Range(1, LevelHeight - 2))
-            //{
-            //    foreach (int x in Enumerable.Range(1, LevelWidth - 2))
-            //    {
-            //        char tileType = _tileMap.CharMap[x, y];
-            //        _tileMap.Tiles[x, y] = LoadTile(tileType, x, y);
-            //    }
-            //}
         }
 
-        //private Tile LoadTile(char tileType)
-        //{
-        //    return tileType switch
-        //    {
-        //        '.' => new Tile(null, TileCollision.Passable),//"Air" tiles have no texture or hitbox
-        //        '#' => new Tile(_texture, TileCollision.Impassable),
-        //        '*' => new Tile(_texture, TileCollision.Impassable),
-        //        _ => throw new InvalidDataException("Unsupported tile type character."),
-        //    };
-        //}
-
-        private Tile LoadTile2(char currentTile, string surroundingTiles)
+        private Tile MatchTile(char currentTile, string surroundingTiles)
         {
             if (currentTile == '.')
             {
