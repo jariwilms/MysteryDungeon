@@ -23,13 +23,13 @@ namespace MysteryDungeon.Core
         #region variables
         private TileMap _tileMap;
         private delegate TileMap Generator();
-        private Generator _generator;
+        private readonly Generator _generator;
         private LevelType _levelType;
 
         public int LevelWidth;                  //Total width of the level
         public int LevelHeight;                 //Total height of the level
 
-        private int _borderSize;            //Size of border around the level
+        private int _borderSize;                //Size of border around the level
         private int _minSpaceBetweenRooms;      //Minimum amount of space between rooms
 
         private int _minRooms;                  //Minimum amount of rooms
@@ -68,13 +68,18 @@ namespace MysteryDungeon.Core
             _random = new Random();
         }
 
+        public void SetLevelType(LevelType levelType)
+        {
+            _levelType = levelType;
+        }
+
         public TileMap Generate()
         {
             _tileMap = new TileMap(); //TODO: moet tilemap zonder content weergeven, anderzijds gewoon in renderer proppen?
             return _generator();
         }
 
-        private TileMap GenerateStandard() //Kan omgezet worden naar een functie die enkel settings aanpast en dan een enkele generator functie runt
+        private TileMap GenerateStandard()
         {
             LevelWidth = 56;
             LevelHeight = 32;

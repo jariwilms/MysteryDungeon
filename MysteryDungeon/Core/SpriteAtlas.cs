@@ -38,6 +38,11 @@ namespace MysteryDungeon.Core
             SourceRectangles.Add(identifier, new Rectangle(x, y, SpriteSize, SpriteSize));
         }
 
+        public void AddSprite(T identifier, int x, int y, int width, int height)
+        {
+            SourceRectangles.Add(identifier, new Rectangle(x, y, width, height));
+        }
+
         public void RemoveSprite(T identifier)
         {
             SourceRectangles.Remove(identifier);

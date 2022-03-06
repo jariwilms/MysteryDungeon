@@ -21,17 +21,15 @@ namespace MysteryDungeon.Core
         public Player(Texture2D texture, Level level) : base(texture)
         {
             _level = level;
-            _unitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
         }
 
         public void Move(GameTime gameTime)
         {
             if (_canMove) //TODO: fix deze repeating shit code
             {
-                //Welke retard heeft dit geschreven?
                 if (Utility.KeyPressedOnce(Keys.W))
                 {
-                    if (CanMoveTo("up"))
+                    if (CanMoveTo(Direction.Up))
                     {
                         _startPosition = Transform.Position;
                         _endPosition = Transform.Position + new Vector2(0, -_unitSize);
@@ -39,10 +37,9 @@ namespace MysteryDungeon.Core
                         _canMove = false;
                     }
                 }
-
-                if (Utility.KeyPressedOnce(Keys.A))
+                else if (Utility.KeyPressedOnce(Keys.A))
                 {
-                    if (CanMoveTo("left"))
+                    if (CanMoveTo(Direction.Left))
                     {
                         _startPosition = Transform.Position;
                         _endPosition = Transform.Position + new Vector2(-_unitSize, 0);
@@ -50,10 +47,9 @@ namespace MysteryDungeon.Core
                         _canMove = false;
                     }
                 }
-
-                if (Utility.KeyPressedOnce(Keys.S))
+                else if (Utility.KeyPressedOnce(Keys.S))
                 {
-                    if (CanMoveTo("down"))
+                    if (CanMoveTo(Direction.Down))
                     {
                         _startPosition = Transform.Position;
                         _endPosition = Transform.Position + new Vector2(0, _unitSize);
@@ -61,10 +57,9 @@ namespace MysteryDungeon.Core
                         _canMove = false;
                     }
                 }
-
-                if (Utility.KeyPressedOnce(Keys.D))
+                else if (Utility.KeyPressedOnce(Keys.D))
                 {
-                    if (CanMoveTo("right"))
+                    if (CanMoveTo(Direction.Right))
                     {
                         _startPosition = Transform.Position;
                         _endPosition = Transform.Position + new Vector2(_unitSize, 0);
@@ -92,38 +87,20 @@ namespace MysteryDungeon.Core
             }
         }
 
-        private bool CanMoveTo(string direction) //TODO: DIRECTION ENUM IDK
+        private bool CanMoveTo(Direction direction) //TODO: DIRECTION ENUM IDK
         {
-            int leftTile = (int)Math.Floor((float)BoundingRectangle.Left / _unitSize);
-            int rightTile = (int)Math.Ceiling((float)BoundingRectangle.Right / _unitSize) - 1;
-            int topTile = (int)Math.Floor((float)BoundingRectangle.Top / _unitSize);
-            int bottomTile = (int)Math.Ceiling((float)BoundingRectangle.Bottom / _unitSize) - 1;
-
-            int offsetx = 0;
-            int offsety = 0;
-
-            switch (direction)
+            Vector2 directionVector = direction switch
             {
-                case "up":
-                    offsety = -1;
-                    break;
-                case "left":
-                    offsetx = -1;
-                    break;
-                case "down":
-                    offsety = 1;
-                    break;
-                case "right":
-                    offsetx = 1;
-                    break;
-                default:
-                    break;
-            }
+                Direction.Up => new Vector2(0, -1),
+                Direction.Right => new Vector2(1, 0),
+                Direction.Down => new Vector2(0, 1),
+                Direction.Left => new Vector2(-1, 0),
+                _ => throw new ArgumentException("The given direction does not exist")
+            };
 
-            offsetx = leftTile + offsetx < 0 ? 0 : offsetx;
-            offsety = topTile + offsety < 0 ? 0 : offsety;
+            Vector2 offsetPosition = new Vector2((int)Transform.Position.X / _unitSize, (int)Transform.Position.Y / _unitSize) + directionVector;
 
-            if (_level.TileMap.Tiles[leftTile + offsetx, topTile + offsety].TileCollision == TileCollision.Passable)
+            if (_level.TileMap.Tiles[(int)offsetPosition.X, (int)offsetPosition.Y].TileCollision == TileCollision.Passable)
                 return true;
 
             return false;
@@ -137,11 +114,6 @@ namespace MysteryDungeon.Core
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             spriteBatch.Draw(Texture, new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, _unitSize, _unitSize), Color.White);
-
-            //spriteBatch.DrawString(GameTest._spriteFont, topTile.ToString(), new Vector2(300, 10), Color.White);
-            //spriteBatch.DrawString(GameTest._spriteFont, rightTile.ToString(), new Vector2(300, 40), Color.White);
-            //spriteBatch.DrawString(GameTest._spriteFont, bottomTile.ToString(), new Vector2(300, 70), Color.White);
-            //spriteBatch.DrawString(GameTest._spriteFont, leftTile.ToString(), new Vector2(300, 100), Color.White);
         }
     }
 }

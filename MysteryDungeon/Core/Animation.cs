@@ -7,7 +7,7 @@ namespace MysteryDungeon.Core
     class Animation
     {
         public Texture2D Texture { get; set; } //De texture image zelf
-        private Vector2 _textureOffset; //Offset in de image
+        private Vector2 _textureSource; //Offset in de image
 
         public int TextureWidth { get { return _textureWidth; } }
         public int TextureHeight { get { return _textureHeight; } }
@@ -29,7 +29,7 @@ namespace MysteryDungeon.Core
         public Animation(Texture2D texture, int rows, int columns, float frameTime = 1.0f)
         {
             Texture = texture;
-            _textureOffset = Vector2.Zero;
+            _textureSource = Vector2.Zero;
 
             Rows = rows;
             Columns = columns;
@@ -46,7 +46,7 @@ namespace MysteryDungeon.Core
         public Animation(Texture2D texture, Vector2 textureOffset, int textureWidth, int textureHeight, int rows, int columns, float frameTime = 1.0f)
             : this(texture, rows, columns, frameTime)
         {
-            _textureOffset = textureOffset;
+            _textureSource = textureOffset;
             _textureWidth = textureWidth;
             _textureHeight = textureHeight;
         }
@@ -80,8 +80,8 @@ namespace MysteryDungeon.Core
             int column = _currentFrame % Columns; //X index in the texture atlas
 
             _sourceRectangle = new Rectangle(
-                (int)_textureOffset.X + _textureWidth * column, //Column index + declared texture offset in spritesheet
-                (int)_textureOffset.Y + _textureHeight * row,  //Row index
+                (int)_textureSource.X + _textureWidth * column, //Column index + declared texture offset in spritesheet
+                (int)_textureSource.Y + _textureHeight * row,  //Row index
                 _textureWidth, _textureHeight);
         }
 
@@ -91,8 +91,8 @@ namespace MysteryDungeon.Core
             int column = _currentFrame % Columns; //X index in the texture atlas
 
             _sourceRectangle = new Rectangle(
-                (int)_textureOffset.X + _textureWidth * column, //Column index + declared texture offset in spritesheet
-                (int)_textureOffset.Y + _textureHeight * row,  //Row index
+                (int)_textureSource.X + _textureWidth * column, //Column index + declared texture offset in spritesheet
+                (int)_textureSource.Y + _textureHeight * row,  //Row index
                 _textureWidth, _textureHeight);
         }
     }

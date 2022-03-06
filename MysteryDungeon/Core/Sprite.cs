@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Configuration;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MysteryDungeon.Core
@@ -13,6 +15,7 @@ namespace MysteryDungeon.Core
         public Sprite(Texture2D texture)
         {
             Texture = texture;
+            _unitSize = int.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
         }
 
         public void SetPosition(Vector2 newPosition)
