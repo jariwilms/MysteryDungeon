@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Configuration;
-using System.Text;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
+using System.Configuration;
 
 namespace MysteryDungeon.Core
 {
@@ -14,7 +10,7 @@ namespace MysteryDungeon.Core
     {
         private Level _level;
 
-        private float _lerpDuration = 0.1f;
+        private float _lerpDuration = 0.08f;
         private float _timeElapsed = 0;
         private Vector2 _startPosition;
         private Vector2 _endPosition;

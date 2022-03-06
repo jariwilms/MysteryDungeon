@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace MysteryDungeon.Core
 {
@@ -11,7 +8,7 @@ namespace MysteryDungeon.Core
     {
         private Animation _animation;
         private Rectangle _destinationRectangle;
-        
+
         public bool IsPlaying { get { return _isPlaying; } }
         private bool _isPlaying;
 

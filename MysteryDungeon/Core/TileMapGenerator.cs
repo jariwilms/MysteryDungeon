@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 
 namespace MysteryDungeon.Core
 {
@@ -47,8 +44,8 @@ namespace MysteryDungeon.Core
         private int _horizontalRoomBoxSize;     //Horizontal size of level subdivision => LevelWidth - (2 * _borderSize) / _horizontalRooms
         private int _verticalRoomBoxSize;       //Vertical size of level subdivision => LevelHeight - (2 * _borderSize) / _verticalRooms
 
-        //private int _minimumConnections;        //Minimum amount of connections per room
-        //private List<int> _connectionBias;      //Decides what direction connections are likely to form to
+        private int _minimumConnections;        //Minimum amount of connections per room
+        private List<int> _connectionBias;      //Decides what direction connections are likely to form in
         private int _roomSpawnChance;           //Decides the chance
         private int _connectorSpawnChance;
 
@@ -374,9 +371,9 @@ namespace MysteryDungeon.Core
             {
                 foreach (int x in Enumerable.Range(1, LevelWidth - 2))
                 {
-                    surroundingTiles = "";
-
                     currentTile = _tileMap.CharMap[x, y];
+
+                    surroundingTiles = "";
                     surroundingTiles += _tileMap.CharMap[x, y - 1]; //Add tile above
                     surroundingTiles += _tileMap.CharMap[x + 1, y]; //Add tile right
                     surroundingTiles += _tileMap.CharMap[x, y + 1]; //Add tile below
@@ -390,28 +387,31 @@ namespace MysteryDungeon.Core
         private Tile MatchTile(char currentTile, string surroundingTiles)
         {
             if (currentTile == '.')
-            {
                 return new Tile(TileType.Floor, TileCollision.Passable); ; //Floor tile
-            }
 
             return surroundingTiles switch //first = above, second = right, third = below, fourth = left
             {
-                "...." => new Tile(TileType.Ceiling, TileCollision.Impassable),             // 0
-                "...#" => new Tile(TileType.RightCap, TileCollision.Impassable),            // 1
-                "..#." => new Tile(TileType.TopCap, TileCollision.Impassable),              // 2
-                "..##" => new Tile(TileType.CornerTopRight, TileCollision.Impassable),      // 3
-                ".#.." => new Tile(TileType.LeftCap, TileCollision.Impassable),             // 4
-                ".#.#" => new Tile(TileType.Wall, TileCollision.Impassable),                // 5
-                ".##." => new Tile(TileType.CornerTopLeft, TileCollision.Impassable),       // 6
-                ".###" => new Tile(TileType.LedgeTop, TileCollision.Impassable),            // 7
-                "#..." => new Tile(TileType.BottomCap, TileCollision.Impassable),           // 8
-                "#..#" => new Tile(TileType.CornerBottomRight, TileCollision.Impassable),   // 9
-                "#.#." => new Tile(TileType.Ceiling, TileCollision.Impassable),                //10
-                "#.##" => new Tile(TileType.Ceiling, TileCollision.Impassable),                //11
-                "##.." => new Tile(TileType.Ceiling, TileCollision.Impassable),                //12
-                "##.#" => new Tile(TileType.Ceiling, TileCollision.Impassable),                //13
-                "###." => new Tile(TileType.Ceiling, TileCollision.Impassable),                //14
-                "####" => new Tile(TileType.Ceiling, TileCollision.Impassable),                //15
+                "####" => new Tile(TileType.Ceiling, TileCollision.Impassable),                 //15
+                "...." => new Tile(TileType.Pillar, TileCollision.Impassable),                  // 0
+
+                "..#." => new Tile(TileType.TopCap, TileCollision.Impassable),                  // 2
+                "...#" => new Tile(TileType.RightCap, TileCollision.Impassable),                // 1
+                "#..." => new Tile(TileType.BottomCap, TileCollision.Impassable),               // 8
+                ".#.." => new Tile(TileType.LeftCap, TileCollision.Impassable),                 // 4
+
+                ".##." => new Tile(TileType.CornerTopLeft, TileCollision.Impassable),           // 6
+                "..##" => new Tile(TileType.CornerTopRight, TileCollision.Impassable),          // 3
+                "#..#" => new Tile(TileType.CornerBottomRight, TileCollision.Impassable),       // 9
+                "##.." => new Tile(TileType.CornerBottomLeft, TileCollision.Impassable),        //12
+
+                ".###" => new Tile(TileType.LedgeTop, TileCollision.Impassable),                // 7
+                "#.##" => new Tile(TileType.LedgeRight, TileCollision.Impassable),              //11
+                "##.#" => new Tile(TileType.LedgeBottom, TileCollision.Impassable),             //13
+                "###." => new Tile(TileType.LedgeLeft, TileCollision.Impassable),               //14
+
+                ".#.#" => new Tile(TileType.ConnectorHorizontal, TileCollision.Impassable),     // 5
+                "#.#." => new Tile(TileType.ConnectorVertical, TileCollision.Impassable),       //10
+
                 _ => throw new InvalidDataException(String.Format("The given character sequence is not valid: {0}", surroundingTiles))
             };
         }

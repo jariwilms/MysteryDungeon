@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using MysteryDungeon.Core;
+using System;
 
 namespace MysteryDungeon
 {
@@ -46,7 +43,7 @@ namespace MysteryDungeon
             _windowWidthScale = _windowWidth / _virtualWindowWidth;
             _windowHeightScale = _windowHeight / _virtualWindowHeight;
             _windowScale = Matrix.CreateScale(_windowWidthScale, _windowHeightScale, 1.0f);
-            
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
@@ -60,8 +57,7 @@ namespace MysteryDungeon
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             _graphics.PreferredBackBufferWidth = _windowWidth;
             _graphics.PreferredBackBufferHeight = _windowHeight;
-            _graphics.PreferMultiSampling = true;
-            _graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
+            _graphics.PreferMultiSampling = false;
 
             _graphics.SynchronizeWithVerticalRetrace = false;
             this.IsFixedTimeStep = false;
@@ -124,7 +120,11 @@ namespace MysteryDungeon
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            _spriteBatch.Begin(transformMatrix: camera.TransformMatrix);
+            _spriteBatch.Begin(
+                SpriteSortMode.Deferred,
+                BlendState.AlphaBlend,
+                SamplerState.PointClamp,
+                transformMatrix: camera.TransformMatrix);
 
             // #####
 

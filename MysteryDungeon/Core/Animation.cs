@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,7 +21,7 @@ namespace MysteryDungeon.Core
         private int _totalFrames; //Hoeveelheid frames -> Rows * Columns
 
         private double _frameTime; //Tijd tussen frames
-        private double _deltaTime; 
+        private double _deltaTime;
 
         public Rectangle SourceRectangle { get { return _sourceRectangle; } }
         private Rectangle _sourceRectangle;

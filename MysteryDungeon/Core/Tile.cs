@@ -1,19 +1,13 @@
-﻿using System;
-using System.Text;
-using System.Configuration;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace MysteryDungeon.Core
+﻿namespace MysteryDungeon.Core
 {
     public enum TileType
     {
-        None, 
+        None,
 
         Floor,
         Wall,
-        Ceiling, 
+        Ceiling,
+        Pillar,
 
         LedgeTop,
         LedgeRight,
@@ -30,8 +24,9 @@ namespace MysteryDungeon.Core
         RidgeBottomRight,
         RidgeBottomLeft,
 
-        ConnectorHorizontal, 
-        ConnectorVertical, 
+        ConnectorHorizontal,
+        ConnectorVertical,
+
 
         TopCap,
         RightCap,
@@ -42,7 +37,7 @@ namespace MysteryDungeon.Core
 
     public enum TileCollision
     {
-        Passable = 0, 
+        Passable = 0,
         Impassable = 1
     }
 

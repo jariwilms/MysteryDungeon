@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-
-using Microsoft.Xna.Framework;
 
 namespace MysteryDungeon.Core
 {
@@ -25,7 +23,7 @@ namespace MysteryDungeon.Core
         public Vector2 SpawnPoint;
 
         public int Width { get { return CharMap.GetLength(0); } }
-        public int Height { get { return CharMap.GetLength(1); }  }
+        public int Height { get { return CharMap.GetLength(1); } }
 
         private Random _random;
 
@@ -67,7 +65,7 @@ namespace MysteryDungeon.Core
                 Direction.Up => Direction.Down,
                 Direction.Right => Direction.Left,
                 Direction.Down => Direction.Up,
-                Direction.Left => Direction.Right, 
+                Direction.Left => Direction.Right,
                 _ => throw new Exception()
             };
 

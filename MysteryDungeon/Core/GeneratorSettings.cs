@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MysteryDungeon.Core
+﻿namespace MysteryDungeon.Core
 {
     class GeneratorSettings
     {

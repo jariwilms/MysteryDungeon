@@ -1,17 +1,15 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-using System.Text;
-
-using Microsoft.Xna.Framework;
 
 namespace MysteryDungeon.Core
 {
     public enum Direction
     {
-        Up = 0b0001, 
-        Right = 0b0010, 
-        Down = 0b0100, 
-        Left = 0b1000, 
+        Up = 0b0001,
+        Right = 0b0010,
+        Down = 0b0100,
+        Left = 0b1000,
         All = 0b1111
     }
 

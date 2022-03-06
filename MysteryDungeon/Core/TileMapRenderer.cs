@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Text;
-using System.IO;
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Configuration;
 
 namespace MysteryDungeon.Core
 {
@@ -40,6 +36,7 @@ namespace MysteryDungeon.Core
             _spriteAtlas.AddSprite(TileType.Floor, 32, 48);
             _spriteAtlas.AddSprite(TileType.Wall, 32, 32);
             _spriteAtlas.AddSprite(TileType.Ceiling, 0, 0);
+            _spriteAtlas.AddSprite(TileType.Pillar, 0, 0);
 
             _spriteAtlas.AddSprite(TileType.LedgeTop, 32, 64);
             _spriteAtlas.AddSprite(TileType.LedgeRight, 16, 32);
@@ -90,9 +87,9 @@ namespace MysteryDungeon.Core
                         Vector2 tilePosition = new Vector2(x, y) * new Vector2(_unitSize, _unitSize);
 
                         spriteBatch.Draw(
-                            _spriteAtlas.SourceTexture, 
-                            new Rectangle((int)tilePosition.X, (int)tilePosition.Y, _unitSize, _unitSize), 
-                            _spriteAtlas.SourceRectangle, 
+                            _spriteAtlas.SourceTexture,
+                            new Rectangle((int)tilePosition.X, (int)tilePosition.Y, _unitSize, _unitSize),
+                            _spriteAtlas.SourceRectangle,
                             Color.White);
                     }
                 }
