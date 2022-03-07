@@ -20,7 +20,8 @@ namespace MysteryDungeon.Core
         {
             _content = content;
 
-            Player = new Player(_content.Load<Texture2D>("sprites/player"), this);
+            Texture2D playerSprite = _content.Load<Texture2D>("sprites/player");
+            Player = new Player(content, playerSprite, this);
 
             _tileMapGenerator = new TileMapGenerator(LevelType.Standard);
             TileMap = _tileMapGenerator.Generate();

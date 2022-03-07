@@ -68,6 +68,18 @@
 /processorParam:TextureFormat=Color
 /build:sprites/arrow.png
 
+#begin sprites/chikorita.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:sprites/chikorita.png
+
 #begin sprites/dungeon.png
 /importer:TextureImporter
 /processor:TextureProcessor

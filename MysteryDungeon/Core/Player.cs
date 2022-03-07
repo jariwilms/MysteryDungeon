@@ -1,8 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Configuration;
+using Microsoft.Xna.Framework.Content;
 
 namespace MysteryDungeon.Core
 {
@@ -10,17 +13,32 @@ namespace MysteryDungeon.Core
     {
         private Level _level;
 
-        private float _lerpDuration = 0.08f;
+        private float _lerpDuration = 0.12f;
         private float _timeElapsed = 0;
+
         private Vector2 _startPosition;
         private Vector2 _endPosition;
 
         private bool _canMove = true;
         private bool _isMoving = false;
 
-        public Player(Texture2D texture, Level level) : base(texture)
+        public Player(ContentManager content, Texture2D texture, Level level) : base(texture)
         {
             _level = level;
+
+            _animationPlayer = new AnimationPlayer();
+            _animationDictionary = new Dictionary<string, Animation>();
+
+            _tempSprite = content.Load<Texture2D>("sprites/chikorita");
+
+            CreateAnimations();
+
+            _animationPlayer.PlayAnimation(_animationDictionary.GetValueOrDefault("Idle"));
+        }
+
+        private void CreateAnimations()
+        {
+            _animationDictionary.Add("Idle", new Animation(_tempSprite, new Vector2(102, 46), 3, 0, 13, 21, 1, 2, 1.0f));
         }
 
         public void Move(GameTime gameTime)
@@ -109,11 +127,12 @@ namespace MysteryDungeon.Core
         public override void Update(GameTime gameTime)
         {
             Move(gameTime);
+            _animationPlayer.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.Draw(Texture, new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, _unitSize, _unitSize), Color.White);
+            _animationPlayer.Draw(spriteBatch, new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, _unitSize, _unitSize));
         }
     }
 }

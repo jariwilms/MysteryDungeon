@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,6 +10,10 @@ namespace MysteryDungeon.Core
     {
         public Texture2D Texture { get; set; }
         public Rectangle BoundingRectangle { get { return new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, 100, 100); } }
+
+        protected AnimationPlayer _animationPlayer;
+        protected Dictionary<string, Animation> _animationDictionary; //verander naar enum met animationstates?
+        protected Texture2D _tempSprite;
 
         protected int _unitSize;
 

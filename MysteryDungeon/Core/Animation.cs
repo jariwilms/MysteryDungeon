@@ -6,16 +6,17 @@ namespace MysteryDungeon.Core
 {
     class Animation
     {
-        public Texture2D Texture { get; set; } //De texture image zelf
-        private Vector2 _textureSource; //Offset in de image
+        public Texture2D SourceTexture { get; set; } 
 
-        public int TextureWidth { get { return _textureWidth; } }
-        public int TextureHeight { get { return _textureHeight; } }
-        private readonly int _textureWidth; //Voorlopig readonly, tenzij er een use-case komt voor texture resizing?
-        private readonly int _textureHeight;
+        public Rectangle SourceRectangle { get { return _sourceRectangle; } private set { _sourceRectangle = value; } }
+        private Rectangle _sourceRectangle;
 
-        public int Rows { get; set; } //Hoeveel rijen en kolommen de texture bevat
-        public int Columns { get; set; }
+        private Vector2 _textureOffset; //For sprite sheets that do not start at (0, 0)
+        private int _spaceBetweenSpritesX;
+        private int _spaceBetweenSpritesY;
+
+        private int _rows;
+        private int _columns;
 
         private int _currentFrame; //Huidige frame: 0 <= _currentFrame < _totalFrames
         private int _totalFrames; //Hoeveelheid frames -> Rows * Columns
@@ -23,44 +24,47 @@ namespace MysteryDungeon.Core
         private double _frameTime; //Tijd tussen frames
         private double _deltaTime;
 
-        public Rectangle SourceRectangle { get { return _sourceRectangle; } }
-        private Rectangle _sourceRectangle;
-
         public Animation(Texture2D texture, int rows, int columns, float frameTime = 1.0f)
         {
-            Texture = texture;
-            _textureSource = Vector2.Zero;
+            SourceTexture = texture;
 
-            Rows = rows;
-            Columns = columns;
+            _sourceRectangle.Width = SourceTexture.Width / columns;
+            _sourceRectangle.Height = SourceTexture.Height / rows;
+
+            _textureOffset = new Vector2(0, 0);
+            _spaceBetweenSpritesX = 0;
+            _spaceBetweenSpritesY = 0;
+
+            _rows = rows;
+            _columns = columns;
 
             _currentFrame = 0;
-            _totalFrames = Rows * Columns;
-
-            _textureWidth = Texture.Width / Columns;
-            _textureHeight = Texture.Height / Rows;
+            _totalFrames = rows * columns;
 
             _frameTime = frameTime;
         }
 
-        public Animation(Texture2D texture, Vector2 textureOffset, int textureWidth, int textureHeight, int rows, int columns, float frameTime = 1.0f)
+        public Animation(Texture2D texture, Vector2 textureOffset, int spaceBetweenSpritesX, int spaceBetweenSpritesY, int textureWidth, int textureHeight, int rows, int columns, float frameTime = 1.0f)
             : this(texture, rows, columns, frameTime)
         {
-            _textureSource = textureOffset;
-            _textureWidth = textureWidth;
-            _textureHeight = textureHeight;
+            _textureOffset = textureOffset;
+            _sourceRectangle.Width = textureWidth;
+            _sourceRectangle.Height = textureHeight;
+
+            _spaceBetweenSpritesX = spaceBetweenSpritesX;
+            _spaceBetweenSpritesY = spaceBetweenSpritesY;
         }
 
         public void NextFrame()
         {
             _currentFrame = (_currentFrame + 1) % _totalFrames;
-            UpdateFrame();
+            UpdateSprite();
         }
 
         public void PreviousFrame()
         {
             _currentFrame = (_currentFrame + _totalFrames - 1) % _totalFrames;
-            UpdateFrame();
+            UpdateSprite();
         }
 
         public void Update(GameTime gameTime)
@@ -76,24 +80,16 @@ namespace MysteryDungeon.Core
                 _currentFrame = (_currentFrame + 1) % _totalFrames;
             }
 
-            int row = _currentFrame / Columns; //Y index in the texture atlas
-            int column = _currentFrame % Columns; //X index in the texture atlas
-
-            _sourceRectangle = new Rectangle(
-                (int)_textureSource.X + _textureWidth * column, //Column index + declared texture offset in spritesheet
-                (int)_textureSource.Y + _textureHeight * row,  //Row index
-                _textureWidth, _textureHeight);
+            UpdateSprite();
         }
 
-        public void UpdateFrame()
+        private void UpdateSprite() //Updates without taking time into account
         {
-            int row = _currentFrame / Columns; //Y index in the texture atlas
-            int column = _currentFrame % Columns; //X index in the texture atlas
+            int column = _currentFrame % _columns;
+            int row = _currentFrame / _columns;
 
-            _sourceRectangle = new Rectangle(
-                (int)_textureSource.X + _textureWidth * column, //Column index + declared texture offset in spritesheet
-                (int)_textureSource.Y + _textureHeight * row,  //Row index
-                _textureWidth, _textureHeight);
+            _sourceRectangle.X = (int)_textureOffset.X + (_sourceRectangle.Width * column) + column * _spaceBetweenSpritesX;
+            _sourceRectangle.Y = (int)_textureOffset.Y + (_sourceRectangle.Height * row) + row * _spaceBetweenSpritesY;
         }
     }
 }
