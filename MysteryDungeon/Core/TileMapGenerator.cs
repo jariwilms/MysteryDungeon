@@ -396,7 +396,7 @@ namespace MysteryDungeon.Core
 
             return surroundingTiles switch //first = above, second = right, third = below, fourth = left
             {
-                "####" => new Tile(TileType.Ceiling, TileCollision.Impassable),                 //15
+                "####" => new Tile(TileType.Block, TileCollision.Impassable),                 //15
                 "...." => new Tile(TileType.Pillar, TileCollision.Impassable),                  // 0
 
                 "..#." => new Tile(TileType.TopCap, TileCollision.Impassable),                  // 2

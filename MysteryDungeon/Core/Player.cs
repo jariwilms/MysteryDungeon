@@ -132,7 +132,7 @@ namespace MysteryDungeon.Core
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _animationPlayer.Draw(spriteBatch, new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, _unitSize, _unitSize));
+            _animationPlayer.Draw(spriteBatch, new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, 60, _unitSize));
         }
     }
 }

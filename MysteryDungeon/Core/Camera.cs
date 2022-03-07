@@ -6,10 +6,15 @@ namespace MysteryDungeon.Core
     class Camera
     {
         public Matrix TransformMatrix { get; private set; }
+
         private Matrix _position;
         private Matrix _offset;
         private Matrix _zoom;
+
         private float _zoomValue;
+        private float _minZoom;
+        private float _maxZoom;
+        private float _zoomStep;
 
         private Sprite _target;
 
@@ -19,25 +24,28 @@ namespace MysteryDungeon.Core
             _position = new Matrix();
             _offset = new Matrix();
             _zoom = new Matrix();
-            _zoomValue = 0.1f;
-        }
+            _zoomValue = 4.0f;
+            _minZoom = 0.1f;
+            _maxZoom = 5.0f;
+            _zoomStep = 0.1f;
+    }
 
         public void Follow(Sprite target)
         {
             _target = target;
         }
 
-        public void zoomIn()
+        public void ZoomIn() //If current zoom + zoomstep greater than maxzoom => zoom = maxzoom
         {
-            _zoomValue = _zoomValue + 0.1f > 1.5f ? 1.5f : _zoomValue + 0.1f;
+            _zoomValue = _zoomValue + _zoomStep > _maxZoom ? _maxZoom : _zoomValue + + _zoomStep;
         }
 
-        public void zoomOut()
+        public void ZoomOut() //Vice versa
         {
-            _zoomValue = _zoomValue - 0.1f < 0.1f ? 0.1f : _zoomValue - 0.1f;
+            _zoomValue = _zoomValue - _zoomStep < _minZoom ? _minZoom : _zoomValue - _zoomStep;
         }
 
-        public void setZoom(float zoom)
+        public void SetZoom(float zoom)
         {
             _zoom = Matrix.CreateScale(zoom);
         }

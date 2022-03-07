@@ -9,7 +9,7 @@ namespace MysteryDungeon.Core
     class Sprite : Component
     {
         public Texture2D Texture { get; set; }
-        public Rectangle BoundingRectangle { get { return new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, 100, 100); } }
+        public Rectangle BoundingRectangle { get { return new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, _unitSize, _unitSize); } }
 
         protected AnimationPlayer _animationPlayer;
         protected Dictionary<string, Animation> _animationDictionary; //verander naar enum met animationstates?

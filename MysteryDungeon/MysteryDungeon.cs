@@ -103,10 +103,10 @@ namespace MysteryDungeon
             // #####
 
             if (Utility.KeyPressedOnce(Keys.Q))
-                camera.zoomOut();
+                camera.ZoomOut();
 
             if (Utility.KeyPressedOnce(Keys.E))
-                camera.zoomIn();
+                camera.ZoomIn();
 
             level.Update(gameTime);
             camera.Update();
@@ -120,6 +120,7 @@ namespace MysteryDungeon
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
             _spriteBatch.Begin(
                 SpriteSortMode.Deferred,
                 BlendState.AlphaBlend,
@@ -129,7 +130,7 @@ namespace MysteryDungeon
             // #####
 
             level.Draw(_spriteBatch, gameTime);
-            _spriteBatch.DrawString(_spriteFont, Math.Round(_averageFrameTime).ToString(), new Vector2(100, 100), Color.White);
+            //_spriteBatch.DrawString(_spriteFont, Math.Round(_averageFrameTime).ToString(), new Vector2(100, 100), Color.White); //drawfps
 
             // #####
 

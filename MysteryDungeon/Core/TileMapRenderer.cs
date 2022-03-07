@@ -22,44 +22,44 @@ namespace MysteryDungeon.Core
             _content = content;
             _unitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
 
-            Texture2D texture = _content.Load<Texture2D>("tiles/dungeon tileset");
-            _platformTexture = _content.Load<Texture2D>("tiles/Platform");
+            Texture2D texture = _content.Load<Texture2D>("tiles/tiny_woods");
+            _platformTexture = _content.Load<Texture2D>("tiles/platform");
             _spriteFontArial = _content.Load<SpriteFont>("font");
 
-            _spriteAtlas = new SpriteAtlas<TileType>(texture, 16);
+            _spriteAtlas = new SpriteAtlas<TileType>(texture, new Vector2(9, 163), 1, 1, 24, 21, 24);
 
             SetupAtlas();
         }
 
         private void SetupAtlas()
         {
-            _spriteAtlas.AddSprite(TileType.Floor, 32, 48);
-            _spriteAtlas.AddSprite(TileType.Wall, 32, 32);
-            _spriteAtlas.AddSprite(TileType.Ceiling, 0, 0);
-            _spriteAtlas.AddSprite(TileType.Pillar, 0, 0);
+            _spriteAtlas.AddSprite(TileType.Floor, 13, 1);
+            _spriteAtlas.AddSprite(TileType.Wall, 6, 0); //not used yet
+            _spriteAtlas.AddSprite(TileType.Block, 4, 1);
+            _spriteAtlas.AddSprite(TileType.Pillar, 4, 4);
 
-            _spriteAtlas.AddSprite(TileType.LedgeTop, 32, 64);
-            _spriteAtlas.AddSprite(TileType.LedgeRight, 16, 32);
-            _spriteAtlas.AddSprite(TileType.LedgeBottom, 32, 16);
-            _spriteAtlas.AddSprite(TileType.LedgeLeft, 176, 32);
+            _spriteAtlas.AddSprite(TileType.LedgeTop, 4, 0); //rename to wallTop?
+            _spriteAtlas.AddSprite(TileType.LedgeRight, 5, 1);
+            _spriteAtlas.AddSprite(TileType.LedgeBottom, 4, 2);
+            _spriteAtlas.AddSprite(TileType.LedgeLeft, 3, 1);
 
-            _spriteAtlas.AddSprite(TileType.CornerTopLeft, 128, 80);
-            _spriteAtlas.AddSprite(TileType.CornerTopRight, 64, 80);
-            _spriteAtlas.AddSprite(TileType.CornerBottomRight, 48, 16);
-            _spriteAtlas.AddSprite(TileType.CornerBottomLeft, 144, 16);
+            _spriteAtlas.AddSprite(TileType.CornerTopLeft, 3, 0);
+            _spriteAtlas.AddSprite(TileType.CornerTopRight, 5, 0);
+            _spriteAtlas.AddSprite(TileType.CornerBottomRight, 5, 2);
+            _spriteAtlas.AddSprite(TileType.CornerBottomLeft, 3, 2);
 
-            _spriteAtlas.AddSprite(TileType.RidgeTopLeft, 144, 80);
-            _spriteAtlas.AddSprite(TileType.RidgeTopRight, 48, 80);
-            _spriteAtlas.AddSprite(TileType.RidgeBottomRight, 48, 0);
-            _spriteAtlas.AddSprite(TileType.RidgeBottomLeft, 176, 16);
+            _spriteAtlas.AddSprite(TileType.RidgeTopLeft, 6, 0);
+            _spriteAtlas.AddSprite(TileType.RidgeTopRight, 6, 0);
+            _spriteAtlas.AddSprite(TileType.RidgeBottomRight, 6, 0);
+            _spriteAtlas.AddSprite(TileType.RidgeBottomLeft, 6, 0);
 
-            _spriteAtlas.AddSprite(TileType.ConnectorHorizontal, 0, 0);
-            _spriteAtlas.AddSprite(TileType.ConnectorVertical, 0, 0);
+            _spriteAtlas.AddSprite(TileType.ConnectorHorizontal, 4, 3);
+            _spriteAtlas.AddSprite(TileType.ConnectorVertical, 3, 4);
 
-            _spriteAtlas.AddSprite(TileType.TopCap, 0, 0);
-            _spriteAtlas.AddSprite(TileType.RightCap, 0, 0);
-            _spriteAtlas.AddSprite(TileType.BottomCap, 0, 0);
-            _spriteAtlas.AddSprite(TileType.LeftCap, 0, 0);
+            _spriteAtlas.AddSprite(TileType.TopCap, 4, 6);
+            _spriteAtlas.AddSprite(TileType.RightCap, 5, 7);
+            _spriteAtlas.AddSprite(TileType.BottomCap, 4, 8);
+            _spriteAtlas.AddSprite(TileType.LeftCap, 3, 7);
         }
 
         public void Render(TileMap tileMap)
@@ -84,11 +84,11 @@ namespace MysteryDungeon.Core
                     {
                         _spriteAtlas.SetCurrentSprite(tileType);
 
-                        Vector2 tilePosition = new Vector2(x, y) * new Vector2(_unitSize, _unitSize);
+                        Point tilePosition = new Point(x, y) * new Point(_unitSize, _unitSize);
 
                         spriteBatch.Draw(
                             _spriteAtlas.SourceTexture,
-                            new Rectangle((int)tilePosition.X, (int)tilePosition.Y, _unitSize, _unitSize),
+                            new Rectangle(tilePosition.X, tilePosition.Y, _unitSize, _unitSize),
                             _spriteAtlas.SourceRectangle,
                             Color.White);
                     }
@@ -99,8 +99,8 @@ namespace MysteryDungeon.Core
             {
                 room.Connectors.ForEach(connector =>
                 {
-                    Vector2 tilePosition = new Vector2(connector.Position.Item1, connector.Position.Item2) * new Vector2(_unitSize, _unitSize);
-                    spriteBatch.Draw(_platformTexture, new Rectangle((int)tilePosition.X, (int)tilePosition.Y, _unitSize, _unitSize), Color.White);
+                    Point tilePosition = new Point(connector.Position.X, connector.Position.Y) * new Point(_unitSize, _unitSize);
+                    spriteBatch.Draw(_platformTexture, new Rectangle(tilePosition.X, tilePosition.Y, _unitSize, _unitSize), Color.White);
                 });
             });
 

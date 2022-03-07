@@ -88,8 +88,8 @@ namespace MysteryDungeon.Core
             int column = _currentFrame % _columns;
             int row = _currentFrame / _columns;
 
-            _sourceRectangle.X = (int)_textureOffset.X + (_sourceRectangle.Width * column) + column * _spaceBetweenSpritesX;
-            _sourceRectangle.Y = (int)_textureOffset.Y + (_sourceRectangle.Height * row) + row * _spaceBetweenSpritesY;
+            _sourceRectangle.X = (int)_textureOffset.X + column * _sourceRectangle.Width + column * _spaceBetweenSpritesX;
+            _sourceRectangle.Y = (int)_textureOffset.Y + row * _sourceRectangle.Height + row * _spaceBetweenSpritesY;
         }
     }
 }

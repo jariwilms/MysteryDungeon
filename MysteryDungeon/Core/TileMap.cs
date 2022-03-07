@@ -79,7 +79,7 @@ namespace MysteryDungeon.Core
             if (source.IsConnected || destination.IsConnected)
                 return;
 
-            Vector2 currentPosition = new Vector2(source.Position.Item1, source.Position.Item2);
+            Vector2 currentPosition = new Vector2(source.Position.X, source.Position.Y);
             Vector2 positionIncrement;
 
             int totalDistanceA;
@@ -87,13 +87,13 @@ namespace MysteryDungeon.Core
 
             if (source.Direction.HasFlag(Direction.Up) || source.Direction.HasFlag(Direction.Down))
             {
-                totalDistanceA = destination.Position.Item2 - source.Position.Item2;
-                totalDistanceB = destination.Position.Item1 - source.Position.Item1;
+                totalDistanceA = destination.Position.Y - source.Position.Y;
+                totalDistanceB = destination.Position.X - source.Position.X;
             }
             else if (source.Direction.HasFlag(Direction.Left) || source.Direction.HasFlag(Direction.Right))
             {
-                totalDistanceA = destination.Position.Item1 - source.Position.Item1;
-                totalDistanceB = destination.Position.Item2 - source.Position.Item2;
+                totalDistanceA = destination.Position.X - source.Position.X;
+                totalDistanceB = destination.Position.Y - source.Position.Y;
             }
             else
             {

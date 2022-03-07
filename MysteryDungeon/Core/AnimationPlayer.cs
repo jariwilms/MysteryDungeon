@@ -64,7 +64,12 @@ namespace MysteryDungeon.Core
             if (_animation == null)
                 throw new NullReferenceException("No animation has been set.");
 
-            spriteBatch.Draw(_animation.SourceTexture, destinationRectangle, _animation.SourceRectangle, Color.White);
+            //spriteBatch.Draw(_animation.SourceTexture, destinationRectangle, _animation.SourceRectangle, Color.White);
+            spriteBatch.Draw(
+                _animation.SourceTexture, 
+                new Rectangle(destinationRectangle.X, destinationRectangle.Y, _animation.SourceRectangle.Width, _animation.SourceRectangle.Height), 
+                _animation.SourceRectangle, 
+                Color.White);
         }
     }
 }

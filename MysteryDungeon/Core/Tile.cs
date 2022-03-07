@@ -6,7 +6,7 @@
 
         Floor,
         Wall,
-        Ceiling,
+        Block,
         Pillar,
 
         LedgeTop,
