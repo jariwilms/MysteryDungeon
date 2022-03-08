@@ -7,7 +7,6 @@ namespace MysteryDungeon.Core
     class AnimationPlayer
     {
         private Animation _animation;
-        private Rectangle _destinationRectangle;
 
         public bool IsPlaying { get { return _isPlaying; } private set { _isPlaying = value; } }
         private bool _isPlaying;
@@ -64,10 +63,12 @@ namespace MysteryDungeon.Core
             if (_animation == null)
                 throw new NullReferenceException("No animation has been set.");
 
-            //spriteBatch.Draw(_animation.SourceTexture, destinationRectangle, _animation.SourceRectangle, Color.White);
+            int leftDiff = (24 - _animation.SourceRectangle.Width) / 2;
+            int bottomDiff = 24 - _animation.SourceRectangle.Height;
+
             spriteBatch.Draw(
                 _animation.SourceTexture, 
-                new Rectangle(destinationRectangle.X, destinationRectangle.Y, _animation.SourceRectangle.Width, _animation.SourceRectangle.Height), 
+                new Rectangle(destinationRectangle.X + leftDiff, destinationRectangle.Y + bottomDiff, _animation.SourceRectangle.Width, _animation.SourceRectangle.Height), 
                 _animation.SourceRectangle, 
                 Color.White);
         }

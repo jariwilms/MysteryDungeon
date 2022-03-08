@@ -26,7 +26,7 @@ namespace MysteryDungeon.Core
             _platformTexture = _content.Load<Texture2D>("tiles/platform");
             _spriteFontArial = _content.Load<SpriteFont>("font");
 
-            _spriteAtlas = new SpriteAtlas<TileType>(texture, new Vector2(9, 163), 1, 1, 24, 21, 24);
+            _spriteAtlas = new SpriteAtlas<TileType>(texture, new Point(9, 163), 1, 1, 24);
 
             SetupAtlas();
         }
@@ -80,18 +80,18 @@ namespace MysteryDungeon.Core
                 {
                     TileType tileType = _tileMap.Tiles[x, y].TileType;
 
-                    if (tileType != TileType.None)
-                    {
-                        _spriteAtlas.SetCurrentSprite(tileType);
+                    if (tileType == TileType.None)
+                        continue;
 
-                        Point tilePosition = new Point(x, y) * new Point(_unitSize, _unitSize);
+                    _spriteAtlas.SetCurrentSprite(tileType);
 
-                        spriteBatch.Draw(
-                            _spriteAtlas.SourceTexture,
-                            new Rectangle(tilePosition.X, tilePosition.Y, _unitSize, _unitSize),
-                            _spriteAtlas.SourceRectangle,
-                            Color.White);
-                    }
+                    Point tilePosition = new Point(x, y) * new Point(_unitSize, _unitSize); //Offset taking unitSize into account
+
+                    spriteBatch.Draw(
+                        _spriteAtlas.SourceTexture,                                                                                             //Sprite sheet
+                        new Rectangle(tilePosition.X, tilePosition.Y, _spriteAtlas.SourceRectangle.Width, _spriteAtlas.SourceRectangle.Height), //Adjusted position, width and height of tile
+                        _spriteAtlas.SourceRectangle,                                                                                           //Current position of chosen sprite in sprite sheet
+                        Color.White);
                 }
             }
 
@@ -100,7 +100,7 @@ namespace MysteryDungeon.Core
                 room.Connectors.ForEach(connector =>
                 {
                     Point tilePosition = new Point(connector.Position.X, connector.Position.Y) * new Point(_unitSize, _unitSize);
-                    spriteBatch.Draw(_platformTexture, new Rectangle(tilePosition.X, tilePosition.Y, _unitSize, _unitSize), Color.White);
+                    spriteBatch.Draw(_platformTexture, new Rectangle(tilePosition.X, tilePosition.Y, 24, 24), Color.White);
                 });
             });
 

@@ -16,18 +16,26 @@ namespace MysteryDungeon.Core
         private float _maxZoom;
         private float _zoomStep;
 
+        private int _windowWidth;
+        private int _windowHeight;
+
         private Sprite _target;
 
-        public Camera()
+        public Camera(int windowWidth, int windowHeight)
         {
             TransformMatrix = new Matrix();
+
             _position = new Matrix();
             _offset = new Matrix();
             _zoom = new Matrix();
-            _zoomValue = 4.0f;
+
+            _zoomValue = 1.0f;
             _minZoom = 0.1f;
             _maxZoom = 5.0f;
             _zoomStep = 0.1f;
+
+            _windowWidth = windowWidth;
+            _windowHeight = windowHeight;
     }
 
         public void Follow(Sprite target)
@@ -58,8 +66,8 @@ namespace MysteryDungeon.Core
                 0.0f);
 
             _offset = Matrix.CreateTranslation(
-                MysteryDungeon._windowWidth / 2,
-                MysteryDungeon._windowHeight / 2,
+                _windowWidth / 2,
+                _windowHeight / 2,
                 0.0f);
 
             _zoom = Matrix.CreateScale(_zoomValue);

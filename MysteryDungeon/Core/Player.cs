@@ -13,8 +13,8 @@ namespace MysteryDungeon.Core
     {
         private Level _level;
 
-        private float _lerpDuration = 0.12f;
-        private float _timeElapsed = 0;
+        private float _lerpDuration = 0.22f;
+        private float _timeElapsed = 0.0f;
 
         private Vector2 _startPosition;
         private Vector2 _endPosition;
@@ -38,7 +38,7 @@ namespace MysteryDungeon.Core
 
         private void CreateAnimations()
         {
-            _animationDictionary.Add("Idle", new Animation(_tempSprite, new Vector2(102, 46), 3, 0, 13, 21, 1, 2, 1.0f));
+            _animationDictionary.Add("Idle", new Animation(_tempSprite, new Point(102, 46), 3, 0, 13, 21, 1, 2, 1.0f));
         }
 
         public void Move(GameTime gameTime)
@@ -107,16 +107,16 @@ namespace MysteryDungeon.Core
 
         private bool CanMoveTo(Direction direction) //TODO: DIRECTION ENUM IDK
         {
-            Vector2 directionVector = direction switch
+            Point directionVector = direction switch
             {
-                Direction.Up => new Vector2(0, -1),
-                Direction.Right => new Vector2(1, 0),
-                Direction.Down => new Vector2(0, 1),
-                Direction.Left => new Vector2(-1, 0),
+                Direction.Up => new Point(0, -1),
+                Direction.Right => new Point(1, 0),
+                Direction.Down => new Point(0, 1),
+                Direction.Left => new Point(-1, 0),
                 _ => throw new ArgumentException("The given direction does not exist")
             };
 
-            Vector2 offsetPosition = new Vector2((int)Transform.Position.X / _unitSize, (int)Transform.Position.Y / _unitSize) + directionVector;
+            Vector2 offsetPosition = new Vector2((int)Transform.Position.X / _unitSize, (int)Transform.Position.Y / _unitSize) + new Vector2(directionVector.X, directionVector.Y);
 
             if (_level.TileMap.Tiles[(int)offsetPosition.X, (int)offsetPosition.Y].TileCollision == TileCollision.Passable)
                 return true;
@@ -132,7 +132,7 @@ namespace MysteryDungeon.Core
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _animationPlayer.Draw(spriteBatch, new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, 60, _unitSize));
+            _animationPlayer.Draw(spriteBatch, new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, _unitSize, _unitSize));
         }
     }
 }

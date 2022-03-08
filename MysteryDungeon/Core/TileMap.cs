@@ -79,8 +79,8 @@ namespace MysteryDungeon.Core
             if (source.IsConnected || destination.IsConnected)
                 return;
 
-            Vector2 currentPosition = new Vector2(source.Position.X, source.Position.Y);
-            Vector2 positionIncrement;
+            Point currentPosition = source.Position;
+            Point positionIncrement;
 
             int totalDistanceA;
             int totalDistanceB;
@@ -109,10 +109,10 @@ namespace MysteryDungeon.Core
 
             positionIncrement = source.Direction switch
             {
-                Direction.Up => new Vector2(0, -1),
-                Direction.Right => new Vector2(1, 0),
-                Direction.Down => new Vector2(0, 1),
-                Direction.Left => new Vector2(-1, 0),
+                Direction.Up => new Point(0, -1),
+                Direction.Right => new Point(1, 0),
+                Direction.Down => new Point(0, 1),
+                Direction.Left => new Point(-1, 0),
                 _ => throw new Exception()
             };
 
@@ -120,13 +120,13 @@ namespace MysteryDungeon.Core
             {
                 currentPosition.X += positionIncrement.X;
                 currentPosition.Y += positionIncrement.Y;
-                CharMap[(int)currentPosition.X, (int)currentPosition.Y] = '.';
+                CharMap[currentPosition.X, currentPosition.Y] = '.';
             }
 
             positionIncrement = source.Direction switch
             {
-                Direction.Up or Direction.Down => totalDistanceB > 0 ? new Vector2(1, 0) : new Vector2(-1, 0),
-                Direction.Left or Direction.Right => totalDistanceB > 0 ? new Vector2(0, 1) : new Vector2(0, -1),
+                Direction.Up or Direction.Down => totalDistanceB > 0 ? new Point(1, 0) : new Point(-1, 0),
+                Direction.Left or Direction.Right => totalDistanceB > 0 ? new Point(0, 1) : new Point(0, -1),
                 _ => throw new Exception()
             };
 
@@ -134,15 +134,15 @@ namespace MysteryDungeon.Core
             {
                 currentPosition.X += positionIncrement.X;
                 currentPosition.Y += positionIncrement.Y;
-                CharMap[(int)currentPosition.X, (int)currentPosition.Y] = '.';
+                CharMap[currentPosition.X, currentPosition.Y] = '.';
             }
 
             positionIncrement = source.Direction switch
             {
-                Direction.Up => new Vector2(0, -1),
-                Direction.Right => new Vector2(1, 0),
-                Direction.Down => new Vector2(0, 1),
-                Direction.Left => new Vector2(-1, 0),
+                Direction.Up => new Point(0, -1),
+                Direction.Right => new Point(1, 0),
+                Direction.Down => new Point(0, 1),
+                Direction.Left => new Point(-1, 0),
                 _ => throw new Exception()
             };
 
@@ -150,7 +150,7 @@ namespace MysteryDungeon.Core
             {
                 currentPosition.X += positionIncrement.X;
                 currentPosition.Y += positionIncrement.Y;
-                CharMap[(int)currentPosition.X, (int)currentPosition.Y] = '.';
+                CharMap[currentPosition.X, currentPosition.Y] = '.';
             }
 
             source.IsConnected = true;

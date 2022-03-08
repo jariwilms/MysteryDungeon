@@ -11,9 +11,9 @@ namespace MysteryDungeon.Core
         public Rectangle SourceRectangle { get; private set; }
         public Dictionary<T, Rectangle> SpriteDictionary;
 
-        private Vector2 _textureOffset;
-        private int _spaceBetweenSpritesX;
-        private int _spaceBetweenSpritesY;
+        private Point _textureOffset;
+        private readonly int _spaceBetweenSpritesX;
+        private readonly int _spaceBetweenSpritesY;
 
         public int SpriteSize;
 
@@ -28,7 +28,7 @@ namespace MysteryDungeon.Core
             SpriteSize = spriteSize;
         }
 
-        public SpriteAtlas(Texture2D sourceTexture, Vector2 textureOffset, int spaceBetweenSpritesX, int spaceBetweenSpritesY, int spriteSize, int rows, int columns) : this()
+        public SpriteAtlas(Texture2D sourceTexture, Point textureOffset, int spaceBetweenSpritesX, int spaceBetweenSpritesY, int spriteSize) : this()
         {
             SourceTexture = sourceTexture;
 

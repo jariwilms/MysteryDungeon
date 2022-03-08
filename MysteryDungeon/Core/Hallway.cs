@@ -7,13 +7,13 @@ namespace MysteryDungeon.Core
     {
         public Room Room1;
         public Room Room2;
-        public List<Vector2> Points;
+        public List<Point> Points;
 
         public Hallway()
         {
             Room1 = new Room();
             Room2 = new Room();
-            Points = new List<Vector2>();
+            Points = new List<Point>();
         }
     }
 }

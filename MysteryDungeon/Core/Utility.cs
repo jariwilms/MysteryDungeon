@@ -6,14 +6,14 @@ namespace MysteryDungeon.Core
 {
     class Utility
     {
-        public static Vector2 getMousePositionFromPoint(int y, int x)
+        public static Vector2 GetMousePositionFromPoint(int y, int x)
         {
             return new Vector2(Mouse.GetState().X - x / 2, -Mouse.GetState().Y + y / 2);
         }
 
-        public static double getMouseAngleFromPoint(int y, int x) //Y moet soms ge-invert worden => Fix
+        public static double GetMouseAngleFromPoint(int y, int x) //Y moet soms ge-invert worden => Fix
         {
-            Vector2 mousePosition = getMousePositionFromPoint(y, x);
+            Vector2 mousePosition = GetMousePositionFromPoint(y, x);
             return Math.Atan2(-mousePosition.Y, mousePosition.X);
         }
 

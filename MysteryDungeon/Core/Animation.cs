@@ -11,7 +11,7 @@ namespace MysteryDungeon.Core
         public Rectangle SourceRectangle { get { return _sourceRectangle; } private set { _sourceRectangle = value; } }
         private Rectangle _sourceRectangle;
 
-        private Vector2 _textureOffset; //For sprite sheets that do not start at (0, 0)
+        private Point _textureOffset; //For sprite sheets that do not start at (0, 0)
         private int _spaceBetweenSpritesX;
         private int _spaceBetweenSpritesY;
 
@@ -31,7 +31,7 @@ namespace MysteryDungeon.Core
             _sourceRectangle.Width = SourceTexture.Width / columns;
             _sourceRectangle.Height = SourceTexture.Height / rows;
 
-            _textureOffset = new Vector2(0, 0);
+            _textureOffset = new Point(0, 0);
             _spaceBetweenSpritesX = 0;
             _spaceBetweenSpritesY = 0;
 
@@ -44,13 +44,13 @@ namespace MysteryDungeon.Core
             _frameTime = frameTime;
         }
 
-        public Animation(Texture2D texture, Vector2 textureOffset, int spaceBetweenSpritesX, int spaceBetweenSpritesY, int textureWidth, int textureHeight, int rows, int columns, float frameTime = 1.0f)
+        public Animation(Texture2D texture, Point textureOffset, int spaceBetweenSpritesX, int spaceBetweenSpritesY, int textureWidth, int textureHeight, int rows, int columns, float frameTime = 1.0f)
             : this(texture, rows, columns, frameTime)
         {
             _textureOffset = textureOffset;
             _sourceRectangle.Width = textureWidth;
             _sourceRectangle.Height = textureHeight;
-
+            
             _spaceBetweenSpritesX = spaceBetweenSpritesX;
             _spaceBetweenSpritesY = spaceBetweenSpritesY;
         }
@@ -88,8 +88,8 @@ namespace MysteryDungeon.Core
             int column = _currentFrame % _columns;
             int row = _currentFrame / _columns;
 
-            _sourceRectangle.X = (int)_textureOffset.X + column * _sourceRectangle.Width + column * _spaceBetweenSpritesX;
-            _sourceRectangle.Y = (int)_textureOffset.Y + row * _sourceRectangle.Height + row * _spaceBetweenSpritesY;
+            _sourceRectangle.X = _textureOffset.X + column * _sourceRectangle.Width + column * _spaceBetweenSpritesX;
+            _sourceRectangle.Y = _textureOffset.Y + row * _sourceRectangle.Height + row * _spaceBetweenSpritesY;
         }
     }
 }

@@ -10,12 +10,12 @@ namespace MysteryDungeon
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        public static SpriteFont _spriteFont;
+        public SpriteFont _spriteFont;
 
         private const int _virtualWindowWidth = 800;
         private const int _virtualWindowHeight = 600;
-        public static int _windowWidth; //Fix access modifier => tijdelijk gebruikt voor Camera class
-        public static int _windowHeight;
+        public int _windowWidth; //Fix access modifier => tijdelijk gebruikt voor Camera class
+        public int _windowHeight;
         private readonly float _windowWidthScale;
         private readonly float _windowHeightScale;
         private Matrix _windowScale;
@@ -24,6 +24,8 @@ namespace MysteryDungeon
 
         public static KeyboardState KeyboardState;
         public static KeyboardState LastkeyboardState;
+        public MouseState MouseState;
+        public MouseState LastMouseState;
 
         private double[] _frameTimes;
         private double _averageFrameTime;
@@ -68,7 +70,7 @@ namespace MysteryDungeon
 
             level = new Level(Content);
 
-            camera = new Camera();
+            camera = new Camera(_windowWidth, _windowHeight);
             camera.Follow(level.Player);
 
             // #####
@@ -99,14 +101,15 @@ namespace MysteryDungeon
             _averageFrameTime = 1 / _averageFrameTime;
 
             KeyboardState = Keyboard.GetState();
+            MouseState = Mouse.GetState();
 
             // #####
 
-            if (Utility.KeyPressedOnce(Keys.Q))
-                camera.ZoomOut();
-
-            if (Utility.KeyPressedOnce(Keys.E))
+            if (MouseState.ScrollWheelValue > LastMouseState.ScrollWheelValue)
                 camera.ZoomIn();
+
+            if (MouseState.ScrollWheelValue < LastMouseState.ScrollWheelValue)
+                camera.ZoomOut();
 
             level.Update(gameTime);
             camera.Update();
@@ -114,6 +117,7 @@ namespace MysteryDungeon
             // #####
 
             LastkeyboardState = KeyboardState;
+            LastMouseState = MouseState;
             base.Update(gameTime);
         }
 
@@ -130,12 +134,14 @@ namespace MysteryDungeon
             // #####
 
             level.Draw(_spriteBatch, gameTime);
+
             //_spriteBatch.DrawString(_spriteFont, Math.Round(_averageFrameTime).ToString(), new Vector2(100, 100), Color.White); //drawfps
 
             // #####
 
             _spriteBatch.End();
             base.Draw(gameTime);
+
         }
     }
 }
