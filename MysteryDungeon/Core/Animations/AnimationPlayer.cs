@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Animations
 {
-    class AnimationPlayer
+    public class AnimationPlayer
     {
         private Animation _animation;
         private Dictionary<string, Animation> _animationDictionary; //verander naar enum met animationstates?
@@ -21,7 +21,7 @@ namespace MysteryDungeon.Core
         public void AddAnimation(string identifier, Animation animation)
         {
             if (_animationDictionary.ContainsKey(identifier))
-                throw new Exception(String.Format("An animation with identifier {0} already exists", identifier));
+                throw new Exception(string.Format("An animation with identifier {0} already exists", identifier));
 
             _animationDictionary.Add(identifier, animation);
         }
@@ -31,7 +31,7 @@ namespace MysteryDungeon.Core
             bool found = _animationDictionary.TryGetValue(identifier, out Animation animation);
 
             if (!found)
-                throw new Exception(String.Format("An animation with identifier {0} does not exist", identifier));
+                throw new Exception(string.Format("An animation with identifier {0} does not exist", identifier));
 
             _animation = animation;
         }

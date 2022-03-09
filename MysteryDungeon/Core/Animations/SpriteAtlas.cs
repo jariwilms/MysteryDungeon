@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Animations
 {
     class SpriteAtlas<T>
     {
@@ -44,7 +44,7 @@ namespace MysteryDungeon.Core
             bool found = SpriteDictionary.TryGetValue(identifier, out Rectangle source);
 
             if (!found)
-                throw new ArgumentException(String.Format("Texture with given name does not exist: {0}", identifier));
+                throw new ArgumentException(string.Format("Texture with given name does not exist: {0}", identifier));
 
             SourceRectangle = source;
         }
@@ -57,8 +57,8 @@ namespace MysteryDungeon.Core
         /// <param name="row"></param>
         public void AddSprite(T identifier, int column, int row)
         {
-            int xPosition = (int)_textureOffset.X + column * _spaceBetweenSpritesX + column * SpriteSize;
-            int yPosition = (int)_textureOffset.Y + row * _spaceBetweenSpritesY + row * SpriteSize;
+            int xPosition = _textureOffset.X + column * _spaceBetweenSpritesX + column * SpriteSize;
+            int yPosition = _textureOffset.Y + row * _spaceBetweenSpritesY + row * SpriteSize;
 
             SpriteDictionary.Add(identifier, new Rectangle(xPosition, yPosition, SpriteSize, SpriteSize));
         }

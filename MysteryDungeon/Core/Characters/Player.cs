@@ -1,10 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using MysteryDungeon.Core.Animations;
+using MysteryDungeon.Core.Input;
+using MysteryDungeon.Core.Tiles;
 using System;
 
-namespace MysteryDungeon.Core
+
+
+namespace MysteryDungeon.Core.Characters
 {
     public enum MovementDirection
     {
@@ -36,20 +40,20 @@ namespace MysteryDungeon.Core
         AttackLeft,
     }
 
-    class Player : Sprite
+    public class Player : Sprite
     {
         private Level _level;
 
-        private float _lerpDuration = 0.22f;
+        private float _lerpDuration = 0.11f;
         private float _timeElapsed = 0.0f;
 
         private Vector2 _startPosition;
         private Vector2 _endPosition;
 
-        private bool _canMove = true;
+        private bool _canMove = true; //Voorlopig zijn deze vars altijd het tegenovergestelde van elkaar
         private bool _isMoving = false;
 
-        private Action MoveUpAction;
+        private Action MoveUpAction; //Move naar component/sprite?
         private Action MoveRightAction;
         private Action MoveDownAction;
         private Action MoveLeftAction;
@@ -62,85 +66,37 @@ namespace MysteryDungeon.Core
             _animationPlayer = new AnimationPlayer();
 
             CreateAnimations();
+            CreateActions();
+
             _animationPlayer.PlayAnimation("Idle");
-
-            MoveUpAction = () => { MoveTo(MovementDirection.North); _animationPlayer.PlayAnimation("MoveUp"); };
-            MoveRightAction = () => { MoveTo(MovementDirection.East); _animationPlayer.PlayAnimation("MoveRight"); };
-            MoveDownAction = () => { MoveTo(MovementDirection.South); _animationPlayer.PlayAnimation("MoveDown"); };
-            MoveLeftAction = () => { MoveTo(MovementDirection.West); _animationPlayer.PlayAnimation("MoveLeft"); };
-
-            InputEventInvoker.RegisterAction(Keys.W, MoveUpAction);
-            InputEventInvoker.RegisterAction(Keys.A, MoveLeftAction);
-            InputEventInvoker.RegisterAction(Keys.S, MoveDownAction);
-            InputEventInvoker.RegisterAction(Keys.D, MoveRightAction);
         }
 
-        private void CreateAnimations() //Move dit naar data class met animation data
+        private void CreateAnimations() //Move dit naar data class met animation data => verschillende player/enemy models
         {
             _animationPlayer.AddAnimation("Idle", new Animation(_spriteSheet, new Point(98, 20), 1, 0, 16, 21, 1, 2, 0.8f));   //Move spritesheet naar animationplayer? texture verandert niet wrs
             _animationPlayer.AddAnimation("MoveUp", new Animation(_spriteSheet, new Point(260, 47), 3, 0, 13, 20, 1, 2, 0.4f));
             _animationPlayer.AddAnimation("MoveRight", new Animation(_spriteSheet, new Point(175, 49), 3, 0, 20, 18, 1, 2, 0.4f, true, SpriteEffects.FlipHorizontally));
             _animationPlayer.AddAnimation("MoveDown", new Animation(_spriteSheet, new Point(102, 46), 3, 0, 13, 20, 1, 2, 0.4f));
-            _animationPlayer.AddAnimation("MoveLeft", new Animation(_spriteSheet, new Point(175, 49), 3, 0, 20, 18, 1, 2, 0.4f));
+            _animationPlayer.AddAnimation("MoveLeft", new Animation(_spriteSheet, new Point(175, 49), 3, 0, 20, 18, 1, 2, 0.4f)); //TODO: mogelijkheid om animation frames te stitchen, extra animation class?
         }
 
-        public void ReadInput(GameTime gameTime) //Placeholder functie tijdelijk
+        //Move to sprite class + override, also put in list of actions => foreach iteration
+        private void CreateActions()
         {
-            //if (_canMove) //TODO: fix deze repeating shit code
-            //{
-            //    Point movementPoint = Point.Zero;
-            //    KeyboardState keyboardState = Keyboard.GetState();
+            MoveUpAction = () => { MoveTo(MovementDirection.North); };
+            MoveRightAction = () => { MoveTo(MovementDirection.East); };
+            MoveDownAction = () => { MoveTo(MovementDirection.South); };
+            MoveLeftAction = () => { MoveTo(MovementDirection.West); };
 
-            //    if (keyboardState.IsKeyDown(Keys.W))
-            //    {
-            //        if (CanMoveTo(MovementDirection.North))
-            //        {
-            //            _startPosition = Transform.Position;
-            //            _endPosition = Transform.Position + new Vector2(0, -_unitSize);
-            //            _isMoving = true;
-            //            _canMove = false;
-            //            _animationPlayer.PlayAnimation("MoveUp");
-            //        }
-            //    }
-            //    else if (keyboardState.IsKeyDown(Keys.A))
-            //    {
-            //        if (CanMoveTo(MovementDirection.West))
-            //        {
-            //            _startPosition = Transform.Position;
-            //            _endPosition = Transform.Position + new Vector2(-_unitSize, 0);
-            //            _isMoving = true;
-            //            _canMove = false;
-            //            _animationPlayer.PlayAnimation("MoveLeft");
-            //        }
-            //    }
-            //    else if (keyboardState.IsKeyDown(Keys.S))
-            //    {
-            //        if (CanMoveTo(MovementDirection.South))
-            //        {
-            //            _startPosition = Transform.Position;
-            //            _endPosition = Transform.Position + new Vector2(0, _unitSize);
-            //            _isMoving = true;
-            //            _canMove = false;
-            //            _animationPlayer.PlayAnimation("MoveDown");
-            //        }
-            //    }
-            //    else if (keyboardState.IsKeyDown(Keys.D))
-            //    {
-            //        if (CanMoveTo(MovementDirection.East))
-            //        {
-            //            _startPosition = Transform.Position;
-            //            _endPosition = Transform.Position + new Vector2(_unitSize, 0);
-            //            _isMoving = true;
-            //            _canMove = false;
-            //            _animationPlayer.PlayAnimation("MoveRight");
-            //        }
-            //    }
-            //}
+            InputEventInvoker.RegisterAction(ActionKeys.UpKey, MoveUpAction);
+            InputEventInvoker.RegisterAction(ActionKeys.LeftKey, MoveLeftAction);
+            InputEventInvoker.RegisterAction(ActionKeys.DownKey, MoveDownAction);
+            InputEventInvoker.RegisterAction(ActionKeys.RightKey, MoveRightAction);
         }
 
         private void MoveTo(MovementDirection movementDirection)
         {
-            if (_isMoving || !CanMoveTo(movementDirection))
+            if (_isMoving || !_canMove || !CanMoveInDirection(movementDirection))
                 return;
 
             _isMoving = true;
@@ -149,12 +105,23 @@ namespace MysteryDungeon.Core
             _startPosition = Transform.Position;
             _endPosition = _startPosition + movementDirection switch
             {
-                MovementDirection.North => new Vector2(0, -24), //magic numbers jaja idc atm
+                MovementDirection.North => new Vector2(0, -24), //magic numbers jaja idc atm, 24 is _unitSize btww
                 MovementDirection.East => new Vector2(24, 0),
                 MovementDirection.South => new Vector2(0, 24),
                 MovementDirection.West => new Vector2(-24, 0),
                 _ => throw new Exception("The requested direction does not exist"),
             };
+
+            string animationIdentifier = movementDirection switch
+            {
+                MovementDirection.North => "MoveUp",
+                MovementDirection.East => "MoveRight",
+                MovementDirection.South => "MoveDown",
+                MovementDirection.West => "MoveLeft",
+                _ => throw new Exception(string.Format("The requested direction does not exist: {0}", movementDirection)),
+            };
+
+            _animationPlayer.PlayAnimation(animationIdentifier);
         }
 
         public void LerpToDestination(GameTime gameTime)
@@ -174,11 +141,13 @@ namespace MysteryDungeon.Core
             }
         }
 
-        private bool CanMoveTo(MovementDirection direction) //TODO: DIRECTION ENUM IDK
+        /// <summary>
+        /// Checks if it is possible to move in the given direction
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        private bool CanMoveInDirection(MovementDirection direction) //TODO: DIRECTION ENUM IDK
         {
-            if (!_canMove)
-                return false;
-
             Point directionVector = direction switch
             {
                 MovementDirection.North => new Point(0, -1),
@@ -187,7 +156,7 @@ namespace MysteryDungeon.Core
                 MovementDirection.West => new Point(-1, 0),
                 _ => throw new ArgumentException("The given direction does not exist")
             };
-
+            //Maak onderscheid tussen tilePosition en drawingPosition?
             Vector2 offsetPosition = new Vector2((int)Transform.Position.X / _unitSize, (int)Transform.Position.Y / _unitSize) + new Vector2(directionVector.X, directionVector.Y);
 
             if (_level.TileMap.Tiles[(int)offsetPosition.X, (int)offsetPosition.Y].TileCollision == TileCollision.Passable)
@@ -198,9 +167,7 @@ namespace MysteryDungeon.Core
 
         public override void Update(GameTime gameTime)
         {
-            //ReadInput(gameTime);
-
-            if (_isMoving)
+            if (_isMoving) //Gaat niet meer werken wanneer non grid-based movement geimplementeerd wordt
                 LerpToDestination(gameTime);
 
             _animationPlayer.Update(gameTime);

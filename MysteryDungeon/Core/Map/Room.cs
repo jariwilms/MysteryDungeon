@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Map
 {
     public enum Direction
     {
@@ -13,7 +13,7 @@ namespace MysteryDungeon.Core
         All = 0b1111
     }
 
-    class Room
+    public class Room
     {
         public int Id;
         public Tuple<int, int> Index;

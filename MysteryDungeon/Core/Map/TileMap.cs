@@ -1,14 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Map
 {
     /// <summary>
     /// Contains a representation of a map in a 2-dimensional tile array
     /// </summary>
-    class TileMap
+    public class TileMap
     {
         public Tile[,] Tiles;           //Complete array of all tiles
         public char[,] CharMap;         //Text representation of the map

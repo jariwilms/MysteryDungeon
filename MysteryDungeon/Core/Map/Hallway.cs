@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Map
 {
-    class Hallway
+    public class Hallway
     {
         public Room Room1;
         public Room Room2;

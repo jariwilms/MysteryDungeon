@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.Characters;
 
 namespace MysteryDungeon.Core
 {

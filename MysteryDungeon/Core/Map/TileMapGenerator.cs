@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.Tiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Map
 {
     public enum LevelType
     {
@@ -328,7 +329,7 @@ namespace MysteryDungeon.Core
             while (line != null)
             {
                 if (line.Length != lineWidth)
-                    throw new Exception(String.Format("The length of line {0} is different from all preceeding lines.", lines.Count));
+                    throw new Exception(string.Format("The length of line {0} is different from all preceeding lines.", lines.Count));
 
                 lines.Add(line);
                 line = reader.ReadLine();
@@ -417,7 +418,7 @@ namespace MysteryDungeon.Core
                 ".#.#" => new Tile(TileType.ConnectorHorizontal, TileCollision.Impassable),     // 5
                 "#.#." => new Tile(TileType.ConnectorVertical, TileCollision.Impassable),       //10
 
-                _ => throw new InvalidDataException(String.Format("The given character sequence is not valid: {0}", surroundingTiles))
+                _ => throw new InvalidDataException(string.Format("The given character sequence is not valid: {0}", surroundingTiles))
             };
         }
 

@@ -1,32 +1,29 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.Animations;
+using MysteryDungeon.Core.Tiles;
 using System;
 using System.Configuration;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Map
 {
     class TileMapRenderer : IDisposable
     {
         private TileMap _tileMap;
         private SpriteAtlas<TileType> _spriteAtlas;
 
-        private int _unitSize;
-        private Texture2D _platformTexture;
-        private SpriteFont _spriteFontArial;
-
         private readonly ContentManager _content;
+        private int _unitSize;
 
         public TileMapRenderer(ContentManager content)
         {
             _content = content;
-            _unitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
+            _unitSize = int.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
 
-            Texture2D texture = _content.Load<Texture2D>("tiles/tiny_woods");
-            _platformTexture = _content.Load<Texture2D>("tiles/platform");
-            _spriteFontArial = _content.Load<SpriteFont>("font");
+            Texture2D levelTexture = _content.Load<Texture2D>("tiles/tiny_woods");
 
-            _spriteAtlas = new SpriteAtlas<TileType>(texture, new Point(9, 163), 1, 1, 24);
+            _spriteAtlas = new SpriteAtlas<TileType>(levelTexture, new Point(9, 163), 1, 1, 24);
 
             SetupAtlas();
         }
@@ -94,17 +91,6 @@ namespace MysteryDungeon.Core
                         Color.White);
                 }
             }
-
-            _tileMap.Rooms.ForEach(room =>
-            {
-                room.Connectors.ForEach(connector =>
-                {
-                    Point tilePosition = new Point(connector.Position.X, connector.Position.Y) * new Point(_unitSize, _unitSize);
-                    spriteBatch.Draw(_platformTexture, new Rectangle(tilePosition.X, tilePosition.Y, 24, 24), Color.White);
-                });
-            });
-
-            //spriteBatch.DrawString(_spriteFontArial, _tileMap.isComplete ? "Complete" : "Not Complete", new Vector2(100, 100), Color.White);
         }
 
         public void Dispose()

@@ -1,9 +1,8 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Map
 {
-    class Connector
+    public class Connector
     {
         public Point Position;
         public Direction Direction;

@@ -1,10 +1,9 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Animations
 {
-    class Animation
+    public class Animation
     {
         public Texture2D SourceTexture { get; set; }
 

@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.Animations;
 using System.Configuration;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Characters
 {
-    class Sprite : Component
+    public class Sprite : Component
     {
         public Texture2D Texture { get; set; }
         public Rectangle BoundingRectangle { get { return new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, _unitSize, _unitSize); } }

@@ -2,28 +2,41 @@
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Input
 {
+    public enum ActionKeys //Todo key rebinding, gaat niet met enum gaan
+    {
+        ConfirmKey = Keys.Enter,
+        CancelKey = Keys.Back,
+
+        UpKey = Keys.W,
+        RightKey = Keys.D,
+        DownKey = Keys.S,
+        LeftKey = Keys.A,
+
+        EscapeKey = Keys.Escape,
+    }
+
     class InputEventInvoker
     {
-        private static Dictionary<Keys, Action> _eventDictionary;
+        private static Dictionary<ActionKeys, Action> _eventDictionary;
 
         static InputEventInvoker()
         {
-            _eventDictionary = new Dictionary<Keys, Action>();
+            _eventDictionary = new Dictionary<ActionKeys, Action>();
         }
 
-        public static void RegisterAction(Keys key, Action action)
+        public static void RegisterAction(ActionKeys key, Action action)
         {
             _eventDictionary.Add(key, action);
         }
 
         public static void Update()
         {
-            foreach (Keys k in _eventDictionary.Keys)
+            foreach (ActionKeys key in _eventDictionary.Keys)
             {
-                if (Keyboard.GetState().IsKeyDown(k))
-                    _eventDictionary[k].Invoke();
+                if (Keyboard.GetState().IsKeyDown((Keys)key))
+                    _eventDictionary[key].Invoke();
             }
         }
     }

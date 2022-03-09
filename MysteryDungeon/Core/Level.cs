@@ -2,11 +2,13 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MysteryDungeon.Core.Characters;
+using MysteryDungeon.Core.Map;
 using System;
 
 namespace MysteryDungeon.Core
 {
-    class Level : IDisposable
+    public class Level : IDisposable
     {
         public Player Player;
 

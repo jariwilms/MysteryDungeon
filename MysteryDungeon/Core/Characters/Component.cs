@@ -1,10 +1,9 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Characters
 {
-    class Transform
+    public class Transform
     {
         public Transform()
         {
@@ -18,10 +17,9 @@ namespace MysteryDungeon.Core
         public Vector2 Scale { get; set; }
     }
 
-    abstract class Component
+    public abstract class Component
     {
-        public Transform Transform { get { return _transform; } private set { _transform = value; } }
-        private Transform _transform;
+        public Transform Transform;
 
         public Component()
         {
