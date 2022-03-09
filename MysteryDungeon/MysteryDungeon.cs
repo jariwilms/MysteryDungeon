@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core;
-using System;
 
 namespace MysteryDungeon
 {
@@ -12,8 +11,8 @@ namespace MysteryDungeon
         private SpriteBatch _spriteBatch;
         public SpriteFont _spriteFont;
 
-        private const int _virtualWindowWidth = 800;
-        private const int _virtualWindowHeight = 600;
+        private const int _virtualWindowWidth = 720;
+        private const int _virtualWindowHeight = 720;
         public int _windowWidth; //Fix access modifier => tijdelijk gebruikt voor Camera class
         public int _windowHeight;
         private readonly float _windowWidthScale;
@@ -61,9 +60,6 @@ namespace MysteryDungeon
             _graphics.PreferredBackBufferHeight = _windowHeight;
             _graphics.PreferMultiSampling = false;
 
-            _graphics.SynchronizeWithVerticalRetrace = false;
-            this.IsFixedTimeStep = false;
-
             _graphics.ApplyChanges();
 
             // #####
@@ -105,6 +101,8 @@ namespace MysteryDungeon
 
             // #####
 
+            InputEventInvoker.Update();
+
             if (MouseState.ScrollWheelValue > LastMouseState.ScrollWheelValue)
                 camera.ZoomIn();
 
@@ -141,7 +139,6 @@ namespace MysteryDungeon
 
             _spriteBatch.End();
             base.Draw(gameTime);
-
         }
     }
 }

@@ -29,14 +29,14 @@ namespace MysteryDungeon.Core
             _offset = new Matrix();
             _zoom = new Matrix();
 
-            _zoomValue = 1.0f;
-            _minZoom = 0.1f;
-            _maxZoom = 5.0f;
-            _zoomStep = 0.1f;
+            _zoomValue = 3.0f;
+            _minZoom = 2.0f;
+            _maxZoom = 4.0f;
+            _zoomStep = 0.2f;
 
             _windowWidth = windowWidth;
             _windowHeight = windowHeight;
-    }
+        }
 
         public void Follow(Sprite target)
         {
@@ -45,7 +45,7 @@ namespace MysteryDungeon.Core
 
         public void ZoomIn() //If current zoom + zoomstep greater than maxzoom => zoom = maxzoom
         {
-            _zoomValue = _zoomValue + _zoomStep > _maxZoom ? _maxZoom : _zoomValue + + _zoomStep;
+            _zoomValue = _zoomValue + _zoomStep > _maxZoom ? _maxZoom : _zoomValue + +_zoomStep;
         }
 
         public void ZoomOut() //Vice versa
@@ -61,8 +61,8 @@ namespace MysteryDungeon.Core
         public void Update()
         {
             _position = Matrix.CreateTranslation(
-                -_target.Transform.Position.X - _target.BoundingRectangle.Width / 2,
-                -_target.Transform.Position.Y - _target.BoundingRectangle.Height / 2,
+                (int)(-_target.Transform.Position.X - _target.BoundingRectangle.Width / 2),
+                (int)(-_target.Transform.Position.Y - _target.BoundingRectangle.Height / 2),
                 0.0f);
 
             _offset = Matrix.CreateTranslation(

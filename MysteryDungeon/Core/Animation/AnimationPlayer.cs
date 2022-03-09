@@ -1,28 +1,39 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace MysteryDungeon.Core
 {
     class AnimationPlayer
     {
         private Animation _animation;
+        private Dictionary<string, Animation> _animationDictionary; //verander naar enum met animationstates?
 
-        public bool IsPlaying { get { return _isPlaying; } private set { _isPlaying = value; } }
         private bool _isPlaying;
 
         public AnimationPlayer()
         {
-            _isPlaying = false;
+            _animationDictionary = new Dictionary<string, Animation>();
+            _isPlaying = true;
         }
 
-        public void PlayAnimation(Animation animation)
+        public void AddAnimation(string identifier, Animation animation)
         {
-            if (animation == _animation)
-                return;
+            if (_animationDictionary.ContainsKey(identifier))
+                throw new Exception(String.Format("An animation with identifier {0} already exists", identifier));
+
+            _animationDictionary.Add(identifier, animation);
+        }
+
+        public void PlayAnimation(string identifier)
+        {
+            bool found = _animationDictionary.TryGetValue(identifier, out Animation animation);
+
+            if (!found)
+                throw new Exception(String.Format("An animation with identifier {0} does not exist", identifier));
 
             _animation = animation;
-            _isPlaying = true;
         }
 
         public void Resume()
@@ -67,10 +78,14 @@ namespace MysteryDungeon.Core
             int bottomDiff = 24 - _animation.SourceRectangle.Height;
 
             spriteBatch.Draw(
-                _animation.SourceTexture, 
-                new Rectangle(destinationRectangle.X + leftDiff, destinationRectangle.Y + bottomDiff, _animation.SourceRectangle.Width, _animation.SourceRectangle.Height), 
-                _animation.SourceRectangle, 
-                Color.White);
+                _animation.SourceTexture,
+                new Rectangle(destinationRectangle.X + leftDiff, destinationRectangle.Y + bottomDiff - 4, _animation.SourceRectangle.Width, _animation.SourceRectangle.Height),
+                _animation.SourceRectangle,
+                Color.White,
+                0.0f,
+                Vector2.Zero,
+                effects: _animation.SpriteEffects,
+                0.0f);
         }
     }
 }

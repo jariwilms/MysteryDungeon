@@ -6,12 +6,14 @@ namespace MysteryDungeon.Core
 {
     class Animation
     {
-        public Texture2D SourceTexture { get; set; } 
+        public Texture2D SourceTexture { get; set; }
 
         public Rectangle SourceRectangle { get { return _sourceRectangle; } private set { _sourceRectangle = value; } }
         private Rectangle _sourceRectangle;
 
         private Point _textureOffset; //For sprite sheets that do not start at (0, 0)
+        public SpriteEffects SpriteEffects;
+
         private int _spaceBetweenSpritesX;
         private int _spaceBetweenSpritesY;
 
@@ -24,7 +26,9 @@ namespace MysteryDungeon.Core
         private double _frameTime; //Tijd tussen frames
         private double _deltaTime;
 
-        public Animation(Texture2D texture, int rows, int columns, float frameTime = 1.0f)
+        public bool IsLooping;
+
+        public Animation(Texture2D texture, int rows, int columns, float frameTime = 1.0f, bool isLooping = true)
         {
             SourceTexture = texture;
 
@@ -42,17 +46,30 @@ namespace MysteryDungeon.Core
             _totalFrames = rows * columns;
 
             _frameTime = frameTime;
+
+            IsLooping = isLooping;
         }
 
-        public Animation(Texture2D texture, Point textureOffset, int spaceBetweenSpritesX, int spaceBetweenSpritesY, int textureWidth, int textureHeight, int rows, int columns, float frameTime = 1.0f)
+        public Animation(
+            Texture2D texture, Point textureOffset,
+            int spaceBetweenSpritesX, int spaceBetweenSpritesY,
+            int spriteWidth, int spriteHeight,
+            int rows, int columns,
+            float frameTime = 1.0f,
+            bool isLooping = true,
+            SpriteEffects spriteEffects = SpriteEffects.None)
             : this(texture, rows, columns, frameTime)
         {
             _textureOffset = textureOffset;
-            _sourceRectangle.Width = textureWidth;
-            _sourceRectangle.Height = textureHeight;
-            
+            SpriteEffects = spriteEffects;
+
+            _sourceRectangle.Width = spriteWidth;
+            _sourceRectangle.Height = spriteHeight;
+
             _spaceBetweenSpritesX = spaceBetweenSpritesX;
             _spaceBetweenSpritesY = spaceBetweenSpritesY;
+
+            IsLooping = isLooping;
         }
 
         public void NextFrame()
@@ -70,6 +87,9 @@ namespace MysteryDungeon.Core
         public void Update(GameTime gameTime)
         {
             if (_frameTime <= 0)
+                return;
+
+            if (_currentFrame == _totalFrames - 1 && !IsLooping)
                 return;
 
             _deltaTime += gameTime.ElapsedGameTime.TotalSeconds;

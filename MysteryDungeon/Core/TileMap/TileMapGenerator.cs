@@ -347,7 +347,7 @@ namespace MysteryDungeon.Core
         {
             _tileMap.Tiles = new Tile[LevelWidth, LevelHeight];
 
-            Tile borderTile = new Tile(TileType.Wall, TileCollision.Impassable);
+            Tile borderTile = new Tile(TileType.Block, TileCollision.Impassable);
 
             char currentTile;
             string surroundingTiles;
