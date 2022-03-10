@@ -11,11 +11,12 @@ namespace MysteryDungeon.Core.Map
     /// </summary>
     public class TileMap
     {
-        public Tile[,] Tiles;           //Complete array of all tiles
-        public char[,] CharMap;         //Text representation of the map
+        public Tile[,] Tiles;                       //Complete array of all tiles
+        public List<SpecialTile> SpecialTiles;
+        public char[,] CharMap;                     //Text representation of the map
 
-        public List<Room> Rooms;        //Array of rooms
-        public List<Hallway> Hallways;  //List of hallways
+        public List<Room> Rooms;                    //Array of rooms
+        public List<Hallway> Hallways;              //List of hallways
 
         public int HorizontalRooms;
         public int VerticalRooms;
@@ -28,11 +29,10 @@ namespace MysteryDungeon.Core.Map
 
         private Random _random;
 
-        private delegate void ConnectFunction(Connector source, Connector destination);
-
         public TileMap()
         {
             Tiles = new Tile[0, 0];
+            SpecialTiles = new List<SpecialTile>();
             CharMap = new char[0, 0];
 
             Rooms = new List<Room>();
@@ -41,6 +41,11 @@ namespace MysteryDungeon.Core.Map
             isComplete = true;
 
             _random = new Random();
+        }
+
+        public void TriggerTile(Point tilePosition)
+        {
+            Tiles[tilePosition.X, tilePosition.Y].Activate();
         }
 
         public Room GetDestinationRoom(Room room, Connector sourceConnector)

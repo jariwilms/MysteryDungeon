@@ -35,7 +35,7 @@ namespace MysteryDungeon.Core.Tiles
         LeftCap,
     }
 
-    public enum SpecialType //wordt wrs ge-removed
+    public enum SpecialTileType //wordt wrs ge-removed
     {
         WonderTile,         //Resets all stats, regardless if they are positive or negative
 
@@ -71,7 +71,7 @@ namespace MysteryDungeon.Core.Tiles
             TileCollision = tileCollision;
         }
 
-        public virtual void Activate(Level level, Player player)
+        public virtual void Activate() //remove level?
         {
             return;
         }

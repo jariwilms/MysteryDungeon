@@ -50,10 +50,13 @@ namespace MysteryDungeon.Core.Map
         private int _roomSpawnChance;           //Decides the chance
         private int _connectorSpawnChance;
 
+        private int _specialTileSpawnChance;    //What are the odds of a special tile spawning?
+        private int _levelDifficulty;           //<= Change to distinct groups of spawnable tiles per level difficulty?
+
         private readonly Random _random;
         #endregion
 
-        public TileMapGenerator(LevelType levelType = LevelType.Standard)
+        public TileMapGenerator(LevelType levelType = LevelType.Standard) //Voeg leveldifficulty toe aan ctor => trap spawn chance
         {
             _levelType = levelType;
             _generator = _levelType switch
@@ -118,6 +121,8 @@ namespace MysteryDungeon.Core.Map
             GenerateConnectors();           //Generate room connectors
             ConnectRooms();                 //Connect rooms together
             RemoveUnconnectedJunctions();   //Remove junctions that are not connected to any room
+
+            GenerateSpecialTiles();
 
             DrawRoomsOnCharMap();           //Draw every room and hallway on the charmap, this means changing every '#' to '.'
             GenerateTilesFromCharMap();     //Generate tile textures according to charmap data
@@ -212,6 +217,17 @@ namespace MysteryDungeon.Core.Map
             _tileMap.Rooms = _tileMap.Rooms.OrderBy(room => room.Id).ToList();
             _tileMap.HorizontalRooms = _horizontalRooms;
             _tileMap.VerticalRooms = _verticalRooms;
+        }
+
+        private void GenerateSpecialTiles()
+        {
+            List<Room> bigRooms = _tileMap.Rooms.Where(room => !room.isJunction).ToList();
+            Room room = bigRooms[_random.Next(0, bigRooms.Count)];
+
+            int xPos = _random.Next(0, room.Bounds.Width) + room.Bounds.X;
+            int yPos = _random.Next(0, room.Bounds.Height) + room.Bounds.Y;
+
+            _tileMap.SpecialTiles.Add(new WonderTile(new Point(xPos, yPos), SpecialTileType.WonderTile));
         }
 
         private void DrawRoomsOnCharMap()
@@ -319,30 +335,41 @@ namespace MysteryDungeon.Core.Map
             }
         }
 
-        public void LoadMapFromFile(string levelPath)
+        public void GenerateSpawnPoint()
         {
-            using StreamReader reader = new StreamReader(levelPath); //Change to level name
-            List<string> lines = new List<string>();
-            string line = reader.ReadLine();
-            int lineWidth = line.Length;
+            List<Room> bigRooms = _tileMap.Rooms.Where(room => !room.isJunction).ToList();
+            Room room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
 
-            while (line != null)
-            {
-                if (line.Length != lineWidth)
-                    throw new Exception(string.Format("The length of line {0} is different from all preceeding lines.", lines.Count));
+            int x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
+            int y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
-                lines.Add(line);
-                line = reader.ReadLine();
-            }
-
-            _tileMap.CharMap = new char[lineWidth, lines.Count];
-
-            for (int y = 0; y < lines.Count; y++)
-                for (int x = 0; x < lineWidth; x++)
-                    _tileMap.CharMap[x, y] = lines[y][x];
-
-            GenerateTilesFromCharMap();
+            _tileMap.SpawnPoint = new Vector2(x, y);
         }
+
+        //public void LoadMapFromFile(string levelPath)
+        //{
+        //    using StreamReader reader = new StreamReader(levelPath); //Change to level name
+        //    List<string> lines = new List<string>();
+        //    string line = reader.ReadLine();
+        //    int lineWidth = line.Length;
+
+        //    while (line != null)
+        //    {
+        //        if (line.Length != lineWidth)
+        //            throw new Exception(string.Format("The length of line {0} is different from all preceeding lines.", lines.Count));
+
+        //        lines.Add(line);
+        //        line = reader.ReadLine();
+        //    }
+
+        //    _tileMap.CharMap = new char[lineWidth, lines.Count];
+
+        //    for (int y = 0; y < lines.Count; y++)
+        //        for (int x = 0; x < lineWidth; x++)
+        //            _tileMap.CharMap[x, y] = lines[y][x];
+
+        //    GenerateTilesFromCharMap();
+        //}
 
         public void GenerateTilesFromCharMap()
         {
@@ -397,7 +424,7 @@ namespace MysteryDungeon.Core.Map
 
             return surroundingTiles switch //first = above, second = right, third = below, fourth = left
             {
-                "####" => new Tile(TileType.Block, TileCollision.Impassable),                 //15
+                "####" => new Tile(TileType.Block, TileCollision.Impassable),                   //15
                 "...." => new Tile(TileType.Pillar, TileCollision.Impassable),                  // 0
 
                 "..#." => new Tile(TileType.TopCap, TileCollision.Impassable),                  // 2
@@ -420,17 +447,6 @@ namespace MysteryDungeon.Core.Map
 
                 _ => throw new InvalidDataException(string.Format("The given character sequence is not valid: {0}", surroundingTiles))
             };
-        }
-
-        public void GenerateSpawnPoint()
-        {
-            List<Room> bigRooms = _tileMap.Rooms.Where(room => !room.isJunction).ToList();
-            Room room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
-
-            int x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
-            int y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
-
-            _tileMap.SpawnPoint = new Vector2(x, y);
         }
     }
 }

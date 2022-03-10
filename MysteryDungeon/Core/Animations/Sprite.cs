@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MysteryDungeon.Core.Animations;
+using MysteryDungeon.Core.Characters;
 
-namespace MysteryDungeon.Core.Characters
+namespace MysteryDungeon.Core.Animations
 {
     public class Sprite //Extend met animatedsprite class, of maak aparte class zonder extension?
     {

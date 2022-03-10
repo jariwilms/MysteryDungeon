@@ -31,7 +31,7 @@ namespace MysteryDungeon.Core
             _zoom = new Matrix();
 
             _zoomValue = 3.0f;
-            _minZoom = 2.0f;
+            _minZoom = 0.2f;
             _maxZoom = 4.0f;
             _zoomStep = 0.2f;
 

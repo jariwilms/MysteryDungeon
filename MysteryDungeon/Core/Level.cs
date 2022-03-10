@@ -32,11 +32,6 @@ namespace MysteryDungeon.Core
             Player.SetPosition(TileMap.SpawnPoint);
         }
 
-        public void OnNewTileReached(Actor actor)
-        {
-
-        }
-
         public void Update(GameTime gameTime)
         {
             _tileMapRenderer.Update(gameTime);
