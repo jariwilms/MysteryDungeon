@@ -161,16 +161,16 @@ namespace MysteryDungeon.Core.Characters
         {
             Point directionPoint = direction switch
             {
-                MovementDirection.North => new Point(0, -UnitSize),
-                MovementDirection.East => new Point(UnitSize, 0),
-                MovementDirection.South => new Point(0, UnitSize),
-                MovementDirection.West => new Point(UnitSize),
+                MovementDirection.North => new Point(0, -1),
+                MovementDirection.East => new Point(1, 0),
+                MovementDirection.South => new Point(0, 1),
+                MovementDirection.West => new Point(-1, 0),
                 _ => throw new ArgumentException("The given direction does not exist.")
             };
 
-            Vector2 offsetPosition = new Vector2((int)Transform.Position.X, (int)Transform.Position.Y) + new Vector2(directionPoint.X, directionPoint.Y);
+            Vector2 tilePosition = new Vector2((int)Transform.Position.X / UnitSize, (int)Transform.Position.Y / UnitSize) + new Vector2(directionPoint.X, directionPoint.Y);
 
-            if (_level.TileMap.Tiles[(int)offsetPosition.X / UnitSize, (int)offsetPosition.Y / UnitSize].TileCollision == TileCollision.Passable)
+            if (_level.TileMap.Tiles[(int)tilePosition.X, (int)tilePosition.Y].TileCollision == TileCollision.Passable)
                 return true;
 
             return false;
