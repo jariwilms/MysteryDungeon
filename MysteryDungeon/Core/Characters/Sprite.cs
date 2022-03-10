@@ -1,39 +1,34 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
-using System.Configuration;
 
 namespace MysteryDungeon.Core.Characters
 {
-    public class Sprite : Component
+    public class Sprite //Extend met animatedsprite class, of maak aparte class zonder extension?
     {
-        public Texture2D Texture { get; set; }
-        public Rectangle BoundingRectangle { get { return new Rectangle((int)Transform.Position.X, (int)Transform.Position.Y, _unitSize, _unitSize); } }
+        public Texture2D Texture;
+        public AnimationPlayer AnimationPlayer;
+        public Vector2 DrawingPosition { get; set; }
+        public Rectangle BoundingRectangle { get { return new Rectangle((int)DrawingPosition.X, (int)DrawingPosition.Y, _unitSize, _unitSize); } }
 
-        protected AnimationPlayer _animationPlayer;
-        protected Texture2D _spriteSheet;
+        private int _unitSize;
 
-        protected int _unitSize;
-
-        public Sprite(Texture2D texture)
+        public Sprite(Texture2D texture, int unitSize)
         {
             Texture = texture;
-            _unitSize = int.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
+            AnimationPlayer = new AnimationPlayer();
+            _unitSize = unitSize;
         }
 
-        public void SetPosition(Vector2 newPosition)
+        public void Update(GameTime gameTime, Transform transform)
         {
-            Transform.Position = newPosition * new Vector2(_unitSize, _unitSize);
+            DrawingPosition = transform.Position;
+            AnimationPlayer.Update(gameTime);
         }
 
-        public override void Update(GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
-        }
-
-        public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
-        {
-            spriteBatch.Draw(Texture, Transform.Position, Color.White);
+            AnimationPlayer.Draw(spriteBatch, new Rectangle((int)DrawingPosition.X, (int)DrawingPosition.Y, _unitSize, _unitSize));
         }
     }
 }

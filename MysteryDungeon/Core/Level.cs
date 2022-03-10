@@ -22,16 +22,19 @@ namespace MysteryDungeon.Core
         {
             _content = content;
 
-            Texture2D playerSprite = _content.Load<Texture2D>("sprites/player");
-            Player = new Player(content, playerSprite, this);
-
             _tileMapGenerator = new TileMapGenerator(LevelType.Standard);
             TileMap = _tileMapGenerator.Generate();
 
             _tileMapRenderer = new TileMapRenderer(content);
             _tileMapRenderer.Render(TileMap);
 
+            Player = new Player(content, this);
             Player.SetPosition(TileMap.SpawnPoint);
+        }
+
+        public void OnNewTileReached(Actor actor)
+        {
+
         }
 
         public void Update(GameTime gameTime)

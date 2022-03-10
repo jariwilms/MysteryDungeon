@@ -10,7 +10,7 @@ namespace MysteryDungeon.Core.Tiles
 
         }
 
-        public override void Activate(Player player)
+        public override void Activate(Level level, Player player)
         {
             throw new NotImplementedException();
         }

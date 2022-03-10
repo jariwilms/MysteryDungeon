@@ -20,7 +20,7 @@ namespace MysteryDungeon.Core
         private int _windowWidth;
         private int _windowHeight;
 
-        private Sprite _target;
+        private Actor _target;
 
         public Camera(int windowWidth, int windowHeight)
         {
@@ -39,7 +39,7 @@ namespace MysteryDungeon.Core
             _windowHeight = windowHeight;
         }
 
-        public void Follow(Sprite target)
+        public void Follow(Actor target)
         {
             _target = target;
         }
@@ -62,8 +62,8 @@ namespace MysteryDungeon.Core
         public void Update()
         {
             _position = Matrix.CreateTranslation(
-                (int)(-_target.Transform.Position.X - _target.BoundingRectangle.Width / 2),
-                (int)(-_target.Transform.Position.Y - _target.BoundingRectangle.Height / 2),
+                (int)(-_target.Transform.Position.X - _target.Sprite.BoundingRectangle.Width / 2),
+                (int)(-_target.Transform.Position.Y - _target.Sprite.BoundingRectangle.Height / 2),
                 0.0f);
 
             _offset = Matrix.CreateTranslation(

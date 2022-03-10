@@ -65,12 +65,13 @@ namespace MysteryDungeon.Core.Tiles
         public TileType TileType;
         public TileCollision TileCollision;
 
-        public Tile(TileType tileType, TileCollision tileCollision)
+        public Tile(TileType tileType, TileCollision tileCollision = TileCollision.Passable)
         {
             TileType = tileType;
+            TileCollision = tileCollision;
         }
 
-        public virtual void Activate(Player player)
+        public virtual void Activate(Level level, Player player)
         {
             return;
         }
