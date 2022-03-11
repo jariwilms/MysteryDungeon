@@ -2,28 +2,28 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Configuration;
 
-namespace MysteryDungeon.Core.Characters
+namespace MysteryDungeon.Core
 {
     public class Transform
     {
+        public Vector2 Position;
+        public Vector3 Rotation;
+        public Vector2 Scale;
+
         public Transform()
         {
             Position = Vector2.Zero;
             Rotation = Vector3.Zero;
             Scale = Vector2.One;
         }
-
-        public Vector2 Position { get; set; }
-        public Vector3 Rotation { get; set; }
-        public Vector2 Scale { get; set; }
     }
 
-    public abstract class Component
+    public abstract class GameComponent
     {
         public Transform Transform;
         public int UnitSize;
 
-        public Component()
+        public GameComponent()
         {
             Transform = new Transform();
             UnitSize = int.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
@@ -35,6 +35,6 @@ namespace MysteryDungeon.Core.Characters
         }
 
         public abstract void Update(GameTime gameTime);
-        public abstract void Draw(SpriteBatch spriteBatch, GameTime gameTime);
+        public abstract void Draw(SpriteBatch spriteBatch);
     }
 }

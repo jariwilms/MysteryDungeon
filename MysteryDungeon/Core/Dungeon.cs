@@ -36,11 +36,12 @@ namespace MysteryDungeon.Core
 
         public void StairsReached()
         {
-            Player.CanMove = false;
             TileMap = _tileMapGenerator.Generate();
+
+            Player.Stop();
             Player.SetPosition(TileMap.SpawnPoint);
+
             _tileMapRenderer.Render(TileMap);
-            Player.CanMove = true;
         }
 
         public void Update(GameTime gameTime)
@@ -54,10 +55,10 @@ namespace MysteryDungeon.Core
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            _tileMapRenderer.Draw(spriteBatch, gameTime);
-            Player.Draw(spriteBatch, gameTime);
+            _tileMapRenderer.Draw(spriteBatch);
+            Player.Draw(spriteBatch);
         }
 
         public void Dispose()

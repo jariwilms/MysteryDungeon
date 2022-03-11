@@ -77,7 +77,7 @@ namespace MysteryDungeon.Core.Map
 
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch)
         {
             Point tilePosition;
 

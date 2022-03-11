@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core;
+using MysteryDungeon.Core.GUI;
 using MysteryDungeon.Core.Input;
 
 namespace MysteryDungeon
@@ -33,8 +34,11 @@ namespace MysteryDungeon
 
         // ### THE CUM ZONE ###
 
-        Camera camera;
-        Dungeon dungeon;
+        private Camera _camera;
+        private Dungeon _dungeon;
+        private GuiManager _guiManager;
+
+        // ###
 
         public MysteryDungeon()
         {
@@ -65,10 +69,12 @@ namespace MysteryDungeon
 
             // #####
 
-            dungeon = new Dungeon(Content);
+            _dungeon = new Dungeon(Content); //Haal player uit dungeon?
 
-            camera = new Camera(_windowWidth, _windowHeight);
-            camera.Follow(dungeon.Player);
+            _camera = new Camera(_windowWidth, _windowHeight);
+            _camera.Follow(_dungeon.Player);
+
+            _guiManager = new GuiManager(Content, _spriteBatch, _windowWidth, _windowHeight);
 
             // #####
 
@@ -105,13 +111,13 @@ namespace MysteryDungeon
             InputHandler.Update();
 
             if (MouseState.ScrollWheelValue > LastMouseState.ScrollWheelValue)
-                camera.ZoomIn();
+                _camera.ZoomIn();
 
             if (MouseState.ScrollWheelValue < LastMouseState.ScrollWheelValue)
-                camera.ZoomOut();
+                _camera.ZoomOut();
 
-            dungeon.Update(gameTime);
-            camera.Update();
+            _dungeon.Update(gameTime);
+            _camera.Update();
 
             // #####
 
@@ -128,11 +134,11 @@ namespace MysteryDungeon
                 SpriteSortMode.Deferred,
                 BlendState.AlphaBlend,
                 SamplerState.PointClamp,
-                transformMatrix: camera.TransformMatrix);
+                transformMatrix: _camera.TransformMatrix);
 
             // #####
 
-            dungeon.Draw(_spriteBatch, gameTime);
+            _dungeon.Draw(_spriteBatch);
 
             //_spriteBatch.DrawString(_spriteFont, Math.Round(_averageFrameTime).ToString(), new Vector2(100, 100), Color.White); //drawfps
 

@@ -36,22 +36,18 @@ namespace MysteryDungeon.Core.Characters
         AttackLeft,
     }
 
-    public class Actor : Component
+    public class Actor : GameComponent
     {
         public Dungeon Dungeon;
         public Sprite Sprite;
 
-        public delegate void OnSpawnEvent();
-        public delegate void OnDefeatEvent();
-        public delegate void OnMoveStartEvent();
-        public delegate void OnMoveFinishedEvent();
+        public event Action OnSpawn;
+        public event Action OnDefeat;
+        public event Action OnMoveStart;
+        public event Action OnMoveFinished;
 
-        public event OnSpawnEvent OnSpawn;
-        public event OnDefeatEvent OnDefeat;
-        public event OnMoveStartEvent OnMoveStart;
-        public event OnMoveFinishedEvent OnMoveFinished;
-
-        protected float _lerpDuration = 0.22f;
+        public float LerpDuration { get { return _lerpDuration; } set { if (value > 0) _lerpDuration = value; } }
+        protected float _lerpDuration = 0.2f;
         protected float _timeElapsed = 0.0f;
 
         protected Vector2 _startPosition;
@@ -59,6 +55,8 @@ namespace MysteryDungeon.Core.Characters
 
         public bool CanMove = true; //Voorlopig zijn deze vars altijd het tegenovergestelde van elkaar
         public bool IsMoving = false;
+        public bool IsLerping = false;
+        public bool SkipLerp = false;
 
         protected Action MoveUpAction; //change to Command?
         protected Action MoveRightAction;
@@ -68,6 +66,19 @@ namespace MysteryDungeon.Core.Characters
         public Actor() : base()
         {
 
+        }
+
+        public void Stop()
+        {
+            Transform.Position = _endPosition;
+
+            CanMove = true;
+            IsMoving = false;
+            IsLerping = false;
+
+            _timeElapsed = 0;
+
+            OnMoveFinished?.Invoke();
         }
 
         protected virtual void CreateAnimations()
@@ -85,9 +96,6 @@ namespace MysteryDungeon.Core.Characters
         {
             if (IsMoving || !CanMove || !CanMoveInDirection(movementDirection))
                 return;
-
-            OnMoveStart?.Invoke();
-            CanMove = false;
 
             _startPosition = Transform.Position;
             _endPosition = _startPosition + movementDirection switch
@@ -108,24 +116,28 @@ namespace MysteryDungeon.Core.Characters
                 _ => throw new Exception(string.Format("The requested direction does not exist: {0}", movementDirection)),
             };
 
+            IsMoving = true;
+            CanMove = false;
+            IsLerping = true;
+
+            OnMoveStart?.Invoke();
+
             Sprite.AnimationPlayer.PlayAnimation(animationIdentifier);
         }
 
         protected void LerpToDestination(GameTime gameTime)
         {
-            if (_timeElapsed < _lerpDuration)
+            if (_timeElapsed < _lerpDuration && !SkipLerp)
             {
                 Transform.Position = Vector2.Lerp(_startPosition, _endPosition, _timeElapsed / _lerpDuration);
                 _timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             else
             {
-                OnMoveFinished?.Invoke();
-
-                Transform.Position = _endPosition;
-                _timeElapsed = 0;
+                Stop();
 
                 CanMove = true;
+                SkipLerp = false;
             }
         }
 
@@ -155,15 +167,15 @@ namespace MysteryDungeon.Core.Characters
 
         public override void Update(GameTime gameTime)
         {
-            if (IsMoving) //Gaat niet meer werken wanneer non grid-based movement geimplementeerd wordt
+            if (IsLerping) //Gaat niet meer werken wanneer non grid-based movement geimplementeerd wordt
                 LerpToDestination(gameTime);
 
             Sprite.Update(gameTime, Transform);
         }
 
-        public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            Sprite.Draw(spriteBatch, gameTime);
+            Sprite.Draw(spriteBatch);
         }
     }
 }

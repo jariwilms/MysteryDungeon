@@ -17,9 +17,6 @@ namespace MysteryDungeon.Core.Characters
             Sprite.AnimationPlayer.PlayAnimation("Idle");
 
             CreateActions();
-
-            OnMoveStart += () => { IsMoving = true; };
-            OnMoveFinished += () => { IsMoving = false; };
         }
 
         protected override void CreateAnimations() //Move dit naar data class met animation data => verschillende player/enemy models

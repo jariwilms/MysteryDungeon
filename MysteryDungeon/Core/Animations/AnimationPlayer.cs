@@ -9,6 +9,7 @@ namespace MysteryDungeon.Core.Animations
     {
         private Animation _animation;
         private Dictionary<string, Animation> _animationDictionary; //verander naar enum met animationstates?
+        public Rectangle DestinationRectangle;
 
         private bool _isPlaying;
 
@@ -69,7 +70,7 @@ namespace MysteryDungeon.Core.Animations
             _animation.Update(gameTime);
         }
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle destinationRectangle)
+        public void Draw(SpriteBatch spriteBatch)
         {
             if (_animation == null)
                 throw new NullReferenceException("No animation has been set.");
@@ -79,7 +80,7 @@ namespace MysteryDungeon.Core.Animations
 
             spriteBatch.Draw(
                 _animation.SourceTexture,
-                new Rectangle(destinationRectangle.X + leftDiff, destinationRectangle.Y + bottomDiff - 4, _animation.SourceRectangle.Width, _animation.SourceRectangle.Height),
+                new Rectangle(DestinationRectangle.X + leftDiff, DestinationRectangle.Y + bottomDiff - 4, _animation.SourceRectangle.Width, _animation.SourceRectangle.Height),
                 _animation.SourceRectangle,
                 Color.White,
                 0.0f,

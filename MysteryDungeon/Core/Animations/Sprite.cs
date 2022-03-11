@@ -24,11 +24,13 @@ namespace MysteryDungeon.Core.Animations
         {
             DrawingPosition = transform.Position;
             AnimationPlayer.Update(gameTime);
+            AnimationPlayer.DestinationRectangle = new Rectangle((int)DrawingPosition.X, (int)DrawingPosition.Y, _unitSize, _unitSize);
+
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            AnimationPlayer.Draw(spriteBatch, new Rectangle((int)DrawingPosition.X, (int)DrawingPosition.Y, _unitSize, _unitSize));
+            AnimationPlayer.Draw(spriteBatch);
         }
     }
 }
