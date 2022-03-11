@@ -18,11 +18,6 @@ namespace MysteryDungeon.Core.GUI
             BoundingRectangle = boundingRectangle;
         }
 
-        public override void Click()
-        {
-
-        }
-
         public override void Update(GameTime gameTime)
         {
             throw new NotImplementedException();

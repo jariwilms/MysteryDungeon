@@ -74,7 +74,10 @@ namespace MysteryDungeon
             _camera = new Camera(_windowWidth, _windowHeight);
             _camera.Follow(_dungeon.Player);
 
-            _guiManager = new GuiManager(Content, _spriteBatch, _windowWidth, _windowHeight);
+            _guiManager = new GuiManager(Content, _windowWidth, _windowHeight);
+
+            Texture2D dialogueTexture = Content.Load<Texture2D>("gui/dialogue");
+            GuiManager.Widgets.Add(new DialogueBox(dialogueTexture, new Rectangle(10, 10, dialogueTexture.Width, dialogueTexture.Height)));
 
             // #####
 
@@ -119,6 +122,8 @@ namespace MysteryDungeon
             _dungeon.Update(gameTime);
             _camera.Update();
 
+            _guiManager.Update(gameTime);
+
             // #####
 
             LastkeyboardState = KeyboardState;
@@ -136,15 +141,16 @@ namespace MysteryDungeon
                 SamplerState.PointClamp,
                 transformMatrix: _camera.TransformMatrix);
 
-            // #####
-
             _dungeon.Draw(_spriteBatch);
 
-            //_spriteBatch.DrawString(_spriteFont, Math.Round(_averageFrameTime).ToString(), new Vector2(100, 100), Color.White); //drawfps
+            _spriteBatch.End();
 
-            // #####
+            _spriteBatch.Begin();
+
+            _guiManager.Draw(_spriteBatch);
 
             _spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

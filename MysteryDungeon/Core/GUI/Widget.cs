@@ -48,8 +48,6 @@ namespace MysteryDungeon.Core.GUI
             widget._children.Add(this);
         }
 
-        public abstract void Click();
-
         public virtual void Enable()
         {
             IsActive = true;
