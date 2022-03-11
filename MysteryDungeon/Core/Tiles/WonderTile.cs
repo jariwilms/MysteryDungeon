@@ -1,23 +1,19 @@
-﻿using Microsoft.Xna.Framework;
-using MysteryDungeon.Core.Characters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MysteryDungeon.Core.Characters;
 
 namespace MysteryDungeon.Core.Tiles
 {
     class WonderTile : SpecialTile
     {
-        public WonderTile(Point position, SpecialTileType specialTileType, bool isVisible = true) : base(position, specialTileType, isVisible)
+        public WonderTile() : base(TileType.Floor, SpecialTileType.WonderTile)
         {
+            SpecialTileType = SpecialTileType.WonderTile;
 
+            IsVisible = true;
         }
 
-        public override void Activate()
+        public override void Activate(Dungeon dungeon, Actor actor)
         {
-            Console.WriteLine("Stepped on a wonder tile");
+
         }
     }
 }

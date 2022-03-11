@@ -64,16 +64,18 @@ namespace MysteryDungeon.Core.Tiles
     {
         public TileType TileType;
         public TileCollision TileCollision;
+        public bool IsSpecial;
 
-        public Tile(TileType tileType, TileCollision tileCollision = TileCollision.Passable)
+        public Tile(TileType tileType, TileCollision tileCollision)
         {
             TileType = tileType;
             TileCollision = tileCollision;
+            IsSpecial = false;
         }
 
-        public virtual void Activate() //remove level?
+        public virtual void Activate(Dungeon dungeon, Actor actor)
         {
-            return;
+
         }
     }
 }

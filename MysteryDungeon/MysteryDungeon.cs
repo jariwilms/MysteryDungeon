@@ -34,7 +34,7 @@ namespace MysteryDungeon
         // ### THE CUM ZONE ###
 
         Camera camera;
-        Level level;
+        Dungeon dungeon;
 
         public MysteryDungeon()
         {
@@ -65,10 +65,10 @@ namespace MysteryDungeon
 
             // #####
 
-            level = new Level(Content);
+            dungeon = new Dungeon(Content);
 
             camera = new Camera(_windowWidth, _windowHeight);
-            camera.Follow(level.Player);
+            camera.Follow(dungeon.Player);
 
             // #####
 
@@ -102,7 +102,7 @@ namespace MysteryDungeon
 
             // #####
 
-            InputEventInvoker.Update();
+            InputHandler.Update();
 
             if (MouseState.ScrollWheelValue > LastMouseState.ScrollWheelValue)
                 camera.ZoomIn();
@@ -110,7 +110,7 @@ namespace MysteryDungeon
             if (MouseState.ScrollWheelValue < LastMouseState.ScrollWheelValue)
                 camera.ZoomOut();
 
-            level.Update(gameTime);
+            dungeon.Update(gameTime);
             camera.Update();
 
             // #####
@@ -132,7 +132,7 @@ namespace MysteryDungeon
 
             // #####
 
-            level.Draw(_spriteBatch, gameTime);
+            dungeon.Draw(_spriteBatch, gameTime);
 
             //_spriteBatch.DrawString(_spriteFont, Math.Round(_averageFrameTime).ToString(), new Vector2(100, 100), Color.White); //drawfps
 

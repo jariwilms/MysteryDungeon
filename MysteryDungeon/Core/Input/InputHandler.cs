@@ -17,11 +17,11 @@ namespace MysteryDungeon.Core.Input
         EscapeKey = Keys.Escape,
     }
 
-    class InputEventInvoker
+    class InputHandler
     {
         private static Dictionary<ActionKeys, Action> _eventDictionary;
 
-        static InputEventInvoker()
+        static InputHandler()
         {
             _eventDictionary = new Dictionary<ActionKeys, Action>();
         }
@@ -36,7 +36,7 @@ namespace MysteryDungeon.Core.Input
             foreach (ActionKeys key in _eventDictionary.Keys)
             {
                 if (Keyboard.GetState().IsKeyDown((Keys)key))
-                    _eventDictionary[key].Invoke();
+                    _eventDictionary[key]?.Invoke();
             }
         }
     }

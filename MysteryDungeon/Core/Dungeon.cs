@@ -5,10 +5,11 @@ using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core.Characters;
 using MysteryDungeon.Core.Map;
 using System;
+using System.Diagnostics;
 
 namespace MysteryDungeon.Core
 {
-    public class Level : IDisposable
+    public class Dungeon : IDisposable
     {
         public Player Player;
 
@@ -18,11 +19,11 @@ namespace MysteryDungeon.Core
 
         private readonly ContentManager _content;
 
-        public Level(ContentManager content) //TODO: clean up deze dogshit class + leer programmeren
+        public Dungeon(ContentManager content) //TODO: clean up deze dogshit class + leer programmeren
         {
             _content = content;
 
-            _tileMapGenerator = new TileMapGenerator(LevelType.Standard);
+            _tileMapGenerator = new TileMapGenerator(this, DungeonType.Standard);
             TileMap = _tileMapGenerator.Generate();
 
             _tileMapRenderer = new TileMapRenderer(content);
@@ -30,6 +31,16 @@ namespace MysteryDungeon.Core
 
             Player = new Player(content, this);
             Player.SetPosition(TileMap.SpawnPoint);
+            Player.OnMoveFinished += () => { TileMap.TriggerTile(this, Player); };
+        }
+
+        public void StairsReached()
+        {
+            Player.CanMove = false;
+            TileMap = _tileMapGenerator.Generate();
+            Player.SetPosition(TileMap.SpawnPoint);
+            _tileMapRenderer.Render(TileMap);
+            Player.CanMove = true;
         }
 
         public void Update(GameTime gameTime)
@@ -39,9 +50,7 @@ namespace MysteryDungeon.Core
 
             if (Utility.KeyPressedOnce(Keys.R))
             {
-                TileMap = _tileMapGenerator.Generate();
-                Player.SetPosition(TileMap.SpawnPoint);
-                _tileMapRenderer.Render(TileMap);
+                StairsReached();
             }
         }
 

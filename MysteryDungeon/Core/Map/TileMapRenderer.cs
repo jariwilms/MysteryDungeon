@@ -22,10 +22,10 @@ namespace MysteryDungeon.Core.Map
             _content = content;
             _unitSize = int.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
 
-            Texture2D levelTexture = _content.Load<Texture2D>("tiles/tiny_woods");
+            Texture2D dungeonTexture = _content.Load<Texture2D>("tiles/tiny_woods");
             Texture2D specialTexture = content.Load<Texture2D>("tiles/special_tiles");
 
-            _dungeonAtlas = new SpriteAtlas<TileType>(levelTexture, new Point(9, 163), 1, 1, 24);
+            _dungeonAtlas = new SpriteAtlas<TileType>(dungeonTexture, new Point(9, 163), 1, 1, 24);
             _specialAtlas = new SpriteAtlas<SpecialTileType>(specialTexture, new Point(0, 0), 1, 1, 24);
 
             SetupAtlas();
@@ -61,6 +61,8 @@ namespace MysteryDungeon.Core.Map
             _dungeonAtlas.AddSprite(TileType.BottomCap, 4, 8);
             _dungeonAtlas.AddSprite(TileType.LeftCap, 3, 7);
 
+
+
             _specialAtlas.AddSprite(SpecialTileType.StairsDown, 2, 2);
             _specialAtlas.AddSprite(SpecialTileType.WonderTile, 1, 2);
         }
@@ -77,42 +79,39 @@ namespace MysteryDungeon.Core.Map
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            Point tilePosition;
+
             for (int y = 0; y < _tileMap.Height; y++)
             {
                 for (int x = 0; x < _tileMap.Width; x++)
                 {
-                    TileType tileType = _tileMap.Tiles[x, y].TileType;
+                    Tile tile = _tileMap.Tiles[x, y];
+                    tilePosition = new Point(x, y) * new Point(_unitSize, _unitSize); //Offset taking unitSize into account
 
-                    if (tileType == TileType.None) //geen idee wnr dit zou gebeuren atm
-                        continue;
+                    if (tile.IsSpecial)
+                    {
+                        SpecialTileType specialTileType = ((SpecialTile)tile).SpecialTileType;
+                        _specialAtlas.SetCurrentSprite(specialTileType);
 
-                    _dungeonAtlas.SetCurrentSprite(tileType);
+                        spriteBatch.Draw(
+                            _specialAtlas.SourceTexture,
+                            new Rectangle(tilePosition.X, tilePosition.Y, _specialAtlas.SourceRectangle.Width, _specialAtlas.SourceRectangle.Height),
+                            _specialAtlas.SourceRectangle,
+                            Color.White);
+                    }
+                    else
+                    {
+                        TileType tileType = _tileMap.Tiles[x, y].TileType;
+                        _dungeonAtlas.SetCurrentSprite(tileType);
 
-                    Point tilePosition = new Point(x, y) * new Point(_unitSize, _unitSize); //Offset taking unitSize into account
-
-                    spriteBatch.Draw(
-                        _dungeonAtlas.SourceTexture,                                                                                                //Sprite sheet
-                        new Rectangle(tilePosition.X, tilePosition.Y, _dungeonAtlas.SourceRectangle.Width, _dungeonAtlas.SourceRectangle.Height),   //Adjusted position, width and height of tile
-                        _dungeonAtlas.SourceRectangle,                                                                                              //Current position of chosen sprite in sprite sheet
-                        Color.White);
+                        spriteBatch.Draw(
+                            _dungeonAtlas.SourceTexture,                                                                                                //Sprite sheet
+                            new Rectangle(tilePosition.X, tilePosition.Y, _dungeonAtlas.SourceRectangle.Width, _dungeonAtlas.SourceRectangle.Height),   //Adjusted position, width and height of tile
+                            _dungeonAtlas.SourceRectangle,                                                                                              //Current position of chosen sprite in sprite sheet
+                            Color.White);
+                    }
                 }
             }
-
-            _tileMap.SpecialTiles.ForEach(specialTile =>
-            {
-                if (!specialTile.IsVisible)
-                    return;
-
-                SpecialTileType specialTileType = specialTile.SpecialTileType;
-                _specialAtlas.SetCurrentSprite(specialTileType);
-                Point tilePosition = new Point(specialTile.Position.X, specialTile.Position.Y) * new Point(_unitSize, _unitSize); //Offset taking unitSize into account
-
-                spriteBatch.Draw(
-                    _specialAtlas.SourceTexture,
-                    new Rectangle(tilePosition.X, tilePosition.Y, _specialAtlas.SourceRectangle.Width, _specialAtlas.SourceRectangle.Height),
-                    _specialAtlas.SourceRectangle,
-                    Color.White);
-            });
         }
 
         public void Dispose()

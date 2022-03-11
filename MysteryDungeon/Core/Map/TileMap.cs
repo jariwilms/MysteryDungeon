@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.Characters;
 using MysteryDungeon.Core.Tiles;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,6 @@ namespace MysteryDungeon.Core.Map
     public class TileMap
     {
         public Tile[,] Tiles;                       //Complete array of all tiles
-        public List<SpecialTile> SpecialTiles;
         public char[,] CharMap;                     //Text representation of the map
 
         public List<Room> Rooms;                    //Array of rooms
@@ -32,7 +32,6 @@ namespace MysteryDungeon.Core.Map
         public TileMap()
         {
             Tiles = new Tile[0, 0];
-            SpecialTiles = new List<SpecialTile>();
             CharMap = new char[0, 0];
 
             Rooms = new List<Room>();
@@ -43,9 +42,10 @@ namespace MysteryDungeon.Core.Map
             _random = new Random();
         }
 
-        public void TriggerTile(Point tilePosition)
+        public void TriggerTile(Dungeon dungeon, Actor actor)
         {
-            Tiles[tilePosition.X, tilePosition.Y].Activate();
+            Point tilePosition = new Point((int)(actor.Transform.Position.X / 24), (int)(actor.Transform.Position.Y / 24));
+            Tiles[tilePosition.X, tilePosition.Y].Activate(dungeon, actor);
         }
 
         public Room GetDestinationRoom(Room room, Connector sourceConnector)
