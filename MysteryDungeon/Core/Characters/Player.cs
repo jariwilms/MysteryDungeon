@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
 using MysteryDungeon.Core.Input;
 
+using Microsoft.Xna.Framework.Input;
+
 namespace MysteryDungeon.Core.Characters
 {
     public class Player : Actor
@@ -35,10 +37,10 @@ namespace MysteryDungeon.Core.Characters
             MoveDownAction = () => { MoveTo(MovementDirection.South); };
             MoveLeftAction = () => { MoveTo(MovementDirection.West); };
 
-            InputHandler.RegisterAction(ActionKeys.UpKey, MoveUpAction);
-            InputHandler.RegisterAction(ActionKeys.LeftKey, MoveLeftAction);
-            InputHandler.RegisterAction(ActionKeys.DownKey, MoveDownAction);
-            InputHandler.RegisterAction(ActionKeys.RightKey, MoveRightAction);
+            InputEventHandler.AddEventListener(KeyAction.Up, MoveUpAction);
+            //InputEventHandler.AddEventListener(KeyAction.Right, MoveRightAction);
+            InputEventHandler.AddEventListener(KeyAction.Down, MoveDownAction);
+            //InputEventHandler.AddEventListener(KeyAction.Left, MoveLeftAction);
         }
     }
 }

@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace MysteryDungeon.Core.Input
 {
-    class InputListener
+    public enum KeyAction
     {
-        //public List<InputCommand> InputCommands;
+        Confirm, 
+        Cancel, 
+
+        Up, 
+        Right, 
+        Down, 
+        Left, 
+
+        Escape, 
     }
 }

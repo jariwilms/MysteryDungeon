@@ -81,7 +81,7 @@ namespace MysteryDungeon.Core.Characters
             OnMoveFinished?.Invoke();
         }
 
-        protected virtual void CreateAnimations()
+        protected virtual void CreateAnimations() //laat buitenstaande class animations toevoegen
         {
 
         }
@@ -90,7 +90,7 @@ namespace MysteryDungeon.Core.Characters
         protected virtual void CreateActions()
         {
 
-        }
+        } //insgelijks
 
         protected virtual void MoveTo(MovementDirection movementDirection)
         {
