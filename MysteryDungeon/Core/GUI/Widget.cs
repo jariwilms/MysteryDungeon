@@ -5,17 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MysteryDungeon.Core.GUI
 {
     public abstract class Widget
     {
+        [Flags]
+        public enum screenPosition
+        {
+            Free = 0, 
+            Top = 1, 
+            Right = 2, 
+            Bottom = 4, 
+            Left = 8, 
+            Center = 16
+        }
+
         public Widget Parent;
         private List<Widget> _children;
 
-        public Rectangle BoundingRectangle { get; protected set; }
+        public Texture2D SourceTexture;                             //Source texture for widget drawing
+        public Rectangle DestinationRectangle;
 
         public int Depth;
 
@@ -29,17 +40,13 @@ namespace MysteryDungeon.Core.GUI
         public bool IsResizable;
         public bool isClickable;
 
-        public Widget(Widget parent = null)
+        public Widget(Widget parent = null, bool isResizable = false)
         {
             if (parent != null)
                 SetParent(parent);
 
             _children = new List<Widget>();
-        }
 
-        public Widget(int x, int y, int width, int height, bool isResizable = false)
-        {
-            BoundingRectangle = new Rectangle(x, y, width, height);
             IsResizable = isResizable;
         }
 

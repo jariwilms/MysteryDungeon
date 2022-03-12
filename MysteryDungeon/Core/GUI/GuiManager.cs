@@ -14,9 +14,6 @@ namespace MysteryDungeon.Core.GUI
     class GuiManager
     {
         private ContentManager _content;
-        public static SpriteAtlas<string> DialogueAtlas;
-        //public static SpriteAtlas<string> EffectAtlas;
-        //public static SpriteAtlas<string> FontAtlas;
 
         private int _windowWidth;
         private int _windowHeight;
@@ -26,8 +23,6 @@ namespace MysteryDungeon.Core.GUI
         public GuiManager(ContentManager content, int windowWidth, int windowHeight)
         {
             _content = content;
-            //DialogueAtlas = new SpriteAtlas<string>(content.Load<Texture2D>("gui/dialogue"), 24);
-
 
             _windowWidth = windowWidth;
             _windowHeight = windowHeight;
@@ -37,7 +32,7 @@ namespace MysteryDungeon.Core.GUI
 
         private void CreateDialogueAtlas()
         {
-            //DialogueAtlas
+
         }
 
         public void Update(GameTime gameTime)

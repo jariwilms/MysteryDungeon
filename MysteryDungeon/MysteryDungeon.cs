@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core;
+using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.GUI;
 using MysteryDungeon.Core.Input;
 
@@ -74,10 +75,10 @@ namespace MysteryDungeon
             _camera = new Camera(_windowWidth, _windowHeight);
             _camera.Follow(_dungeon.Player);
 
+            GuiTextures.Load(Content);
             _guiManager = new GuiManager(Content, _windowWidth, _windowHeight);
 
-            Texture2D dialogueTexture = Content.Load<Texture2D>("gui/dialogue");
-            GuiManager.Widgets.Add(new DialogueBox(dialogueTexture, new Rectangle(10, 10, dialogueTexture.Width, dialogueTexture.Height)));
+            GuiManager.Widgets.Add(new DialogueBox(DialogueBox.DialogueBoxColor.Blue, _windowWidth, _windowHeight));
 
             // #####
 

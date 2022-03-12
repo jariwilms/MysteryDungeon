@@ -31,6 +31,11 @@ namespace MysteryDungeon.Core.Input
             _eventDictionary.Add(key, action);
         }
 
+        public static void RegisterAction(ActionKeys key, Action action, bool capture = false)
+        {
+
+        }
+
         public static void Update()
         {
             foreach (ActionKeys key in _eventDictionary.Keys)

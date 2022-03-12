@@ -5,29 +5,53 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.Data;
 
 namespace MysteryDungeon.Core.GUI
 {
     class DialogueBox : Widget
     {
-        public Texture2D DialogueBoxTexture;
-
-        public DialogueBox(Texture2D dialogueBoxTexture, Rectangle boundingRectangle) : base()
+        public enum DialogueBoxColor
         {
-            DialogueBoxTexture = dialogueBoxTexture;
-            BoundingRectangle = boundingRectangle;
+            Red, 
+            Green, 
+            Blue
+        }
+
+        public Rectangle DialogueBoxForegroundSourceRectangle;
+        public Rectangle DialogueBoxBackgroundSourceRectangle;
+
+        public DialogueBox(DialogueBoxColor dialogueBoxColor, int screenWidth, int screenHeight) : base()
+        {
+            SourceTexture = GuiTextures.DialogueTexture;
+
+            DialogueBoxForegroundSourceRectangle = GuiTextures.DialogueBoxForegroundSourceBlue;
+            DialogueBoxBackgroundSourceRectangle = GuiTextures.DialogueBoxBackgroundSource;
+
+            DestinationRectangle = new Rectangle(
+                screenWidth / 2 - DialogueBoxForegroundSourceRectangle.Width / 2, 
+                screenHeight - DialogueBoxForegroundSourceRectangle.Height - 10, 
+                DialogueBoxForegroundSourceRectangle.Width, 
+                DialogueBoxForegroundSourceRectangle.Height);
         }
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+
         }
 
         public override void Draw(SpriteBatch spritebatch)
         {
             spritebatch.Draw(
-                DialogueBoxTexture,
-                BoundingRectangle,
+                SourceTexture,
+                DestinationRectangle,
+                DialogueBoxBackgroundSourceRectangle,
+                Color.White);
+
+            spritebatch.Draw(
+                SourceTexture,
+                DestinationRectangle, 
+                DialogueBoxForegroundSourceRectangle, 
                 Color.White);
         }
     }
