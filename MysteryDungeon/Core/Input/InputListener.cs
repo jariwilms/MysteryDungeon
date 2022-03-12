@@ -8,6 +8,6 @@ namespace MysteryDungeon.Core.Input
 {
     class InputListener
     {
-        public List<InputCommand> InputCommands;
+        //public List<InputCommand> InputCommands;
     }
 }
