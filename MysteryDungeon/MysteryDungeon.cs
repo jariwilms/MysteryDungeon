@@ -112,8 +112,7 @@ namespace MysteryDungeon
 
             // #####
 
-            //InputHandler.Update();
-            InputEventHandler.Update();
+            InputHandler.Instance.Update();
 
             if (MouseState.ScrollWheelValue > LastMouseState.ScrollWheelValue)
                 _camera.ZoomIn();

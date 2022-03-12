@@ -37,10 +37,10 @@ namespace MysteryDungeon.Core.Characters
             MoveDownAction = () => { MoveTo(MovementDirection.South); };
             MoveLeftAction = () => { MoveTo(MovementDirection.West); };
 
-            InputEventHandler.AddEventListener(KeyAction.Up, MoveUpAction);
-            //InputEventHandler.AddEventListener(KeyAction.Right, MoveRightAction);
-            InputEventHandler.AddEventListener(KeyAction.Down, MoveDownAction);
-            //InputEventHandler.AddEventListener(KeyAction.Left, MoveLeftAction);
+            InputHandler.Instance.AddEventListener(KeyAction.Up, MoveUpAction);
+            InputHandler.Instance.AddEventListener(KeyAction.Right, MoveRightAction);
+            InputHandler.Instance.AddEventListener(KeyAction.Down, MoveDownAction);
+            InputHandler.Instance.AddEventListener(KeyAction.Left, MoveLeftAction);
         }
     }
 }

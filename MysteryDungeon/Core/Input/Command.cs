@@ -10,19 +10,15 @@ namespace MysteryDungeon.Core.Input
 {
     public class Command
     {
-        public KeyAction KeyAction;
-        public Keys Key;
         public event Action Actions;
+        public KeyAction KeyAction;
 
-        public Command(KeyAction keyAction, Keys key)
+        public bool Capture;
+
+        public Command(KeyAction keyAction, bool capture = true)
         {
             KeyAction = keyAction;
-            Key = key;
-        }
-
-        public void SetKey(Keys newKey)
-        {
-            Key = newKey;
+            Capture = capture;
         }
 
         public void Execute()
