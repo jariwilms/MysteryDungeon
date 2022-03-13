@@ -8,9 +8,9 @@ namespace MysteryDungeon.Core.GUI
     public abstract class Widget
     {
         [Flags]
-        public enum screenPosition
+        public enum ScreenPosition
         {
-            Free = 0,
+            None = 0,
             Top = 1,
             Right = 2,
             Bottom = 4,
@@ -36,9 +36,9 @@ namespace MysteryDungeon.Core.GUI
         public bool IsResizable;
         public bool isClickable;
 
-        protected int _windowWidth;
-        protected int _windowHeight;
-        protected float _scale;
+        protected int WindowWidth;
+        protected int WindowHeight;
+        protected float Scale;
 
         public Widget(Widget parent = null, bool isResizable = false)
         {
@@ -49,9 +49,9 @@ namespace MysteryDungeon.Core.GUI
 
             IsResizable = isResizable;
 
-            _windowWidth = MysteryDungeon._windowWidth;
-            _windowHeight = MysteryDungeon._windowHeight;
-            _scale = 1.0f;
+            WindowWidth = MysteryDungeon._windowWidth;
+            WindowHeight = MysteryDungeon._windowHeight;
+            Scale = 1.0f;
         }
 
         public virtual void Enable()
@@ -76,7 +76,7 @@ namespace MysteryDungeon.Core.GUI
 
         public void SetScale(int scale)
         {
-            _scale = scale;
+            Scale = scale;
         }
 
         public void AddChild(Widget widget) //setparent vs addchild?

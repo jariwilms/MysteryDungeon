@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Configuration;
 
 namespace MysteryDungeon.Core
@@ -26,7 +27,7 @@ namespace MysteryDungeon.Core
         public GameComponent()
         {
             Transform = new Transform();
-            UnitSize = int.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
+            UnitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
         }
 
         public void SetPosition(Vector2 newPosition)

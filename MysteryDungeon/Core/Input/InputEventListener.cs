@@ -2,11 +2,11 @@
 {
     public class InputEventListener
     {
-        private static InputEventHandler _inputHandler;
+        private static InputEventHandler s_inputHandler;
 
         public InputEventListener()
         {
-            _inputHandler = InputEventHandler.Instance;
+            s_inputHandler = InputEventHandler.Instance;
         }
     }
 }

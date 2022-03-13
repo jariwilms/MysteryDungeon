@@ -22,7 +22,7 @@ namespace MysteryDungeon.Core.Animations
         public void AddAnimation(string identifier, Animation animation)
         {
             if (_animationDictionary.ContainsKey(identifier))
-                throw new Exception(string.Format("An animation with identifier {0} already exists", identifier));
+                throw new Exception(String.Format("An animation with identifier {0} already exists", identifier));
 
             _animationDictionary.Add(identifier, animation);
         }
@@ -32,7 +32,7 @@ namespace MysteryDungeon.Core.Animations
             bool found = _animationDictionary.TryGetValue(identifier, out Animation animation);
 
             if (!found)
-                throw new Exception(string.Format("An animation with identifier {0} does not exist", identifier));
+                throw new Exception(String.Format("An animation with identifier {0} does not exist", identifier));
 
             _animation = animation;
         }

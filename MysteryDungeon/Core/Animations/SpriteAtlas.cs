@@ -44,7 +44,7 @@ namespace MysteryDungeon.Core.Animations
             bool found = SpriteDictionary.TryGetValue(identifier, out Rectangle source);
 
             if (!found)
-                throw new ArgumentException(string.Format("Texture with given name does not exist: {0}", identifier));
+                throw new ArgumentException(String.Format("Texture with given name does not exist: {0}", identifier));
 
             SourceRectangle = source;
         }

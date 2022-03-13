@@ -38,7 +38,7 @@ namespace MysteryDungeon.Core.Input
 
         public void AddEventListener(KeyAction keyAction, Action action)
         {
-            foreach (var command in _commands)
+            foreach (Command command in _commands)
             {
                 if (command.KeyAction == keyAction)
                 {

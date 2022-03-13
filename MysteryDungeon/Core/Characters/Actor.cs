@@ -47,11 +47,11 @@ namespace MysteryDungeon.Core.Characters
         public event Action OnMoveFinished;
 
         public float LerpDuration { get { return _lerpDuration; } set { if (value > 0) _lerpDuration = value; } }
-        protected float _lerpDuration = 0.2f;
-        protected float _timeElapsed = 0.0f;
+        private float _lerpDuration;
+        protected float TimeElapsed;
 
-        protected Vector2 _startPosition;
-        protected Vector2 _endPosition;
+        protected Vector2 StartPosition;
+        protected Vector2 EndPosition;
 
         public bool CanMove = true; //Voorlopig zijn deze vars altijd het tegenovergestelde van elkaar
         public bool IsMoving = false;
@@ -65,18 +65,19 @@ namespace MysteryDungeon.Core.Characters
 
         public Actor() : base()
         {
-
+            LerpDuration = 0.2f;
+            TimeElapsed = 0.0f;
         }
 
         public void Stop()
         {
-            Transform.Position = _endPosition;
+            Transform.Position = EndPosition;
 
             CanMove = true;
             IsMoving = false;
             IsLerping = false;
 
-            _timeElapsed = 0;
+            TimeElapsed = 0;
 
             OnMoveFinished?.Invoke();
         }
@@ -97,8 +98,8 @@ namespace MysteryDungeon.Core.Characters
             if (IsMoving || !CanMove || !CanMoveInDirection(movementDirection))
                 return;
 
-            _startPosition = Transform.Position;
-            _endPosition = _startPosition + movementDirection switch
+            StartPosition = Transform.Position;
+            EndPosition = StartPosition + movementDirection switch
             {
                 MovementDirection.North => new Vector2(0, -UnitSize),
                 MovementDirection.East => new Vector2(UnitSize, 0),
@@ -113,7 +114,7 @@ namespace MysteryDungeon.Core.Characters
                 MovementDirection.East => "MoveRight",
                 MovementDirection.South => "MoveDown",
                 MovementDirection.West => "MoveLeft",
-                _ => throw new Exception(string.Format("The requested direction does not exist: {0}", movementDirection)),
+                _ => throw new Exception(String.Format("The requested direction does not exist: {0}", movementDirection)),
             };
 
             IsMoving = true;
@@ -127,10 +128,10 @@ namespace MysteryDungeon.Core.Characters
 
         protected void LerpToDestination(GameTime gameTime)
         {
-            if (_timeElapsed < _lerpDuration && !SkipLerp)
+            if (TimeElapsed < LerpDuration && !SkipLerp)
             {
-                Transform.Position = Vector2.Lerp(_startPosition, _endPosition, _timeElapsed / _lerpDuration);
-                _timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Transform.Position = Vector2.Lerp(StartPosition, EndPosition, TimeElapsed / LerpDuration);
+                TimeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             else
             {

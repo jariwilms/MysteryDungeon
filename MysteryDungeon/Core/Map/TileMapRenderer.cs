@@ -20,7 +20,7 @@ namespace MysteryDungeon.Core.Map
         public TileMapRenderer(ContentManager content)
         {
             _content = content;
-            _unitSize = int.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
+            _unitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
 
             Texture2D dungeonTexture = _content.Load<Texture2D>("tiles/tiny_woods");
             Texture2D specialTexture = content.Load<Texture2D>("tiles/special_tiles");
