@@ -8,23 +8,23 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MysteryDungeon.Core.Input
 {
-    public sealed class InputHandler
+    public sealed class InputEventHandler
     {
-        public static readonly InputHandler Instance = new InputHandler();
+        public static readonly InputEventHandler Instance = new InputEventHandler();
 
 		private List<Command> _commands;
 		private Dictionary<KeyAction, Keys> _keyTable;
 
         private KeyboardState _keyboardState;
 
-        static InputHandler()
+        static InputEventHandler()
         {
 
         }
 
-        private InputHandler()
+        private InputEventHandler()
 		{
-			_commands = new List<Command>();
+			_commands = new List<Command>(); //move commands naar inputeventlistener? + maak list aan van listeners => iterate top to bottom voor event capturing
 			_keyTable = new Dictionary<KeyAction, Keys>();
 
 			foreach (KeyAction key in Enum.GetValues(typeof(KeyAction)))
@@ -50,6 +50,11 @@ namespace MysteryDungeon.Core.Input
                     break;
                 }
             }
+        }
+
+        public void RemoveEventListener(Action action)
+        {
+
         }
 
 		public void Update()

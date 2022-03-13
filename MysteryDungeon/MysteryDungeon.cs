@@ -16,8 +16,8 @@ namespace MysteryDungeon
 
         private const int _virtualWindowWidth = 720;
         private const int _virtualWindowHeight = 720;
-        public int _windowWidth; //Fix access modifier => tijdelijk gebruikt voor Camera class
-        public int _windowHeight;
+        public static int _windowWidth;
+        public static int _windowHeight;
         private readonly float _windowWidthScale;
         private readonly float _windowHeightScale;
         private Matrix _windowScale;
@@ -70,15 +70,19 @@ namespace MysteryDungeon
 
             // #####
 
+            GuiTextures.Load(Content);
+
+            _guiManager = new GuiManager(Content, _windowWidth, _windowHeight);
+            GuiManager.Widgets.Add(new DialogueBoxWidget());
+
+
+
             _dungeon = new Dungeon(Content); //Haal player uit dungeon?
+
+
 
             _camera = new Camera(_windowWidth, _windowHeight);
             _camera.Follow(_dungeon.Player);
-
-            GuiTextures.Load(Content);
-            _guiManager = new GuiManager(Content, _windowWidth, _windowHeight);
-
-            GuiManager.Widgets.Add(new DialogueBox(DialogueBox.DialogueBoxColor.Blue, _windowWidth, _windowHeight));
 
             // #####
 
@@ -112,7 +116,7 @@ namespace MysteryDungeon
 
             // #####
 
-            InputHandler.Instance.Update();
+            InputEventHandler.Instance.Update();
 
             if (MouseState.ScrollWheelValue > LastMouseState.ScrollWheelValue)
                 _camera.ZoomIn();

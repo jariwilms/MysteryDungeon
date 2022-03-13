@@ -10,6 +10,9 @@ namespace MysteryDungeon.Core.Characters
 {
     public class Player : Actor
     {
+        public int CurrentHealth;
+        public int MaxHealth;
+
         public Player(ContentManager content, Dungeon dungeon) : base()
         {
             Dungeon = dungeon;
@@ -37,10 +40,10 @@ namespace MysteryDungeon.Core.Characters
             MoveDownAction = () => { MoveTo(MovementDirection.South); };
             MoveLeftAction = () => { MoveTo(MovementDirection.West); };
 
-            InputHandler.Instance.AddEventListener(KeyAction.Up, MoveUpAction);
-            InputHandler.Instance.AddEventListener(KeyAction.Right, MoveRightAction);
-            InputHandler.Instance.AddEventListener(KeyAction.Down, MoveDownAction);
-            InputHandler.Instance.AddEventListener(KeyAction.Left, MoveLeftAction);
+            InputEventHandler.Instance.AddEventListener(KeyAction.Up, MoveUpAction);
+            InputEventHandler.Instance.AddEventListener(KeyAction.Right, MoveRightAction);
+            InputEventHandler.Instance.AddEventListener(KeyAction.Down, MoveDownAction);
+            InputEventHandler.Instance.AddEventListener(KeyAction.Left, MoveLeftAction);
         }
     }
 }

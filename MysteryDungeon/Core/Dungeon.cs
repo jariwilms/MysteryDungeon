@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core.Characters;
+using MysteryDungeon.Core.GUI;
 using MysteryDungeon.Core.Map;
 using System;
 using System.Diagnostics;
@@ -32,6 +33,11 @@ namespace MysteryDungeon.Core
             Player = new Player(content, this);
             Player.SetPosition(TileMap.SpawnPoint);
             Player.OnMoveFinished += () => { TileMap.TriggerTile(this, Player); };
+
+            Player.CurrentHealth = 20;
+            Player.MaxHealth = 30;
+
+            GuiManager.Widgets.Add(new HealthBarWidget(Player));
         }
 
         public void StairsReached()

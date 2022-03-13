@@ -28,11 +28,11 @@ namespace MysteryDungeon.Core.GUI
         public Texture2D SourceTexture;                             //Source texture for widget drawing
         public Rectangle DestinationRectangle;
 
-        public int Depth;
-
         public event Action OnHoverEnter;
         public event Action OnHoverLeave;
         public event Action OnClicked;
+
+        public int Depth;
 
         public bool IsFocused;
         public bool IsActive;
@@ -40,19 +40,25 @@ namespace MysteryDungeon.Core.GUI
         public bool IsResizable;
         public bool isClickable;
 
+        protected int _windowWidth;
+        protected int _windowHeight;
+
         public Widget(Widget parent = null, bool isResizable = false)
         {
             if (parent != null)
-                SetParent(parent);
+                parent.AddChild(this);
 
             _children = new List<Widget>();
 
             IsResizable = isResizable;
+
+            _windowWidth = MysteryDungeon._windowWidth;
+            _windowHeight = MysteryDungeon._windowHeight;
         }
 
-        public void SetParent(Widget widget)
+        public void AddChild(Widget widget) //setparent vs addchild?
         {
-            widget._children.Add(this);
+            _children.Add(widget);
         }
 
         public virtual void Enable()

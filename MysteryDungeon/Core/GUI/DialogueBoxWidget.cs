@@ -9,7 +9,7 @@ using MysteryDungeon.Core.Data;
 
 namespace MysteryDungeon.Core.GUI
 {
-    class DialogueBox : Widget
+    class DialogueBoxWidget : Widget
     {
         public enum DialogueBoxColor
         {
@@ -21,7 +21,7 @@ namespace MysteryDungeon.Core.GUI
         public Rectangle DialogueBoxForegroundSourceRectangle;
         public Rectangle DialogueBoxBackgroundSourceRectangle;
 
-        public DialogueBox(DialogueBoxColor dialogueBoxColor, int screenWidth, int screenHeight) : base()
+        public DialogueBoxWidget(Widget parent = null, DialogueBoxColor dialogueBoxColor = DialogueBoxColor.Blue) : base(parent)
         {
             SourceTexture = GuiTextures.DialogueTexture;
 
@@ -29,8 +29,8 @@ namespace MysteryDungeon.Core.GUI
             DialogueBoxBackgroundSourceRectangle = GuiTextures.DialogueBoxBackgroundSource;
 
             DestinationRectangle = new Rectangle(
-                screenWidth / 2 - DialogueBoxForegroundSourceRectangle.Width / 2, 
-                screenHeight - DialogueBoxForegroundSourceRectangle.Height - 10, 
+                _windowWidth / 2 - DialogueBoxForegroundSourceRectangle.Width / 2, 
+                _windowHeight - DialogueBoxForegroundSourceRectangle.Height - 10, 
                 DialogueBoxForegroundSourceRectangle.Width, 
                 DialogueBoxForegroundSourceRectangle.Height);
         }

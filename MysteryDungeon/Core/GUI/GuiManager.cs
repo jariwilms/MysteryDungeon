@@ -11,7 +11,7 @@ using MysteryDungeon.Core.Animations;
 
 namespace MysteryDungeon.Core.GUI
 {
-    class GuiManager
+    class GuiManager : IDisposable
     {
         private ContentManager _content;
 
@@ -20,14 +20,17 @@ namespace MysteryDungeon.Core.GUI
 
         public static List<Widget> Widgets;
 
+        static GuiManager()
+        {
+            Widgets = new List<Widget>();
+        }
+
         public GuiManager(ContentManager content, int windowWidth, int windowHeight)
         {
             _content = content;
 
             _windowWidth = windowWidth;
             _windowHeight = windowHeight;
-
-            Widgets = new List<Widget>();
         }
 
         private void CreateDialogueAtlas()
@@ -49,6 +52,11 @@ namespace MysteryDungeon.Core.GUI
             {
                 widget.Draw(spriteBatch);
             });
+        }
+
+        public void Dispose()
+        {
+            _content.Unload();
         }
     }
 }
