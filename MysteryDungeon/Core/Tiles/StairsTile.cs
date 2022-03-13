@@ -7,7 +7,7 @@ namespace MysteryDungeon.Core.Tiles
     {
         public enum StairDirection
         {
-            Up, 
+            Up,
             Down,
         }
 

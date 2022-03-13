@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Data;
 
@@ -13,8 +8,8 @@ namespace MysteryDungeon.Core.GUI
     {
         public enum DialogueBoxColor
         {
-            Red, 
-            Green, 
+            Red,
+            Green,
             Blue
         }
 
@@ -29,9 +24,9 @@ namespace MysteryDungeon.Core.GUI
             DialogueBoxBackgroundSourceRectangle = GuiTextures.DialogueBoxBackgroundSource;
 
             DestinationRectangle = new Rectangle(
-                _windowWidth / 2 - DialogueBoxForegroundSourceRectangle.Width / 2, 
-                _windowHeight - DialogueBoxForegroundSourceRectangle.Height - 10, 
-                DialogueBoxForegroundSourceRectangle.Width, 
+                _windowWidth / 2 - DialogueBoxForegroundSourceRectangle.Width / 2,
+                _windowHeight - DialogueBoxForegroundSourceRectangle.Height - 10,
+                DialogueBoxForegroundSourceRectangle.Width,
                 DialogueBoxForegroundSourceRectangle.Height);
         }
 
@@ -50,8 +45,8 @@ namespace MysteryDungeon.Core.GUI
 
             spritebatch.Draw(
                 SourceTexture,
-                DestinationRectangle, 
-                DialogueBoxForegroundSourceRectangle, 
+                DestinationRectangle,
+                DialogueBoxForegroundSourceRectangle,
                 Color.White);
         }
     }

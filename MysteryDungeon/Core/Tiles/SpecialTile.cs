@@ -1,6 +1,4 @@
-﻿using MysteryDungeon.Core.Characters;
-
-namespace MysteryDungeon.Core.Tiles
+﻿namespace MysteryDungeon.Core.Tiles
 {
     public abstract class SpecialTile : Tile
     {

@@ -1,13 +1,8 @@
-﻿using MysteryDungeon.Core.Characters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.Characters;
 using MysteryDungeon.Core.Data;
+using MysteryDungeon.Core.Extensions;
 
 namespace MysteryDungeon.Core.GUI
 {
@@ -31,6 +26,8 @@ namespace MysteryDungeon.Core.GUI
 
             HealthBarHealthDestination = new Rectangle(_windowWidth / 2, 10, HealthBarHealthSource.Width, HealthBarHealthSource.Height);
             HealthBarDamageDestination = new Rectangle(_windowWidth / 2, 10, HealthBarDamageSource.Width, HealthBarDamageSource.Height);
+
+            _scale = 10.0f;
         }
 
         public void SetPlayer(Player player)
@@ -48,15 +45,18 @@ namespace MysteryDungeon.Core.GUI
 
         public override void Draw(SpriteBatch spritebatch)
         {
+            Rectangle scaledHealthBarHealthDestination = HealthBarHealthDestination.Scale(_scale);
+            Rectangle scaledHealthBarDamageDestination = HealthBarDamageDestination.Scale(_scale);
+
             spritebatch.Draw(
                 SourceTexture,
-                HealthBarDamageDestination,
+                scaledHealthBarDamageDestination,
                 HealthBarDamageSource,
                 Color.White);
 
             spritebatch.Draw(
                 SourceTexture,
-                HealthBarHealthDestination,
+                scaledHealthBarHealthDestination,
                 HealthBarHealthSource,
                 Color.White);
         }

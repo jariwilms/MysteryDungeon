@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
 using MysteryDungeon.Core.Input;
 
-using Microsoft.Xna.Framework.Input;
-
 namespace MysteryDungeon.Core.Characters
 {
     public class Player : Actor

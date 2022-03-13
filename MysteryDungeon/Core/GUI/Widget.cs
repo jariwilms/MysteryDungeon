@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.GUI
 {
@@ -14,11 +10,11 @@ namespace MysteryDungeon.Core.GUI
         [Flags]
         public enum screenPosition
         {
-            Free = 0, 
-            Top = 1, 
-            Right = 2, 
-            Bottom = 4, 
-            Left = 8, 
+            Free = 0,
+            Top = 1,
+            Right = 2,
+            Bottom = 4,
+            Left = 8,
             Center = 16
         }
 
@@ -42,6 +38,7 @@ namespace MysteryDungeon.Core.GUI
 
         protected int _windowWidth;
         protected int _windowHeight;
+        protected float _scale;
 
         public Widget(Widget parent = null, bool isResizable = false)
         {
@@ -54,11 +51,7 @@ namespace MysteryDungeon.Core.GUI
 
             _windowWidth = MysteryDungeon._windowWidth;
             _windowHeight = MysteryDungeon._windowHeight;
-        }
-
-        public void AddChild(Widget widget) //setparent vs addchild?
-        {
-            _children.Add(widget);
+            _scale = 1.0f;
         }
 
         public virtual void Enable()
@@ -79,6 +72,16 @@ namespace MysteryDungeon.Core.GUI
         public virtual void Hide()
         {
             IsVisible = false;
+        }
+
+        public void SetScale(int scale)
+        {
+            _scale = scale;
+        }
+
+        public void AddChild(Widget widget) //setparent vs addchild?
+        {
+            _children.Add(widget);
         }
 
         public abstract void Update(GameTime gameTime);

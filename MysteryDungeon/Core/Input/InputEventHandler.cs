@@ -1,10 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.Xna.Framework.Input;
 
 namespace MysteryDungeon.Core.Input
 {
@@ -12,8 +8,8 @@ namespace MysteryDungeon.Core.Input
     {
         public static readonly InputEventHandler Instance = new InputEventHandler();
 
-		private List<Command> _commands;
-		private Dictionary<KeyAction, Keys> _keyTable;
+        private List<Command> _commands;
+        private Dictionary<KeyAction, Keys> _keyTable;
 
         private KeyboardState _keyboardState;
 
@@ -23,12 +19,12 @@ namespace MysteryDungeon.Core.Input
         }
 
         private InputEventHandler()
-		{
-			_commands = new List<Command>(); //move commands naar inputeventlistener? + maak list aan van listeners => iterate top to bottom voor event capturing
-			_keyTable = new Dictionary<KeyAction, Keys>();
+        {
+            _commands = new List<Command>(); //move commands naar inputeventlistener? + maak list aan van listeners => iterate top to bottom voor event capturing
+            _keyTable = new Dictionary<KeyAction, Keys>();
 
-			foreach (KeyAction key in Enum.GetValues(typeof(KeyAction)))
-				_commands.Add(new Command(key));
+            foreach (KeyAction key in Enum.GetValues(typeof(KeyAction)))
+                _commands.Add(new Command(key));
 
             _keyTable.Add(KeyAction.Confirm, Keys.None);
             _keyTable.Add(KeyAction.Cancel, Keys.None);
@@ -42,7 +38,7 @@ namespace MysteryDungeon.Core.Input
 
         public void AddEventListener(KeyAction keyAction, Action action)
         {
-			foreach (var command in _commands)
+            foreach (var command in _commands)
             {
                 if (command.KeyAction == keyAction)
                 {
@@ -57,8 +53,8 @@ namespace MysteryDungeon.Core.Input
 
         }
 
-		public void Update()
-		{
+        public void Update()
+        {
             _keyboardState = Keyboard.GetState();
 
             _commands.ForEach(command =>
@@ -67,5 +63,5 @@ namespace MysteryDungeon.Core.Input
                     command.Execute();
             });
         }
-	}
+    }
 }
