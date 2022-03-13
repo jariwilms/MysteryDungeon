@@ -4,33 +4,35 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core.GUI
+namespace MysteryDungeon.Core.Interface
 {
-    class GuiManager : IDisposable
+    public sealed class GUI : IDisposable
     {
+        public static readonly GUI Instance = new GUI();
+
         private ContentManager _content;
+
+        public List<Widget> Widgets;
 
         private int _windowWidth;
         private int _windowHeight;
 
-        public static List<Widget> Widgets;
+        static GUI()
+        {
 
-        static GuiManager()
+        }
+
+        private GUI()
         {
             Widgets = new List<Widget>();
         }
 
-        public GuiManager(ContentManager content, int windowWidth, int windowHeight)
+        public void Init(ContentManager content, int windowWidth, int windowHeight)
         {
             _content = content;
 
             _windowWidth = windowWidth;
             _windowHeight = windowHeight;
-        }
-
-        private void CreateDialogueAtlas()
-        {
-
         }
 
         public void Update(GameTime gameTime)

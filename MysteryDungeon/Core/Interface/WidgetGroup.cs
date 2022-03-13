@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MysteryDungeon.Core.GUI
+namespace MysteryDungeon.Core.Interface
 {
     class WidgetGroup
     {

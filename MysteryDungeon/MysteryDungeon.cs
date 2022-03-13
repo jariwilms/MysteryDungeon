@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core;
 using MysteryDungeon.Core.Data;
-using MysteryDungeon.Core.GUI;
+using MysteryDungeon.Core.Interface;
 using MysteryDungeon.Core.Input;
 
 namespace MysteryDungeon
@@ -37,7 +37,6 @@ namespace MysteryDungeon
 
         private Camera _camera;
         private Dungeon _dungeon;
-        private GuiManager _guiManager;
 
         // ###
 
@@ -72,8 +71,8 @@ namespace MysteryDungeon
 
             GuiTextures.Load(Content);
 
-            _guiManager = new GuiManager(Content, _windowWidth, _windowHeight);
-            GuiManager.Widgets.Add(new DialogueBoxWidget());
+            GUI.Instance.Init(Content, _windowWidth, _windowHeight);
+            GUI.Instance.Widgets.Add(new DialogueBoxWidget());
 
 
 
@@ -127,7 +126,7 @@ namespace MysteryDungeon
             _dungeon.Update(gameTime);
             _camera.Update();
 
-            _guiManager.Update(gameTime);
+            GUI.Instance.Update(gameTime);
 
             // #####
 
@@ -157,7 +156,7 @@ namespace MysteryDungeon
                 BlendState.AlphaBlend,
                 SamplerState.PointClamp);
 
-            _guiManager.Draw(_spriteBatch);
+            GUI.Instance.Draw(_spriteBatch);
 
             _spriteBatch.End();
 

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Data;
 
-namespace MysteryDungeon.Core.GUI
+namespace MysteryDungeon.Core.Interface
 {
     class DialogueBoxWidget : Widget
     {

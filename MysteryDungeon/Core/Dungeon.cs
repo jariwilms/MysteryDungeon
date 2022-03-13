@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core.Characters;
-using MysteryDungeon.Core.GUI;
+using MysteryDungeon.Core.Interface;
 using MysteryDungeon.Core.Map;
 using System;
 
@@ -36,17 +36,16 @@ namespace MysteryDungeon.Core
             Player.CurrentHealth = 20;
             Player.MaxHealth = 30;
 
-            GuiManager.Widgets.Add(new HealthBarWidget(Player));
+            GUI.Instance.Widgets.Add(new HealthBarWidget(Player));
         }
 
         public void StairsReached()
         {
             TileMap = _tileMapGenerator.Generate();
+            _tileMapRenderer.Render(TileMap);
 
             Player.Stop();
             Player.SetPosition(TileMap.SpawnPoint);
-
-            _tileMapRenderer.Render(TileMap);
         }
 
         public void Update(GameTime gameTime)

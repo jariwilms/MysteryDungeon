@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core.GUI
+namespace MysteryDungeon.Core.Interface
 {
-    public abstract class Widget
+    public abstract class Widget //make more window oriented
     {
         [Flags]
         public enum ScreenPosition
