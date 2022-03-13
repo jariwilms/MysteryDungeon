@@ -152,7 +152,10 @@ namespace MysteryDungeon
 
 
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(
+                SpriteSortMode.Deferred,
+                BlendState.AlphaBlend,
+                SamplerState.PointClamp);
 
             _guiManager.Draw(_spriteBatch);
 

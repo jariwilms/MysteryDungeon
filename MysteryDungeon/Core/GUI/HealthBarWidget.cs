@@ -27,7 +27,7 @@ namespace MysteryDungeon.Core.GUI
             HealthBarHealthDestination = new Rectangle(WindowWidth / 2, 10, HealthBarHealthSource.Width, HealthBarHealthSource.Height);
             HealthBarDamageDestination = new Rectangle(WindowWidth / 2, 10, HealthBarDamageSource.Width, HealthBarDamageSource.Height);
             
-            Scale = 10.0f;
+            LocalScale = 10.0f;
         }
 
         public void SetPlayer(Player player)
@@ -45,8 +45,8 @@ namespace MysteryDungeon.Core.GUI
 
         public override void Draw(SpriteBatch spritebatch)
         {
-            Rectangle scaledHealthBarHealthDestination = HealthBarHealthDestination.Scale(Scale);
-            Rectangle scaledHealthBarDamageDestination = HealthBarDamageDestination.Scale(Scale);
+            Rectangle scaledHealthBarHealthDestination = HealthBarHealthDestination.Scale(LocalScale);
+            Rectangle scaledHealthBarDamageDestination = HealthBarDamageDestination.Scale(LocalScale);
 
             spritebatch.Draw(
                 SourceTexture,

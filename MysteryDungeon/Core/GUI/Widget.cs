@@ -38,7 +38,9 @@ namespace MysteryDungeon.Core.GUI
 
         protected int WindowWidth;
         protected int WindowHeight;
-        protected float Scale;
+
+        public static float GlobalScale;
+        public float LocalScale;
 
         public Widget(Widget parent = null, bool isResizable = false)
         {
@@ -51,7 +53,7 @@ namespace MysteryDungeon.Core.GUI
 
             WindowWidth = MysteryDungeon._windowWidth;
             WindowHeight = MysteryDungeon._windowHeight;
-            Scale = 1.0f;
+            LocalScale = 1.0f;
         }
 
         public virtual void Enable()
@@ -72,11 +74,6 @@ namespace MysteryDungeon.Core.GUI
         public virtual void Hide()
         {
             IsVisible = false;
-        }
-
-        public void SetScale(int scale)
-        {
-            Scale = scale;
         }
 
         public void AddChild(Widget widget) //setparent vs addchild?
