@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Interface
 {
-    public abstract class Widget //make more window oriented
+    public abstract class Widget
     {
         [Flags]
         public enum ScreenPosition

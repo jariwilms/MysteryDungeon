@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.Extensions;
 using System;
 using System.Configuration;
 
@@ -19,12 +20,13 @@ namespace MysteryDungeon.Core
         }
     }
 
-    public abstract class GameComponent
+    public abstract class GameObject
     {
         public Transform Transform;
+        public Transform Offset;
         public int UnitSize;
 
-        public GameComponent()
+        public GameObject()
         {
             Transform = new Transform();
             UnitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));

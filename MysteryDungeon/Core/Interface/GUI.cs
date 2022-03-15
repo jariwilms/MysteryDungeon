@@ -27,7 +27,7 @@ namespace MysteryDungeon.Core.Interface
             Widgets = new List<Widget>();
         }
 
-        public void Init(ContentManager content, int windowWidth, int windowHeight)
+        public void Initialize(ContentManager content, int windowWidth, int windowHeight)
         {
             _content = content;
 
@@ -43,7 +43,7 @@ namespace MysteryDungeon.Core.Interface
             });
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawWidgets(SpriteBatch spriteBatch)
         {
             Widgets.ForEach(widget =>
             {

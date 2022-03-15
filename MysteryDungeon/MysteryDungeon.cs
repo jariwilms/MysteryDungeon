@@ -5,6 +5,8 @@ using MysteryDungeon.Core;
 using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Interface;
 using MysteryDungeon.Core.Input;
+using System;
+using MysteryDungeon.Core.Extensions;
 
 namespace MysteryDungeon
 {
@@ -36,8 +38,10 @@ namespace MysteryDungeon
         // ### THE CUM ZONE ###
 
         private Camera _camera;
-        private Dungeon _dungeon;
+        private Level _dungeon;
 
+        private Texture2D _blackRectangle;
+        
         // ###
 
         public MysteryDungeon()
@@ -71,14 +75,10 @@ namespace MysteryDungeon
 
             GuiTextures.Load(Content);
 
-            GUI.Instance.Init(Content, _windowWidth, _windowHeight);
+            GUI.Instance.Initialize(Content, _windowWidth, _windowHeight);
             GUI.Instance.Widgets.Add(new DialogueBoxWidget());
 
-
-
-            _dungeon = new Dungeon(Content); //Haal player uit dungeon?
-
-
+            _dungeon = new Level(Content); //Haal player uit dungeon?
 
             _camera = new Camera(_windowWidth, _windowHeight);
             _camera.Follow(_dungeon.Player);
@@ -92,7 +92,7 @@ namespace MysteryDungeon
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _spriteFont = Content.Load<SpriteFont>("font");
-
+            _blackRectangle = Content.Load<Texture2D>("effects/black_rectangle");
             // #####
         }
 
@@ -156,7 +156,12 @@ namespace MysteryDungeon
                 BlendState.AlphaBlend,
                 SamplerState.PointClamp);
 
-            GUI.Instance.Draw(_spriteBatch);
+            if (true) //draw gui debug shit hier
+            {
+                _spriteBatch.DrawString(_spriteFont, "Camera zoom: " + _camera.ZoomValue.ToString(), new Vector2(10, 10), Color.White, 0.0f, Vector2.Zero, 0.1f, SpriteEffects.None, 0.0f);
+            }
+
+            GUI.Instance.DrawWidgets(_spriteBatch);
 
             _spriteBatch.End();
 

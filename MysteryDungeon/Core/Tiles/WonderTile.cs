@@ -11,7 +11,7 @@ namespace MysteryDungeon.Core.Tiles
             IsVisible = true;
         }
 
-        public override void Activate(Dungeon dungeon, Actor actor)
+        public override void Activate(Level dungeon, Actor actor)
         {
 
         }

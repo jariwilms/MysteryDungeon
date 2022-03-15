@@ -73,7 +73,7 @@ namespace MysteryDungeon.Core.Tiles
             IsSpecial = false;
         }
 
-        public virtual void Activate(Dungeon dungeon, Actor actor)
+        public virtual void Activate(Level dungeon, Actor actor)
         {
 
         }

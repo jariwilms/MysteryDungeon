@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
+using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Tiles;
 using System;
 
@@ -36,15 +37,18 @@ namespace MysteryDungeon.Core.Characters
         AttackLeft,
     }
 
-    public class Actor : GameComponent
+    public abstract class Actor : GameObject
     {
-        public Dungeon Dungeon;
-        public Sprite Sprite;
+        public Level Dungeon { get; protected set; }
+        public Sprite Sprite { get; protected set; }
 
         public event Action OnSpawn;
         public event Action OnDefeat;
         public event Action OnMoveStart;
         public event Action OnMoveFinished;
+
+        public event Action OnTurnStart;
+        public event Action OnTurnFinished;
 
         public float LerpDuration { get { return _lerpDuration; } set { if (value > 0) _lerpDuration = value; } }
         private float _lerpDuration;
@@ -147,7 +151,7 @@ namespace MysteryDungeon.Core.Characters
         /// </summary>
         /// <param name="direction"></param>
         /// <returns></returns>
-        private bool CanMoveInDirection(MovementDirection direction) //TODO: DIRECTION ENUM IDK
+        private bool CanMoveInDirection(MovementDirection direction)
         {
             Point directionPoint = direction switch
             {
@@ -160,7 +164,7 @@ namespace MysteryDungeon.Core.Characters
 
             Vector2 tilePosition = new Vector2((int)Transform.Position.X / UnitSize, (int)Transform.Position.Y / UnitSize) + new Vector2(directionPoint.X, directionPoint.Y);
 
-            if (Dungeon.TileMap.Tiles[(int)tilePosition.X, (int)tilePosition.Y].TileCollision == TileCollision.Passable)
+            if (Dungeon.Tilemap.Tiles[(int)tilePosition.X, (int)tilePosition.Y].TileCollision == TileCollision.Passable)
                 return true;
 
             return false;

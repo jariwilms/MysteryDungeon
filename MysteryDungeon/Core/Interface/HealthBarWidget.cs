@@ -27,7 +27,7 @@ namespace MysteryDungeon.Core.Interface
             HealthBarHealthDestination = new Rectangle(WindowWidth / 2, 10, HealthBarHealthSource.Width, HealthBarHealthSource.Height);
             HealthBarDamageDestination = new Rectangle(WindowWidth / 2, 10, HealthBarDamageSource.Width, HealthBarDamageSource.Height);
             
-            LocalScale = 10.0f;
+            LocalScale = 2.0f;
         }
 
         public void SetPlayer(Player player)

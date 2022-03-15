@@ -11,11 +11,11 @@ namespace MysteryDungeon.Core.Characters
         public int CurrentHealth;
         public int MaxHealth;
 
-        public Player(ContentManager content, Dungeon dungeon) : base()
+        public Player(ContentManager content, Level dungeon) : base()
         {
             Dungeon = dungeon;
 
-            Sprite = new Sprite(content.Load<Texture2D>("sprites/chikorita"), UnitSize); //move naar constructor
+            Sprite = new Sprite(content.Load<Texture2D>("sprites/chikorita"), UnitSize);
             CreateAnimations();
             Sprite.AnimationPlayer.PlayAnimation("Idle");
 
@@ -42,6 +42,16 @@ namespace MysteryDungeon.Core.Characters
             InputEventHandler.Instance.AddEventListener(KeyAction.Right, MoveRightAction);
             InputEventHandler.Instance.AddEventListener(KeyAction.Down, MoveDownAction);
             InputEventHandler.Instance.AddEventListener(KeyAction.Left, MoveLeftAction);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
         }
     }
 }

@@ -4,25 +4,25 @@ using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
 using MysteryDungeon.Core.Tiles;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace MysteryDungeon.Core.Map
 {
-    class TileMapRenderer : IDisposable
+    class TilemapRenderer //Convert to singleton
     {
-        private TileMap _tileMap;
+        public Tilemap Tilemap { get; private set; }
+
         private SpriteAtlas<TileType> _dungeonAtlas;
         private SpriteAtlas<SpecialTileType> _specialAtlas;
-
-        private readonly ContentManager _content;
+        
         private int _unitSize;
 
-        public TileMapRenderer(ContentManager content)
+        public TilemapRenderer(ContentManager content)
         {
-            _content = content;
             _unitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
 
-            Texture2D dungeonTexture = _content.Load<Texture2D>("tiles/tiny_woods");
+            Texture2D dungeonTexture = content.Load<Texture2D>("tiles/tiny_woods");
             Texture2D specialTexture = content.Load<Texture2D>("tiles/special_tiles");
 
             _dungeonAtlas = new SpriteAtlas<TileType>(dungeonTexture, new Point(9, 163), 1, 1, 24);
@@ -67,9 +67,9 @@ namespace MysteryDungeon.Core.Map
             _specialAtlas.AddSprite(SpecialTileType.WonderTile, 1, 2);
         }
 
-        public void Render(TileMap tileMap)
+        public void Render(Tilemap tilemap)
         {
-            _tileMap = tileMap;
+            Tilemap = tilemap;
         }
 
         public void Update(GameTime gameTime)
@@ -81,11 +81,11 @@ namespace MysteryDungeon.Core.Map
         {
             Point tilePosition;
 
-            for (int y = 0; y < _tileMap.Height; y++)
+            for (int y = 0; y < Tilemap.Height; y++)
             {
-                for (int x = 0; x < _tileMap.Width; x++)
+                for (int x = 0; x < Tilemap.Width; x++)
                 {
-                    Tile tile = _tileMap.Tiles[x, y];
+                    Tile tile = Tilemap.Tiles[x, y];
                     tilePosition = new Point(x, y) * new Point(_unitSize, _unitSize); //Offset taking unitSize into account
 
                     if (tile.IsSpecial)
@@ -101,7 +101,7 @@ namespace MysteryDungeon.Core.Map
                     }
                     else
                     {
-                        TileType tileType = _tileMap.Tiles[x, y].TileType;
+                        TileType tileType = Tilemap.Tiles[x, y].TileType;
                         _dungeonAtlas.SetCurrentSprite(tileType);
 
                         spriteBatch.Draw(
@@ -112,11 +112,6 @@ namespace MysteryDungeon.Core.Map
                     }
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            _content.Unload();
         }
     }
 }

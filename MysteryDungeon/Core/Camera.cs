@@ -12,7 +12,7 @@ namespace MysteryDungeon.Core
         private Matrix _offset;
         private Matrix _zoom;
 
-        private float _zoomValue;
+        public float ZoomValue { get; private set; }
         private float _minZoom;
         private float _maxZoom;
         private float _zoomStep;
@@ -30,7 +30,7 @@ namespace MysteryDungeon.Core
             _offset = new Matrix();
             _zoom = new Matrix();
 
-            _zoomValue = 3.0f;
+            ZoomValue = 3.0f;
             _minZoom = 0.2f;
             _maxZoom = 4.0f;
             _zoomStep = 0.2f;
@@ -46,12 +46,12 @@ namespace MysteryDungeon.Core
 
         public void ZoomIn() //If current zoom + zoomstep greater than maxzoom => zoom = maxzoom
         {
-            _zoomValue = _zoomValue + _zoomStep > _maxZoom ? _maxZoom : _zoomValue + +_zoomStep;
+            ZoomValue = ZoomValue + _zoomStep > _maxZoom ? _maxZoom : ZoomValue + +_zoomStep;
         }
 
         public void ZoomOut() //Vice versa
         {
-            _zoomValue = _zoomValue - _zoomStep < _minZoom ? _minZoom : _zoomValue - _zoomStep;
+            ZoomValue = ZoomValue - _zoomStep < _minZoom ? _minZoom : ZoomValue - _zoomStep;
         }
 
         public void SetZoom(float zoom)
@@ -71,7 +71,7 @@ namespace MysteryDungeon.Core
                 _windowHeight / 2,
                 0.0f);
 
-            _zoom = Matrix.CreateScale(_zoomValue);
+            _zoom = Matrix.CreateScale(ZoomValue);
 
             TransformMatrix = _position * _zoom * _offset;
         }

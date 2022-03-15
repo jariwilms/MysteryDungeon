@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MysteryDungeon.Core.Characters;
+using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Tiles;
 using System;
 using System.Collections.Generic;
@@ -8,15 +9,17 @@ using System.Linq;
 namespace MysteryDungeon.Core.Map
 {
     /// <summary>
-    /// Contains a representation of a map in a 2-dimensional tile array
+    /// Stores and handles tile assets for creating 2D levels
     /// </summary>
-    public class TileMap
+    public class Tilemap //Move rooms en hallways buiten tilemap?
     {
         public Tile[,] Tiles;                       //Complete array of all tiles
-        public char[,] CharMap;                     //Text representation of the map
+        public char[,] Charmap;                     //Text representation of the map
 
         public List<Room> Rooms;                    //Array of rooms
-        public List<Hallway> Hallways;              //List of hallways
+        public List<Hallway> Hallways;              //List of hallways, unused atm
+
+        public GridComponent GridComponent;
 
         public int HorizontalRooms;
         public int VerticalRooms;
@@ -24,25 +27,25 @@ namespace MysteryDungeon.Core.Map
         public bool isComplete;
         public Vector2 SpawnPoint;
 
-        public int Width { get { return CharMap.GetLength(0); } }
-        public int Height { get { return CharMap.GetLength(1); } }
+        public int Width { get { return Charmap.GetLength(0); } }
+        public int Height { get { return Charmap.GetLength(1); } }
 
         private Random _random;
 
-        public TileMap()
+        public Tilemap()
         {
             Tiles = new Tile[0, 0];
-            CharMap = new char[0, 0];
-
+            Charmap = new char[0, 0];
             Rooms = new List<Room>();
             Hallways = new List<Hallway>();
 
+            GridComponent = new GridComponent(24); //declare unitsize ergens
             isComplete = true;
 
             _random = new Random();
         }
 
-        public void TriggerTile(Dungeon dungeon, Actor actor)
+        public void ActivateTile(Level dungeon, Actor actor)
         {
             Point tilePosition = new Point((int)(actor.Transform.Position.X / 24), (int)(actor.Transform.Position.Y / 24));
             Tiles[tilePosition.X, tilePosition.Y].Activate(dungeon, actor);
@@ -126,7 +129,7 @@ namespace MysteryDungeon.Core.Map
             {
                 currentPosition.X += positionIncrement.X;
                 currentPosition.Y += positionIncrement.Y;
-                CharMap[currentPosition.X, currentPosition.Y] = '.';
+                Charmap[currentPosition.X, currentPosition.Y] = '.';
             }
 
             positionIncrement = source.Direction switch
@@ -140,7 +143,7 @@ namespace MysteryDungeon.Core.Map
             {
                 currentPosition.X += positionIncrement.X;
                 currentPosition.Y += positionIncrement.Y;
-                CharMap[currentPosition.X, currentPosition.Y] = '.';
+                Charmap[currentPosition.X, currentPosition.Y] = '.';
             }
 
             positionIncrement = source.Direction switch
@@ -156,7 +159,7 @@ namespace MysteryDungeon.Core.Map
             {
                 currentPosition.X += positionIncrement.X;
                 currentPosition.Y += positionIncrement.Y;
-                CharMap[currentPosition.X, currentPosition.Y] = '.';
+                Charmap[currentPosition.X, currentPosition.Y] = '.';
             }
 
             source.IsConnected = true;
