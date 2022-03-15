@@ -40,7 +40,7 @@ namespace MysteryDungeon.Core.Characters
 
         public Enemy(Level dungeon, EnemyState enemyState) : this()
         {
-            Dungeon = dungeon;
+            Level = dungeon;
 
             State = EnemyState.Patrolling;
         }

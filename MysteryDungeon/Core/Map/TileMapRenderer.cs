@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
+using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Tiles;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Configuration;
 
 namespace MysteryDungeon.Core.Map
 {
-    class TilemapRenderer //Convert to singleton
+    public class TilemapRenderer : Component
     {
         public Tilemap Tilemap { get; private set; }
 
@@ -18,9 +19,9 @@ namespace MysteryDungeon.Core.Map
         
         private int _unitSize;
 
-        public TilemapRenderer(ContentManager content)
+        public TilemapRenderer(ContentManager content, int unitSize)
         {
-            _unitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
+            _unitSize = unitSize;
 
             Texture2D dungeonTexture = content.Load<Texture2D>("tiles/tiny_woods");
             Texture2D specialTexture = content.Load<Texture2D>("tiles/special_tiles");

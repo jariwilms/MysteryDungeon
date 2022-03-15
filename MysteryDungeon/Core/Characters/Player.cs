@@ -13,7 +13,7 @@ namespace MysteryDungeon.Core.Characters
 
         public Player(ContentManager content, Level dungeon) : base()
         {
-            Dungeon = dungeon;
+            Level = dungeon;
 
             Sprite = new Sprite(content.Load<Texture2D>("sprites/chikorita"), UnitSize);
             CreateAnimations();

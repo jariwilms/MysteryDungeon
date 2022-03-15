@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Extensions;
 using System;
@@ -20,15 +21,19 @@ namespace MysteryDungeon.Core
         }
     }
 
-    public abstract class GameObject
+    public abstract class GameObject : IDisposable
     {
         public Transform Transform;
         public Transform Offset;
-        public int UnitSize;
+
+        public static ContentManager Content;
+        public readonly int UnitSize;
 
         public GameObject()
         {
             Transform = new Transform();
+            Offset = new Transform();
+
             UnitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
         }
 
@@ -39,5 +44,10 @@ namespace MysteryDungeon.Core
 
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(SpriteBatch spriteBatch);
+
+        public void Dispose()
+        {
+            Content.Unload();
+        }
     }
 }

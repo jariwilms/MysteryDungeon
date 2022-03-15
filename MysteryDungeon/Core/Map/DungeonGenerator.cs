@@ -17,18 +17,19 @@ namespace MysteryDungeon.Core.Map
     }
 
     /// <summary>
-    /// Generates random Tilemaps from different level types
+    /// Generates random Dungeons according to predefined generators
     /// </summary>
-    class TilemapGenerator //make singleton?
+    class DungeonGenerator
     {
         #region variables
-        private Tilemap _Tilemap;
-        private delegate Tilemap Generator();
-        private readonly Generator _generator;
+        private Dungeon _dungeon;
         private DungeonType _dungeonType;
 
-        public int DungeonWidth;                  //Total width of the level
-        public int DungeonHeight;                 //Total height of the level
+        private delegate Dungeon Generator();
+        private readonly Generator _generator;
+
+        private int _dungeonWidth;                //Total width of the level
+        private int _dungeonHeight;               //Total height of the level
 
         private int _borderSize;                //Size of border around the level
         private int _minSpaceBetweenRooms;      //Minimum amount of space between rooms
@@ -56,7 +57,7 @@ namespace MysteryDungeon.Core.Map
         private readonly Random _random;
         #endregion
 
-        public TilemapGenerator(DungeonType dungeonType = DungeonType.Standard) //Voeg leveldifficulty toe aan ctor => trap spawn chance
+        public DungeonGenerator(DungeonType dungeonType = DungeonType.Standard) //Voeg leveldifficulty toe aan ctor => trap spawn chance
         {
             _dungeonType = dungeonType;
             _generator = _dungeonType switch
@@ -77,16 +78,16 @@ namespace MysteryDungeon.Core.Map
             _dungeonType = dungeonType;
         }
 
-        public Tilemap Generate()
+        public Dungeon Generate()
         {
-            _Tilemap = new Tilemap(); //TODO: moet Tilemap zonder content weergeven, anderzijds gewoon in renderer proppen?
+            _dungeon = new Dungeon();
             return _generator();
         }
 
-        private Tilemap GenerateStandard()
+        private Dungeon GenerateStandard()
         {
-            DungeonWidth = 60;
-            DungeonHeight = 36;
+            _dungeonWidth = 60;
+            _dungeonHeight = 36;
 
             _borderSize = 4;
             _minSpaceBetweenRooms = 3;
@@ -101,8 +102,8 @@ namespace MysteryDungeon.Core.Map
             _maxRoomHorizontalSize = 9;
             _maxRoomVerticalSize = 8;
 
-            _horizontalRoomBoxSize = (DungeonWidth - 2 * _borderSize - _minSpaceBetweenRooms * (_horizontalRooms - 1)) / _horizontalRooms;
-            _verticalRoomBoxSize = (DungeonHeight - 2 * _borderSize - _minSpaceBetweenRooms * (_verticalRooms - 1)) / _verticalRooms;
+            _horizontalRoomBoxSize = (_dungeonWidth - 2 * _borderSize - _minSpaceBetweenRooms * (_horizontalRooms - 1)) / _horizontalRooms;
+            _verticalRoomBoxSize = (_dungeonHeight - 2 * _borderSize - _minSpaceBetweenRooms * (_verticalRooms - 1)) / _verticalRooms;
 
             if (_maxRoomHorizontalSize > _horizontalRoomBoxSize)
                 _maxRoomHorizontalSize = _horizontalRoomBoxSize;
@@ -128,16 +129,16 @@ namespace MysteryDungeon.Core.Map
             GenerateSpawnPoint();           //Generate a spawnpoint in a random room
             GenerateSpecialTiles();
 
-            return _Tilemap;
+            return _dungeon;
         }
 
         #region toBeImplemented
-        public Tilemap GenerateHorizontalCorridor()
+        public Dungeon GenerateHorizontalCorridor()
         {
             throw new NotImplementedException();
         }
 
-        public Tilemap GenerateVerticalCorridor()
+        public Dungeon GenerateVerticalCorridor()
         {
             throw new NotImplementedException();
         }
@@ -146,7 +147,7 @@ namespace MysteryDungeon.Core.Map
         /// Generates a random Tilemap with a circular pattern
         /// </summary>
         /// <returns></returns>
-        public Tilemap GenerateCorridorsInside()
+        public Dungeon GenerateCorridorsInside()
         {
             throw new NotImplementedException();
         }
@@ -155,7 +156,7 @@ namespace MysteryDungeon.Core.Map
         /// Generates a random Tilemap with a plus pattern
         /// </summary>
         /// <returns></returns>
-        public Tilemap GenerateCorridorsOutside()
+        public Dungeon GenerateCorridorsOutside()
         {
             throw new NotImplementedException();
         }
@@ -163,11 +164,11 @@ namespace MysteryDungeon.Core.Map
 
         private void FillCharMap()
         {
-            _Tilemap.Charmap = new char[DungeonWidth, DungeonHeight];
+            _dungeon.Charmap = new char[_dungeonWidth, _dungeonHeight];
 
-            for (int y = 0; y < DungeonHeight; y++)
-                for (int x = 0; x < DungeonWidth; x++)
-                    _Tilemap.Charmap[x, y] = '#';
+            for (int y = 0; y < _dungeonHeight; y++)
+                for (int x = 0; x < _dungeonWidth; x++)
+                    _dungeon.Charmap[x, y] = '#';
         }
 
         private void GenerateRooms()
@@ -209,22 +210,22 @@ namespace MysteryDungeon.Core.Map
                     room.Bounds.X = _random.Next(0, _maxRoomHorizontalSize - room.Bounds.Width) + xIndex * _horizontalRoomBoxSize + _borderSize + xIndex * _minSpaceBetweenRooms;
                     room.Bounds.Y = _random.Next(0, _maxRoomVerticalSize - room.Bounds.Height) + yIndex * _verticalRoomBoxSize + _borderSize + yIndex * _minSpaceBetweenRooms;
 
-                    _Tilemap.Rooms.Add(room);
+                    _dungeon.Rooms.Add(room);
                 }
             }
 
-            _Tilemap.Rooms = _Tilemap.Rooms.OrderBy(room => room.Id).ToList();
-            _Tilemap.HorizontalRooms = _horizontalRooms;
-            _Tilemap.VerticalRooms = _verticalRooms;
+            _dungeon.Rooms = _dungeon.Rooms.OrderBy(room => room.Id).ToList();
+            _dungeon.HorizontalRooms = _horizontalRooms;
+            _dungeon.VerticalRooms = _verticalRooms;
         }
 
         private void DrawRoomsOnCharMap()
         {
-            _Tilemap.Rooms.ForEach(room =>
+            _dungeon.Rooms.ForEach(room =>
             {
                 for (int y = 0; y < room.Bounds.Height; y++)
                     for (int x = 0; x < room.Bounds.Width; x++)
-                        _Tilemap.Charmap[x + room.Bounds.X, y + room.Bounds.Y] = '.';
+                        _dungeon.Charmap[x + room.Bounds.X, y + room.Bounds.Y] = '.';
             });
         }
 
@@ -253,7 +254,7 @@ namespace MysteryDungeon.Core.Map
                     if (h == _horizontalRooms - 1)
                         direction &= ~Direction.Right;
 
-                    Room room = _Tilemap.Rooms[roomNumber];
+                    Room room = _dungeon.Rooms[roomNumber];
                     room.Id = roomNumber;
 
                     roomNumber++;
@@ -266,7 +267,7 @@ namespace MysteryDungeon.Core.Map
             {
                 for (int h = 0; h < _horizontalRooms; h++)
                 {
-                    Room room = _Tilemap.Rooms[roomNumber];
+                    Room room = _dungeon.Rooms[roomNumber];
                     room.CreateConnectors(h, _horizontalRooms, v, _verticalRooms);
                     roomNumber++;
                 }
@@ -275,19 +276,19 @@ namespace MysteryDungeon.Core.Map
 
         public void ConnectRooms()
         {
-            if (_Tilemap.HorizontalRooms == 0 || _Tilemap.VerticalRooms == 0)
+            if (_dungeon.HorizontalRooms == 0 || _dungeon.VerticalRooms == 0)
                 throw new NullReferenceException("Roomsize has not been set");
 
-            _Tilemap.Rooms.ForEach(room =>
+            _dungeon.Rooms.ForEach(room =>
             {
                 if (!room.isJunction)
                 {
                     room.Connectors.ForEach(sourceConnector =>
                     {
-                        Room destinationRoom = _Tilemap.GetDestinationRoom(room, sourceConnector); //Room apart opvragen is required voor HashSet
-                        Connector destinationConnector = _Tilemap.GetDestinationConnector(destinationRoom, sourceConnector);
+                        Room destinationRoom = _dungeon.GetDestinationRoom(room, sourceConnector); //Room apart opvragen is required voor HashSet
+                        Connector destinationConnector = _dungeon.GetDestinationConnector(destinationRoom, sourceConnector);
 
-                        _Tilemap.Connect(sourceConnector, destinationConnector);
+                        _dungeon.Connect(sourceConnector, destinationConnector);
 
                         room.AdjacencyList.Add(destinationRoom);
                         destinationRoom.AdjacencyList.Add(room);
@@ -295,21 +296,21 @@ namespace MysteryDungeon.Core.Map
                 }
             });
 
-            _Tilemap.CheckGraph();
+            _dungeon.CheckGraph();
         }
 
         public void RemoveUnconnectedJunctions()
         {
             bool anyConnected;
 
-            for (int i = _Tilemap.Rooms.Count - 1; i > -1; i--)
+            for (int i = _dungeon.Rooms.Count - 1; i > -1; i--)
             {
                 anyConnected = false;
 
-                if (!_Tilemap.Rooms[i].isJunction)
+                if (!_dungeon.Rooms[i].isJunction)
                     continue;
 
-                _Tilemap.Rooms[i].Connectors.ForEach(connector =>
+                _dungeon.Rooms[i].Connectors.ForEach(connector =>
                 {
                     if (connector.IsConnected)
                         anyConnected = true;
@@ -317,39 +318,39 @@ namespace MysteryDungeon.Core.Map
 
                 if (!anyConnected)
                 {
-                    _Tilemap.Charmap[_Tilemap.Rooms[i].Bounds.X, _Tilemap.Rooms[i].Bounds.Y] = '#';
-                    _Tilemap.Rooms.RemoveAt(i);
+                    _dungeon.Charmap[_dungeon.Rooms[i].Bounds.X, _dungeon.Rooms[i].Bounds.Y] = '#';
+                    _dungeon.Rooms.RemoveAt(i);
                 }
             }
         }
 
         public void GenerateSpawnPoint()
         {
-            List<Room> bigRooms = _Tilemap.Rooms.Where(room => !room.isJunction).ToList();
+            List<Room> bigRooms = _dungeon.Rooms.Where(room => !room.isJunction).ToList();
             Room room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
 
             int x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
             int y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
-            _Tilemap.SpawnPoint = new Vector2(x, y);
+            _dungeon.SpawnPoint = new Vector2(x, y);
         }
 
         private void GenerateSpecialTiles()
         {
-            List<Room> bigRooms = _Tilemap.Rooms.Where(room => !room.isJunction).ToList();
+            List<Room> bigRooms = _dungeon.Rooms.Where(room => !room.isJunction).ToList();
             Room room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
 
             int x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
             int y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
-            _Tilemap.Tiles[x, y] = new WonderTile();
+            _dungeon.Tilemap.Tiles[x, y] = new WonderTile();
 
             room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
 
             x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
             y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
-            _Tilemap.Tiles[x, y] = new StairsTile(StairsTile.StairDirection.Down);
+            _dungeon.Tilemap.Tiles[x, y] = new StairsTile(StairsTile.StairDirection.Down);
         }
 
         //public void LoadMapFromFile(string levelPath)
@@ -379,46 +380,46 @@ namespace MysteryDungeon.Core.Map
 
         public void GenerateTilesFromCharMap()
         {
-            _Tilemap.Tiles = new Tile[DungeonWidth, DungeonHeight];
+            _dungeon.Tilemap.Tiles = new Tile[_dungeonWidth, _dungeonHeight];
 
             Tile borderTile = new Tile(TileType.Block, TileCollision.Impassable);
 
             char currentTile;
             string surroundingTiles;
 
-            foreach (int topBorderX in Enumerable.Range(0, DungeonWidth))
+            foreach (int topBorderX in Enumerable.Range(0, _dungeonWidth))
             {
-                _Tilemap.Tiles[topBorderX, 0] = borderTile;
+                _dungeon.Tilemap.Tiles[topBorderX, 0] = borderTile;
             }
 
-            foreach (int bottomBorderX in Enumerable.Range(0, DungeonWidth))
+            foreach (int bottomBorderX in Enumerable.Range(0, _dungeonWidth))
             {
-                _Tilemap.Tiles[bottomBorderX, DungeonHeight - 1] = borderTile;
+                _dungeon.Tilemap.Tiles[bottomBorderX, _dungeonHeight - 1] = borderTile;
             }
 
-            foreach (int leftBorderY in Enumerable.Range(0, DungeonHeight))
+            foreach (int leftBorderY in Enumerable.Range(0, _dungeonHeight))
             {
-                _Tilemap.Tiles[0, leftBorderY] = borderTile;
+                _dungeon.Tilemap.Tiles[0, leftBorderY] = borderTile;
             }
 
-            foreach (int rightBorderY in Enumerable.Range(0, DungeonHeight))
+            foreach (int rightBorderY in Enumerable.Range(0, _dungeonHeight))
             {
-                _Tilemap.Tiles[DungeonWidth - 1, rightBorderY] = borderTile;
+                _dungeon.Tilemap.Tiles[_dungeonWidth - 1, rightBorderY] = borderTile;
             }
 
-            foreach (int y in Enumerable.Range(1, DungeonHeight - 2))
+            foreach (int y in Enumerable.Range(1, _dungeonHeight - 2))
             {
-                foreach (int x in Enumerable.Range(1, DungeonWidth - 2))
+                foreach (int x in Enumerable.Range(1, _dungeonWidth - 2))
                 {
-                    currentTile = _Tilemap.Charmap[x, y];
+                    currentTile = _dungeon.Charmap[x, y];
 
                     surroundingTiles = "";
-                    surroundingTiles += _Tilemap.Charmap[x, y - 1]; //Add tile above
-                    surroundingTiles += _Tilemap.Charmap[x + 1, y]; //Add tile right
-                    surroundingTiles += _Tilemap.Charmap[x, y + 1]; //Add tile below
-                    surroundingTiles += _Tilemap.Charmap[x - 1, y]; //Add tile left
+                    surroundingTiles += _dungeon.Charmap[x, y - 1]; //Add tile above
+                    surroundingTiles += _dungeon.Charmap[x + 1, y]; //Add tile right
+                    surroundingTiles += _dungeon.Charmap[x, y + 1]; //Add tile below
+                    surroundingTiles += _dungeon.Charmap[x - 1, y]; //Add tile left
 
-                    _Tilemap.Tiles[x, y] = MatchTile(currentTile, surroundingTiles);
+                    _dungeon.Tilemap.Tiles[x, y] = MatchTile(currentTile, surroundingTiles);
                 }
             }
         }

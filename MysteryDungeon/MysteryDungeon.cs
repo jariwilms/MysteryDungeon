@@ -38,7 +38,7 @@ namespace MysteryDungeon
         // ### THE CUM ZONE ###
 
         private Camera _camera;
-        private Level _dungeon;
+        private Level _level;
 
         private Texture2D _blackRectangle;
         
@@ -73,15 +73,16 @@ namespace MysteryDungeon
 
             // #####
 
-            GuiTextures.Load(Content);
+            GameObject.Content = Content;   //jaja I know dat dit een regel of 28 breekt ma so what
+            GuiTextures.Load(Content);      //das hun eigen fout om geen global content load shit te maken aleja
 
             GUI.Instance.Initialize(Content, _windowWidth, _windowHeight);
             GUI.Instance.Widgets.Add(new DialogueBoxWidget());
 
-            _dungeon = new Level(Content); //Haal player uit dungeon?
+            _level = new Level(Content);
 
             _camera = new Camera(_windowWidth, _windowHeight);
-            _camera.Follow(_dungeon.Player);
+            _camera.Follow(_level.Player);
 
             // #####
 
@@ -123,7 +124,7 @@ namespace MysteryDungeon
             if (MouseState.ScrollWheelValue < LastMouseState.ScrollWheelValue)
                 _camera.ZoomOut();
 
-            _dungeon.Update(gameTime);
+            _level.Update(gameTime);
             _camera.Update();
 
             GUI.Instance.Update(gameTime);
@@ -145,7 +146,7 @@ namespace MysteryDungeon
                 SamplerState.PointClamp,
                 transformMatrix: _camera.TransformMatrix);
 
-            _dungeon.Draw(_spriteBatch);
+            _level.Draw(_spriteBatch);
 
             _spriteBatch.End();
 

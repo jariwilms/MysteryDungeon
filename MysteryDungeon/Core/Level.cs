@@ -9,29 +9,21 @@ using System;
 
 namespace MysteryDungeon.Core
 {
-    public class Level : IDisposable
+    public class Level
     {
         public Player Player;
 
-        public Tilemap Tilemap;
-        private readonly TilemapRenderer _TilemapRenderer;
-        private readonly TilemapGenerator _TilemapGenerator;
-
-        private readonly ContentManager _content;
+        public Dungeon Dungeon;
+        private DungeonGenerator _dungeonGenerator;
 
         public Level(ContentManager content) //TODO: clean deze dogshit class up + leer deftig programmeren
         {
-            _content = content;
-
-            _TilemapGenerator = new TilemapGenerator(DungeonType.Standard);
-            Tilemap = _TilemapGenerator.Generate();
-
-            _TilemapRenderer = new TilemapRenderer(content);
-            _TilemapRenderer.Render(Tilemap);
+            _dungeonGenerator = new DungeonGenerator(DungeonType.Standard);
+            Dungeon = _dungeonGenerator.Generate();
 
             Player = new Player(content, this);
-            Player.SetPosition(Tilemap.SpawnPoint);
-            Player.OnMoveFinished += () => { Tilemap.ActivateTile(this, Player); };
+            Player.SetPosition(Dungeon.SpawnPoint);
+            //Player.OnMoveFinished += () => { Tilemap.ActivateTile(this, Player); };
 
             Player.CurrentHealth = 20;
             Player.MaxHealth = 30;
@@ -39,18 +31,22 @@ namespace MysteryDungeon.Core
             GUI.Instance.Widgets.Add(new HealthBarWidget(Player));
         }
 
-        public void StairsReached()
+        public void GenerateNewDungeon()
         {
-            Tilemap = _TilemapGenerator.Generate();
-            _TilemapRenderer.Render(Tilemap);
+            Dungeon = _dungeonGenerator.Generate();
 
             Player.Stop();
-            Player.SetPosition(Tilemap.SpawnPoint);
+            Player.SetPosition(Dungeon.SpawnPoint);
+        }
+
+        public void StairsReached()
+        {
+            GenerateNewDungeon();
         }
 
         public void Update(GameTime gameTime)
         {
-            _TilemapRenderer.Update(gameTime);
+            Dungeon.Update(gameTime);
             Player.Update(gameTime);
 
             if (Utility.KeyPressedOnce(Keys.R))
@@ -61,13 +57,8 @@ namespace MysteryDungeon.Core
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _TilemapRenderer.Draw(spriteBatch);
+            Dungeon.Draw(spriteBatch);
             Player.Draw(spriteBatch);
-        }
-
-        public void Dispose()
-        {
-            _content.Unload();
         }
     }
 }
