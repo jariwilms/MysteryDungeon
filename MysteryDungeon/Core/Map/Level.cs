@@ -6,12 +6,14 @@ using MysteryDungeon.Core.Characters;
 using MysteryDungeon.Core.Interface;
 using MysteryDungeon.Core.Map;
 using System;
+using System.Collections.Generic;
 
-namespace MysteryDungeon.Core
+namespace MysteryDungeon.Core.Map
 {
     public class Level
     {
         public Player Player;
+        public List<Enemy> Enemies;
 
         public Dungeon Dungeon;
         private DungeonGenerator _dungeonGenerator;
@@ -23,7 +25,7 @@ namespace MysteryDungeon.Core
 
             Player = new Player(content, this);
             Player.SetPosition(Dungeon.SpawnPoint);
-            //Player.OnMoveFinished += () => { Tilemap.ActivateTile(this, Player); };
+            Player.OnMoveFinished += () => { Dungeon.Tilemap.ActivateTile(this, Player); };
 
             Player.CurrentHealth = 20;
             Player.MaxHealth = 30;

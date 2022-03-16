@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.Map;
 
 namespace MysteryDungeon.Core.Characters
 {
-    class Enemy : Actor //abstract prob
+    public class Enemy : Actor //abstract prob
     {
         public enum EnemyState
         {
@@ -38,9 +39,9 @@ namespace MysteryDungeon.Core.Characters
             WalkPoint = new Point();
         }
 
-        public Enemy(Level dungeon, EnemyState enemyState) : this()
+        public Enemy(Level level, EnemyState enemyState) : this()
         {
-            Level = dungeon;
+            Level = level;
 
             State = EnemyState.Patrolling;
         }

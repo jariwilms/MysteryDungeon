@@ -17,13 +17,12 @@ namespace MysteryDungeon.Core.Map
         public char[,] Charmap;                     //Text representation of the map
 
         public List<Room> Rooms;                    //Array of rooms
-        public List<Hallway> Hallways;              //List of hallways, unused atm
+        public List<Corridor> Corridors;              //List of hallways, unused atm
 
         public int HorizontalRooms;
         public int VerticalRooms;
 
         public Vector2 SpawnPoint;
-
         public bool isComplete;
 
         private Random _random;
@@ -34,7 +33,7 @@ namespace MysteryDungeon.Core.Map
             Charmap = new char[0, 0];
 
             Rooms = new List<Room>();
-            Hallways = new List<Hallway>();
+            Corridors = new List<Corridor>();
 
             HorizontalRooms = 0;
             VerticalRooms = 0;

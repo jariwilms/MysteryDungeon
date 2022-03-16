@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Map
 {
-    public class Hallway
+    public class Corridor
     {
         public Room Room1;
         public Room Room2;
         public List<Point> Points;
 
-        public Hallway()
+        public Corridor()
         {
             Room1 = new Room();
             Room2 = new Room();

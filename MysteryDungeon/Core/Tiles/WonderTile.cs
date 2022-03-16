@@ -1,4 +1,5 @@
 ﻿using MysteryDungeon.Core.Characters;
+using MysteryDungeon.Core.Map;
 
 namespace MysteryDungeon.Core.Tiles
 {
@@ -11,7 +12,7 @@ namespace MysteryDungeon.Core.Tiles
             IsVisible = true;
         }
 
-        public override void Activate(Level dungeon, Actor actor)
+        public override void Activate(Level level, Actor actor)
         {
 
         }

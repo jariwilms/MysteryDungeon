@@ -12,11 +12,10 @@ namespace MysteryDungeon.Core.Map
     /// <summary>
     /// Stores and handles tile assets for creating 2D levels
     /// </summary>
-    public class Tilemap : GameObject
+    public class Tilemap : GameObject //Convert naar een pure sprite class en zet tiles in aparte grid?
     {
-        public Tile[,] Tiles;                       //Complete array of all tiles
+        public Tile[,] Tiles;
         public GridComponent GridComponent;
-
         public TilemapRenderer TilemapRenderer;
 
         public int Width { get { return Tiles.GetLength(0); } }

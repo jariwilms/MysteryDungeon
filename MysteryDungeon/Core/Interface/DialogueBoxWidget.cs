@@ -24,8 +24,8 @@ namespace MysteryDungeon.Core.Interface
             DialogueBoxBackgroundSourceRectangle = GuiTextures.DialogueBoxBackgroundSource;
 
             DestinationRectangle = new Rectangle(
-                WindowWidth / 2 - DialogueBoxForegroundSourceRectangle.Width / 2,
-                WindowHeight - DialogueBoxForegroundSourceRectangle.Height - 10,
+                WindowSettings.WindowWidth / 2 - DialogueBoxForegroundSourceRectangle.Width / 2,
+                WindowSettings.WindowHeight - DialogueBoxForegroundSourceRectangle.Height - 10,
                 DialogueBoxForegroundSourceRectangle.Width,
                 DialogueBoxForegroundSourceRectangle.Height);
         }

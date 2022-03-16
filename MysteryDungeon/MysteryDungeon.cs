@@ -7,6 +7,7 @@ using MysteryDungeon.Core.Interface;
 using MysteryDungeon.Core.Input;
 using System;
 using MysteryDungeon.Core.Extensions;
+using MysteryDungeon.Core.Map;
 
 namespace MysteryDungeon
 {
@@ -14,15 +15,9 @@ namespace MysteryDungeon
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        public SpriteFont _spriteFont;
+        private SpriteFont _spriteFont;
 
-        private const int _virtualWindowWidth = 720;
-        private const int _virtualWindowHeight = 720;
-        public static int _windowWidth;
-        public static int _windowHeight;
-        private readonly float _windowWidthScale;
-        private readonly float _windowHeightScale;
-        private Matrix _windowScale;
+        public WindowSettings WindowSettings;
 
         private double _deltaTime;
 
@@ -47,26 +42,17 @@ namespace MysteryDungeon
         public MysteryDungeon()
         {
             _graphics = new GraphicsDeviceManager(this);
-
-            _windowWidth = 800;
-            _windowHeight = 600;
-            _windowWidthScale = _windowWidth / _virtualWindowWidth;
-            _windowHeightScale = _windowHeight / _virtualWindowHeight;
-            _windowScale = Matrix.CreateScale(_windowWidthScale, _windowHeightScale, 1.0f);
+            WindowSettings = new WindowSettings(800, 600);
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
-            _frameTimes = new double[16];
-            _averageFrameTime = 0;
-            _frameIndex = 0;
         }
 
         protected override void Initialize()
         {
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            _graphics.PreferredBackBufferWidth = _windowWidth;
-            _graphics.PreferredBackBufferHeight = _windowHeight;
+            _graphics.PreferredBackBufferWidth = WindowSettings.WindowWidth;
+            _graphics.PreferredBackBufferHeight = WindowSettings.WindowHeight;
             _graphics.PreferMultiSampling = false;
 
             _graphics.ApplyChanges();
@@ -75,13 +61,15 @@ namespace MysteryDungeon
 
             GameObject.Content = Content;   //jaja I know dat dit een regel of 28 breekt ma so what
             GuiTextures.Load(Content);      //das hun eigen fout om geen global content load shit te maken aleja
+                                            //Like actually wie in zijn right mind gaat de ContentManager instance
+                                            //passen door heel de f'in class hierarchy, doe ff normaal
 
-            GUI.Instance.Initialize(Content, _windowWidth, _windowHeight);
-            GUI.Instance.Widgets.Add(new DialogueBoxWidget());
+            GUI.Instance.Initialize(Content);
+            Widget.WindowSettings = WindowSettings; //idem
 
             _level = new Level(Content);
 
-            _camera = new Camera(_windowWidth, _windowHeight);
+            _camera = new Camera(WindowSettings.WindowWidth, WindowSettings.WindowHeight);
             _camera.Follow(_level.Player);
 
             // #####
@@ -100,16 +88,6 @@ namespace MysteryDungeon
         protected override void Update(GameTime gameTime)
         {
             _deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
-
-            _frameTimes[_frameIndex] = _deltaTime;
-            _frameIndex = (_frameIndex + 1) % _frameTimes.Length;
-            _averageFrameTime = 0;
-
-            for (int i = 0; i < _frameTimes.Length; i++)
-                _averageFrameTime += _frameTimes[i];
-
-            _averageFrameTime /= 16;
-            _averageFrameTime = 1 / _averageFrameTime;
 
             KeyboardState = Keyboard.GetState();
             MouseState = Mouse.GetState();
@@ -139,7 +117,7 @@ namespace MysteryDungeon
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            
             _spriteBatch.Begin(
                 SpriteSortMode.Deferred,
                 BlendState.AlphaBlend,

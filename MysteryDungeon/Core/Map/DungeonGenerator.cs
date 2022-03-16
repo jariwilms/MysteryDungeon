@@ -28,10 +28,10 @@ namespace MysteryDungeon.Core.Map
         private delegate Dungeon Generator();
         private readonly Generator _generator;
 
-        private int _dungeonWidth;                //Total width of the level
-        private int _dungeonHeight;               //Total height of the level
+        private int _dungeonWidth;                //Total width of the Dungeon
+        private int _dungeonHeight;               //Total height of the Dungeon
 
-        private int _borderSize;                //Size of border around the level
+        private int _borderSize;                //Size of border around the Dungeon
         private int _minSpaceBetweenRooms;      //Minimum amount of space between rooms
 
         private int _minRooms;                  //Minimum amount of rooms
@@ -43,8 +43,8 @@ namespace MysteryDungeon.Core.Map
         private int _minRoomVerticalSize;       //Minimum vertical size of room
         private int _maxRoomVerticalSize;       //Maximum vertical size of room
 
-        private int _horizontalRoomBoxSize;     //Horizontal size of level subdivision => LevelWidth - (2 * _borderSize) / _horizontalRooms
-        private int _verticalRoomBoxSize;       //Vertical size of level subdivision => LevelHeight - (2 * _borderSize) / _verticalRooms
+        private int _horizontalRoomBoxSize;     //Horizontal size of Dungeon subdivision => DungeonWidth - (2 * _borderSize) / _horizontalRooms
+        private int _verticalRoomBoxSize;       //Vertical size of Dungeon subdivision => DungeonHeight - (2 * _borderSize) / _verticalRooms
 
         private int _minimumConnections;        //Minimum amount of connections per room
         private List<int> _connectionBias;      //Decides what direction connections are likely to form in
@@ -52,12 +52,12 @@ namespace MysteryDungeon.Core.Map
         private int _connectorSpawnChance;
 
         private int _specialTileSpawnChance;    //What are the odds of a special tile spawning?
-        private int _levelDifficulty;           //<= Change to distinct groups of spawnable tiles per level difficulty?
+        private int _DungeonDifficulty;           //<= Change to distinct groups of spawnable tiles per Dungeon difficulty?
 
         private readonly Random _random;
         #endregion
 
-        public DungeonGenerator(DungeonType dungeonType = DungeonType.Standard) //Voeg leveldifficulty toe aan ctor => trap spawn chance
+        public DungeonGenerator(DungeonType dungeonType = DungeonType.Standard) //Voeg Dungeondifficulty toe aan ctor => trap spawn chance
         {
             _dungeonType = dungeonType;
             _generator = _dungeonType switch
@@ -353,41 +353,14 @@ namespace MysteryDungeon.Core.Map
             _dungeon.Tilemap.Tiles[x, y] = new StairsTile(StairsTile.StairDirection.Down);
         }
 
-        //public void LoadMapFromFile(string levelPath)
-        //{
-        //    using StreamReader reader = new StreamReader(levelPath); //Change to level name
-        //    List<string> lines = new List<string>();
-        //    string line = reader.ReadLine();
-        //    int lineWidth = line.Length;
-
-        //    while (line != null)
-        //    {
-        //        if (line.Length != lineWidth)
-        //            throw new Exception(String.Format("The length of line {0} is different from all preceeding lines.", lines.Count));
-
-        //        lines.Add(line);
-        //        line = reader.ReadLine();
-        //    }
-
-        //    _Tilemap.CharMap = new char[lineWidth, lines.Count];
-
-        //    for (int y = 0; y < lines.Count; y++)
-        //        for (int x = 0; x < lineWidth; x++)
-        //            _Tilemap.CharMap[x, y] = lines[y][x];
-
-        //    GenerateTilesFromCharMap();
-        //}
-
         public void GenerateTilesFromCharMap()
         {
             _dungeon.Tilemap.Tiles = new Tile[_dungeonWidth, _dungeonHeight];
 
-            Tile borderTile = new Tile(TileType.Block, TileCollision.Impassable);
+            Tile borderTile = new Tile(TileType.Walls1_5, TileCollision.Impassable);
+            string tiles;
 
-            char currentTile;
-            string surroundingTiles;
-
-            foreach (int topBorderX in Enumerable.Range(0, _dungeonWidth))
+            foreach (int topBorderX in Enumerable.Range(0, _dungeonWidth)) //top, right, bottom and left tiles are all plain grass
             {
                 _dungeon.Tilemap.Tiles[topBorderX, 0] = borderTile;
             }
@@ -407,53 +380,111 @@ namespace MysteryDungeon.Core.Map
                 _dungeon.Tilemap.Tiles[_dungeonWidth - 1, rightBorderY] = borderTile;
             }
 
-            foreach (int y in Enumerable.Range(1, _dungeonHeight - 2))
+            foreach (int y in Enumerable.Range(1, _dungeonHeight - 2)) //offset 1 from border
             {
-                foreach (int x in Enumerable.Range(1, _dungeonWidth - 2))
+                foreach (int x in Enumerable.Range(1, _dungeonWidth - 2)) //offset 1 from border
                 {
-                    currentTile = _dungeon.Charmap[x, y];
+                    tiles = "";
+                    tiles += _dungeon.Charmap[x - 1, y - 1]; //Add tile topleft
+                    tiles += _dungeon.Charmap[x, y - 1]; //Add tile top
+                    tiles += _dungeon.Charmap[x + 1, y - 1]; //Add tile topright
+                    tiles += _dungeon.Charmap[x - 1, y]; //Add tile left
+                    tiles += _dungeon.Charmap[x, y]; //Add tile middle
+                    tiles += _dungeon.Charmap[x + 1, y]; //Add tile right
+                    tiles += _dungeon.Charmap[x - 1, y + 1]; //Add tile bottomleft
+                    tiles += _dungeon.Charmap[x, y + 1]; //Add tile bottom
+                    tiles += _dungeon.Charmap[x + 1, y + 1]; //Add tile bottomright
 
-                    surroundingTiles = "";
-                    surroundingTiles += _dungeon.Charmap[x, y - 1]; //Add tile above
-                    surroundingTiles += _dungeon.Charmap[x + 1, y]; //Add tile right
-                    surroundingTiles += _dungeon.Charmap[x, y + 1]; //Add tile below
-                    surroundingTiles += _dungeon.Charmap[x - 1, y]; //Add tile left
-
-                    _dungeon.Tilemap.Tiles[x, y] = MatchTile(currentTile, surroundingTiles);
+                    _dungeon.Tilemap.Tiles[x, y] = MatchTile(tiles);
                 }
             }
         }
 
-        private Tile MatchTile(char currentTile, string surroundingTiles)
+        private Tile MatchTile(string tiles)
         {
-            if (currentTile == '.')
-                return new Tile(TileType.Floor, TileCollision.Passable); ; //Floor tile
+            if (tiles[4] == '.')
+                return new Tile(TileType.Floor, TileCollision.Passable);
 
-            return surroundingTiles switch //first = above, second = right, third = below, fourth = left
+            return tiles switch //TODO: het omgekeerde van dit voor de floor lol
             {
-                "####" => new Tile(TileType.Block, TileCollision.Impassable),                   //15
-                "...." => new Tile(TileType.Pillar, TileCollision.Impassable),                  // 0
+                "....##.##" => new Tile(TileType.Walls1_1, TileCollision.Impassable),          //Walls, view spritesheet for reference
+                "...######" => new Tile(TileType.Walls1_2, TileCollision.Impassable),          //Also add collission at end? => always impassable
+                "...##.##." => new Tile(TileType.Walls1_2, TileCollision.Impassable),
+                ".##.##.##" => new Tile(TileType.Walls1_4, TileCollision.Impassable),
+                "#########" => new Tile(TileType.Walls1_5, TileCollision.Impassable),
+                "##.##.##." => new Tile(TileType.Walls1_6, TileCollision.Impassable),
+                ".##.##..." => new Tile(TileType.Walls1_7, TileCollision.Impassable),
+                "######..." => new Tile(TileType.Walls1_8, TileCollision.Impassable),
+                "##.##...." => new Tile(TileType.Walls1_9, TileCollision.Impassable),
 
-                "..#." => new Tile(TileType.TopCap, TileCollision.Impassable),                  // 2
-                "...#" => new Tile(TileType.RightCap, TileCollision.Impassable),                // 1
-                "#..." => new Tile(TileType.BottomCap, TileCollision.Impassable),               // 8
-                ".#.." => new Tile(TileType.LeftCap, TileCollision.Impassable),                 // 4
+                "....##.#." => new Tile(TileType.Walls2_1, TileCollision.Impassable),
+                "...###..." => new Tile(TileType.Walls2_2, TileCollision.Impassable),
+                "...##..#." => new Tile(TileType.Walls2_3, TileCollision.Impassable),
+                ".#..#..#." => new Tile(TileType.Walls2_4, TileCollision.Impassable),
+                "....#...." => new Tile(TileType.Walls2_5, TileCollision.Impassable),
+                ".#..##..." => new Tile(TileType.Walls2_7, TileCollision.Impassable),
+                ".#.##...." => new Tile(TileType.Walls2_9, TileCollision.Impassable),
 
-                ".##." => new Tile(TileType.CornerTopLeft, TileCollision.Impassable),           // 6
-                "..##" => new Tile(TileType.CornerTopRight, TileCollision.Impassable),          // 3
-                "#..#" => new Tile(TileType.CornerBottomRight, TileCollision.Impassable),       // 9
-                "##.." => new Tile(TileType.CornerBottomLeft, TileCollision.Impassable),        //12
+                "....#..#." => new Tile(TileType.Walls3_1, TileCollision.Impassable),
+                "....##..." => new Tile(TileType.Walls3_2, TileCollision.Impassable),
+                ".#.###.#." => new Tile(TileType.Walls3_3, TileCollision.Impassable),
+                "...##...." => new Tile(TileType.Walls3_4, TileCollision.Impassable),
+                ".#..#...." => new Tile(TileType.Walls3_5, TileCollision.Impassable),
 
-                ".###" => new Tile(TileType.LedgeTop, TileCollision.Impassable),                // 7
-                "#.##" => new Tile(TileType.LedgeRight, TileCollision.Impassable),              //11
-                "##.#" => new Tile(TileType.LedgeBottom, TileCollision.Impassable),             //13
-                "###." => new Tile(TileType.LedgeLeft, TileCollision.Impassable),               //14
+                "...###.#." => new Tile(TileType.Walls4_1, TileCollision.Impassable),
+                ".#..##.#." => new Tile(TileType.Walls4_2, TileCollision.Impassable),
+                ".#.##..#." => new Tile(TileType.Walls4_3, TileCollision.Impassable),
+                ".#.###..." => new Tile(TileType.Walls4_4, TileCollision.Impassable),
 
-                ".#.#" => new Tile(TileType.ConnectorHorizontal, TileCollision.Impassable),     // 5
-                "#.#." => new Tile(TileType.ConnectorVertical, TileCollision.Impassable),       //10
+                "######.#." => new Tile(TileType.Walls5_1, TileCollision.Impassable),
+                "##.#####." => new Tile(TileType.Walls5_2, TileCollision.Impassable),
+                ".#####.##" => new Tile(TileType.Walls5_3, TileCollision.Impassable),
+                ".#.######" => new Tile(TileType.Walls5_4, TileCollision.Impassable),
 
-                _ => throw new InvalidDataException(String.Format("The given character sequence is not valid: {0}", surroundingTiles))
+                "########." => new Tile(TileType.Walls6_1, TileCollision.Impassable),
+                "######.##" => new Tile(TileType.Walls6_2, TileCollision.Impassable),
+                "##.######" => new Tile(TileType.Walls6_3, TileCollision.Impassable),
+                ".########" => new Tile(TileType.Walls6_4, TileCollision.Impassable),
+
+                ".##.##.#." => new Tile(TileType.Walls7_1, TileCollision.Impassable),
+                "##.##..#." => new Tile(TileType.Walls7_2, TileCollision.Impassable),
+                ".#..##.##" => new Tile(TileType.Walls7_3, TileCollision.Impassable),
+                ".#.##.##." => new Tile(TileType.Walls7_4, TileCollision.Impassable),
+
+                "...#####." => new Tile(TileType.Walls8_1, TileCollision.Impassable),
+                "...###.##" => new Tile(TileType.Walls8_2, TileCollision.Impassable),
+                "##.###..." => new Tile(TileType.Walls8_3, TileCollision.Impassable),
+                ".#####..." => new Tile(TileType.Walls8_4, TileCollision.Impassable),
+
+                ".#.###.##" => new Tile(TileType.Walls9_1, TileCollision.Impassable),
+                ".#.#####." => new Tile(TileType.Walls9_2, TileCollision.Impassable),
+                ".#####.#." => new Tile(TileType.Walls9_3, TileCollision.Impassable),
+                "##.###.#." => new Tile(TileType.Walls9_4, TileCollision.Impassable),
+                ".#######." => new Tile(TileType.Walls9_5, TileCollision.Impassable),
+                "##.###.##" => new Tile(TileType.Walls9_6, TileCollision.Impassable),
+
+                _ => new Tile(TileType.Walls1_5, TileCollision.Impassable),
             };
         }
     }
 }
+//"####" => new Tile(TileType.Block, TileCollision.Impassable),                   //15
+//"...." => new Tile(TileType.Pillar, TileCollision.Impassable),                  // 0
+
+//"..#." => new Tile(TileType.TopCap, TileCollision.Impassable),                  // 2
+//"...#" => new Tile(TileType.RightCap, TileCollision.Impassable),                // 1
+//"#..." => new Tile(TileType.BottomCap, TileCollision.Impassable),               // 8
+//".#.." => new Tile(TileType.LeftCap, TileCollision.Impassable),                 // 4
+
+//".##." => new Tile(TileType.CornerTopLeft, TileCollision.Impassable),           // 6
+//"..##" => new Tile(TileType.CornerTopRight, TileCollision.Impassable),          // 3
+//"#..#" => new Tile(TileType.CornerBottomRight, TileCollision.Impassable),       // 9
+//"##.." => new Tile(TileType.CornerBottomLeft, TileCollision.Impassable),        //12
+
+//".###" => new Tile(TileType.LedgeTop, TileCollision.Impassable),                // 7
+//"#.##" => new Tile(TileType.LedgeRight, TileCollision.Impassable),              //11
+//"##.#" => new Tile(TileType.LedgeBottom, TileCollision.Impassable),             //13
+//"###." => new Tile(TileType.LedgeLeft, TileCollision.Impassable),               //14
+
+//".#.#" => new Tile(TileType.ConnectorHorizontal, TileCollision.Impassable),     // 5
+//"#.#." => new Tile(TileType.ConnectorVertical, TileCollision.Impassable),       //10

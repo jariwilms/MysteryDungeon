@@ -14,9 +14,6 @@ namespace MysteryDungeon.Core.Interface
 
         public List<Widget> Widgets;
 
-        private int _windowWidth;
-        private int _windowHeight;
-
         static GUI()
         {
 
@@ -27,12 +24,9 @@ namespace MysteryDungeon.Core.Interface
             Widgets = new List<Widget>();
         }
 
-        public void Initialize(ContentManager content, int windowWidth, int windowHeight)
+        public void Initialize(ContentManager content)
         {
             _content = content;
-
-            _windowWidth = windowWidth;
-            _windowHeight = windowHeight;
         }
 
         public void Update(GameTime gameTime)

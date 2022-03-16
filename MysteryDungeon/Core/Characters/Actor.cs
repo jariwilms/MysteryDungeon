@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
 using MysteryDungeon.Core.Extensions;
+using MysteryDungeon.Core.Map;
 using MysteryDungeon.Core.Tiles;
 using System;
 

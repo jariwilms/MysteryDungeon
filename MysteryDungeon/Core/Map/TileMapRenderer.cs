@@ -32,37 +32,67 @@ namespace MysteryDungeon.Core.Map
             SetupAtlas();
         }
 
-        private void SetupAtlas()
+        private void SetupAtlas() //Zoek iets meer tedious dan dit
         {
             _dungeonAtlas.AddSprite(TileType.Floor, 13, 1);
-            _dungeonAtlas.AddSprite(TileType.Wall, 6, 0); //not used yet
-            _dungeonAtlas.AddSprite(TileType.Block, 4, 1);
-            _dungeonAtlas.AddSprite(TileType.Pillar, 4, 4);
 
-            _dungeonAtlas.AddSprite(TileType.LedgeTop, 4, 0); //rename to wallTop?
-            _dungeonAtlas.AddSprite(TileType.LedgeRight, 5, 1);
-            _dungeonAtlas.AddSprite(TileType.LedgeBottom, 4, 2);
-            _dungeonAtlas.AddSprite(TileType.LedgeLeft, 3, 1);
+            _dungeonAtlas.AddSprite(TileType.Walls1_1, 3, 0);
+            _dungeonAtlas.AddSprite(TileType.Walls1_2, 4, 0);
+            _dungeonAtlas.AddSprite(TileType.Walls1_3, 5, 0);
+            _dungeonAtlas.AddSprite(TileType.Walls1_4, 3, 1);
+            _dungeonAtlas.AddSprite(TileType.Walls1_5, 4, 1);
+            _dungeonAtlas.AddSprite(TileType.Walls1_6, 5, 1);
+            _dungeonAtlas.AddSprite(TileType.Walls1_7, 3, 2);
+            _dungeonAtlas.AddSprite(TileType.Walls1_8, 4, 2);
+            _dungeonAtlas.AddSprite(TileType.Walls1_9, 5, 2);
 
-            _dungeonAtlas.AddSprite(TileType.CornerTopLeft, 3, 0);
-            _dungeonAtlas.AddSprite(TileType.CornerTopRight, 5, 0);
-            _dungeonAtlas.AddSprite(TileType.CornerBottomRight, 5, 2);
-            _dungeonAtlas.AddSprite(TileType.CornerBottomLeft, 3, 2);
+            _dungeonAtlas.AddSprite(TileType.Walls2_1, 3, 3);
+            _dungeonAtlas.AddSprite(TileType.Walls2_2, 4, 3);
+            _dungeonAtlas.AddSprite(TileType.Walls2_3, 5, 3);
+            _dungeonAtlas.AddSprite(TileType.Walls2_4, 3, 4);
+            _dungeonAtlas.AddSprite(TileType.Walls2_5, 4, 4);
+            _dungeonAtlas.AddSprite(TileType.Walls2_6, 3, 4); //exception
+            _dungeonAtlas.AddSprite(TileType.Walls2_7, 3, 5);
+            _dungeonAtlas.AddSprite(TileType.Walls2_8, 4, 3); //exception
+            _dungeonAtlas.AddSprite(TileType.Walls2_9, 5, 5);
 
-            _dungeonAtlas.AddSprite(TileType.RidgeTopLeft, 6, 0);
-            _dungeonAtlas.AddSprite(TileType.RidgeTopRight, 6, 0);
-            _dungeonAtlas.AddSprite(TileType.RidgeBottomRight, 6, 0);
-            _dungeonAtlas.AddSprite(TileType.RidgeBottomLeft, 6, 0);
+            _dungeonAtlas.AddSprite(TileType.Walls3_1, 4, 6);
+            _dungeonAtlas.AddSprite(TileType.Walls3_2, 3, 7);
+            _dungeonAtlas.AddSprite(TileType.Walls3_3, 4, 7);
+            _dungeonAtlas.AddSprite(TileType.Walls3_4, 5, 7);
+            _dungeonAtlas.AddSprite(TileType.Walls3_5, 4, 8);
 
-            _dungeonAtlas.AddSprite(TileType.ConnectorHorizontal, 4, 3);
-            _dungeonAtlas.AddSprite(TileType.ConnectorVertical, 3, 4);
+            _dungeonAtlas.AddSprite(TileType.Walls4_1, 4, 9);
+            _dungeonAtlas.AddSprite(TileType.Walls4_2, 3, 10);
+            _dungeonAtlas.AddSprite(TileType.Walls4_3, 5, 10);
+            _dungeonAtlas.AddSprite(TileType.Walls4_4, 4, 11);
 
-            _dungeonAtlas.AddSprite(TileType.TopCap, 4, 6);
-            _dungeonAtlas.AddSprite(TileType.RightCap, 5, 7);
-            _dungeonAtlas.AddSprite(TileType.BottomCap, 4, 8);
-            _dungeonAtlas.AddSprite(TileType.LeftCap, 3, 7);
+            _dungeonAtlas.AddSprite(TileType.Walls5_1, 4, 12);
+            _dungeonAtlas.AddSprite(TileType.Walls5_2, 3, 13);
+            _dungeonAtlas.AddSprite(TileType.Walls5_3, 5, 13);
+            _dungeonAtlas.AddSprite(TileType.Walls5_4, 4, 14);
 
+            _dungeonAtlas.AddSprite(TileType.Walls6_1, 3, 15);
+            _dungeonAtlas.AddSprite(TileType.Walls6_2, 4, 15);
+            _dungeonAtlas.AddSprite(TileType.Walls6_3, 3, 16);
+            _dungeonAtlas.AddSprite(TileType.Walls6_4, 4, 16);
 
+            _dungeonAtlas.AddSprite(TileType.Walls7_1, 3, 17);
+            _dungeonAtlas.AddSprite(TileType.Walls7_2, 4, 17);
+            _dungeonAtlas.AddSprite(TileType.Walls7_3, 3, 18);
+            _dungeonAtlas.AddSprite(TileType.Walls7_4, 4, 18);
+
+            _dungeonAtlas.AddSprite(TileType.Walls8_1, 3, 19);
+            _dungeonAtlas.AddSprite(TileType.Walls8_2, 4, 19);
+            _dungeonAtlas.AddSprite(TileType.Walls8_3, 3, 20);
+            _dungeonAtlas.AddSprite(TileType.Walls8_4, 4, 20);
+
+            _dungeonAtlas.AddSprite(TileType.Walls9_1, 3, 21);
+            _dungeonAtlas.AddSprite(TileType.Walls9_2, 4, 21);
+            _dungeonAtlas.AddSprite(TileType.Walls9_3, 3, 22);
+            _dungeonAtlas.AddSprite(TileType.Walls9_4, 4, 22);
+            _dungeonAtlas.AddSprite(TileType.Walls9_5, 3, 23);
+            _dungeonAtlas.AddSprite(TileType.Walls9_6, 4, 23);
 
             _specialAtlas.AddSprite(SpecialTileType.StairsDown, 2, 2);
             _specialAtlas.AddSprite(SpecialTileType.WonderTile, 1, 2);

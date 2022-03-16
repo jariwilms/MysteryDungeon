@@ -41,7 +41,7 @@ namespace MysteryDungeon.Core.Components
             => new Vector2((float)(Math.Round(position.X / CellSize.X) * CellSize.X), (float)(Math.Round(position.Y / CellSize.Y) * CellSize.Y));
 
         /// <summary>
-        /// Returns the cell that is closest to the given position in world space
+        /// Returns the cell that is closest to the given position in global space
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
@@ -57,7 +57,7 @@ namespace MysteryDungeon.Core.Components
             => GetLocalCellPosition(position) + CellSize / 2;
 
         /// <summary>
-        /// Returns the center of the cell with the given position in world space
+        /// Returns the center of the cell with the given position in global space
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>

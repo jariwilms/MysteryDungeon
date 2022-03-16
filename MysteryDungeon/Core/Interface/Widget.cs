@@ -20,6 +20,7 @@ namespace MysteryDungeon.Core.Interface
 
         public Widget Parent;
         private List<Widget> _children;
+        public static WindowSettings WindowSettings;
 
         public Texture2D SourceTexture;                             //Source texture for widget drawing
         public Rectangle DestinationRectangle;
@@ -36,9 +37,6 @@ namespace MysteryDungeon.Core.Interface
         public bool IsResizable;
         public bool isClickable;
 
-        protected int WindowWidth;
-        protected int WindowHeight;
-
         public static float GlobalScale;
         public float LocalScale;
 
@@ -51,8 +49,6 @@ namespace MysteryDungeon.Core.Interface
 
             IsResizable = isResizable;
 
-            WindowWidth = MysteryDungeon._windowWidth;
-            WindowHeight = MysteryDungeon._windowHeight;
             LocalScale = 1.0f;
         }
 

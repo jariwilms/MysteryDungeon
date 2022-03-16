@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
 using MysteryDungeon.Core.Input;
+using MysteryDungeon.Core.Map;
 
 namespace MysteryDungeon.Core.Characters
 {
