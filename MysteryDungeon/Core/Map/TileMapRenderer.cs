@@ -133,6 +133,10 @@ namespace MysteryDungeon.Core.Map
                     else
                     {
                         TileType tileType = Tilemap.Tiles[x, y].TileType;
+
+                        if (tileType == TileType.None)
+                            continue;
+
                         _dungeonAtlas.SetCurrentSprite(tileType);
 
                         spriteBatch.Draw(

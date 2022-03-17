@@ -41,6 +41,7 @@ namespace MysteryDungeon.Core.Tiles
     /// </summary>
     public enum TileType
     {
+        None, 
         Floor, 
 
         Walls1_1,
@@ -133,7 +134,7 @@ namespace MysteryDungeon.Core.Tiles
         public TileCollision TileCollision;
         public bool IsSpecial;
 
-        public Tile(TileType tileType, TileCollision tileCollision)
+        public Tile(TileType tileType, TileCollision tileCollision = TileCollision.Impassable)
         {
             TileType = tileType;
             TileCollision = tileCollision;

@@ -36,6 +36,7 @@ namespace MysteryDungeon
         private Level _level;
 
         private Texture2D _blackRectangle;
+        FrameCounter frameCounter;
         
         // ###
 
@@ -72,6 +73,8 @@ namespace MysteryDungeon
             _camera = new Camera(WindowSettings.WindowWidth, WindowSettings.WindowHeight);
             _camera.Follow(_level.Player);
 
+            frameCounter = new FrameCounter();
+
             // #####
 
             base.Initialize();
@@ -106,7 +109,7 @@ namespace MysteryDungeon
             _camera.Update();
 
             GUI.Instance.Update(gameTime);
-
+            frameCounter.Update(gameTime);
             // #####
 
             LastkeyboardState = KeyboardState;
@@ -141,6 +144,7 @@ namespace MysteryDungeon
             }
 
             GUI.Instance.DrawWidgets(_spriteBatch);
+            //_spriteBatch.DrawString(_spriteFont, frameCounter.AverageFramesPerSecond.ToString(), new Vector2(10, 10), Color.White); //drawfps
 
             _spriteBatch.End();
 
