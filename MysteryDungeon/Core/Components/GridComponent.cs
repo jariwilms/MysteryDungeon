@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 namespace MysteryDungeon.Core.Components
 {
     /// <summary>
-    /// Represents a 2-dimensional grid that is divided into cells
+    /// Stores dimensional data of the grid layout and provides helper functions to retrieve information about the grid
     /// </summary>
     public class GridComponent : Component
     {

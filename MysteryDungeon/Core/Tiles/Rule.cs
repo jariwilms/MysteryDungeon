@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MysteryDungeon.Core.Map
+namespace MysteryDungeon.Core.Tiles
 {
     class Rule
     {

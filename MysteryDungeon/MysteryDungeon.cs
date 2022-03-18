@@ -8,6 +8,7 @@ using MysteryDungeon.Core.Input;
 using System;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Map;
+using System.Collections.Generic;
 
 namespace MysteryDungeon
 {
@@ -26,16 +27,11 @@ namespace MysteryDungeon
         public MouseState MouseState;
         public MouseState LastMouseState;
 
-        private double[] _frameTimes;
-        private double _averageFrameTime;
-        private int _frameIndex;
-
         // ### THE CUM ZONE ###
 
         private Camera _camera;
         private Level _level;
 
-        private Texture2D _blackRectangle;
         FrameCounter frameCounter;
         
         // ###
@@ -84,7 +80,6 @@ namespace MysteryDungeon
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _spriteFont = Content.Load<SpriteFont>("font");
-            _blackRectangle = Content.Load<Texture2D>("effects/black_rectangle");
             // #####
         }
 
@@ -140,11 +135,11 @@ namespace MysteryDungeon
 
             if (true) //draw gui debug shit hier
             {
-                _spriteBatch.DrawString(_spriteFont, "Camera zoom: " + _camera.ZoomValue.ToString(), new Vector2(10, 10), Color.White, 0.0f, Vector2.Zero, 0.1f, SpriteEffects.None, 0.0f);
+                //_spriteBatch.DrawString(_spriteFont, "Camera zoom: " + _camera.ZoomValue.ToString(), new Vector2(10, 10), Color.White, 0.0f, Vector2.Zero, 0.1f, SpriteEffects.None, 0.0f);
+                _spriteBatch.DrawString(_spriteFont, _level._pathFound.ToString(), new Vector2(10, 40), Color.White); //drawfps
             }
 
             GUI.Instance.DrawWidgets(_spriteBatch);
-            //_spriteBatch.DrawString(_spriteFont, frameCounter.AverageFramesPerSecond.ToString(), new Vector2(10, 10), Color.White); //drawfps
 
             _spriteBatch.End();
 

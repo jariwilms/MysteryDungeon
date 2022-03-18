@@ -2,8 +2,10 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
+using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Map;
+using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Characters
 {
@@ -11,6 +13,10 @@ namespace MysteryDungeon.Core.Characters
     {
         public int CurrentHealth;
         public int MaxHealth;
+
+
+        public List<PathNode> nodes;
+
 
         public Player(ContentManager content, Level dungeon) : base()
         {

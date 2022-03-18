@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MysteryDungeon.Core.Map
+namespace MysteryDungeon.Core.Tiles
 {
     class RuleTile
     {
         private char[,] _charmap;
         private List<Rule> _rules;
-
+        
         public RuleTile(char[,] charmap)
         {
             _charmap = charmap;

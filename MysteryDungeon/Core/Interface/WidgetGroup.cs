@@ -7,12 +7,12 @@ namespace MysteryDungeon.Core.Interface
         public List<Widget> Widgets { get; }
         public bool IsVisible;
 
-        public WidgetGroup()
+        public WidgetGroup(bool isVisible = true)
         {
-
+            IsVisible = isVisible;
         }
 
-        public void AddWidget(Widget widget, int depth = 0) //Todo: add widget depth so only the front most can consume the input
+        public void AddWidget(Widget widget, int depth = 0) //Todo: add widget depth so only the front most can consume input
         {
             Widgets.Add(widget); //voorlopig
         }

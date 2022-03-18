@@ -352,6 +352,7 @@ namespace MysteryDungeon.Core.Map
             y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
             _dungeon.Tilemap.Tiles[x, y] = new StairsTile(StairsTile.StairDirection.Down);
+            _dungeon.stairsTilePosition = new Point(x, y);
         }
 
         public void GenerateTilesFromCharMap()

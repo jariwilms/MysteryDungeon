@@ -215,7 +215,7 @@ namespace MysteryDungeon.Core.Extensions
     //        => new Vector2d(a.X / b.X, a.Y / b.Y);
     //}
 
-    public class Vector2<T> //Dit is blessed en cursed tegelijk honestly, TODO: operations zoals dot product etc.
+    public class Vector2<T>//Dit is blessed en cursed tegelijk honestly, TODO: operations zoals dot product etc.
     {
         public T X;
         public T Y;

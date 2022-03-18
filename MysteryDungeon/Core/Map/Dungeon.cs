@@ -26,6 +26,7 @@ namespace MysteryDungeon.Core.Map
         public bool isComplete;
 
         private Random _random;
+        internal Point stairsTilePosition;
 
         public Dungeon()
         {
