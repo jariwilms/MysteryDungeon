@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MysteryDungeon.Core.Extensions
 {
@@ -97,7 +94,7 @@ namespace MysteryDungeon.Core.Extensions
             {
                 pathNodes.Add(currentNode);
                 currentNode = currentNode.Parent;
-            } 
+            }
             while (currentNode != null);
 
             pathNodes.Reverse();
@@ -130,15 +127,15 @@ namespace MysteryDungeon.Core.Extensions
 
             //Get up, right, down and left nodes only
 
-            List<Point> points = new List<Point>() 
-            { 
-                new Point(0, 1), 
-                new Point(1, 0), 
-                new Point(0, -1), 
-                new Point(-1, 0) 
+            List<Point> points = new List<Point>()
+            {
+                new Point(0, 1),
+                new Point(1, 0),
+                new Point(0, -1),
+                new Point(-1, 0)
             };
 
-            foreach(var point in points)
+            foreach (var point in points)
             {
                 Point position = new Point(node.Position.X, node.Position.Y) + point;
                 currentNode = NodeGrid[position.X, position.Y];

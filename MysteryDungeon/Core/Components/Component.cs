@@ -1,11 +1,4 @@
-﻿using MysteryDungeon.Core.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MysteryDungeon.Core.Components
+﻿namespace MysteryDungeon.Core.Components
 {
     public class Component
     {

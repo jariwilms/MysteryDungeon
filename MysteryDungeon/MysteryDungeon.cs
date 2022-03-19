@@ -3,12 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core;
 using MysteryDungeon.Core.Data;
-using MysteryDungeon.Core.Interface;
-using MysteryDungeon.Core.Input;
-using System;
 using MysteryDungeon.Core.Extensions;
+using MysteryDungeon.Core.Input;
+using MysteryDungeon.Core.Interface;
 using MysteryDungeon.Core.Map;
-using System.Collections.Generic;
 
 namespace MysteryDungeon
 {
@@ -33,7 +31,7 @@ namespace MysteryDungeon
         private Level _level;
 
         FrameCounter frameCounter;
-        
+
         // ###
 
         public MysteryDungeon()
@@ -115,7 +113,7 @@ namespace MysteryDungeon
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            
+
             _spriteBatch.Begin(
                 SpriteSortMode.Deferred,
                 BlendState.AlphaBlend,

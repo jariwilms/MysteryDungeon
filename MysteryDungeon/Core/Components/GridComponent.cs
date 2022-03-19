@@ -1,11 +1,5 @@
-﻿using MysteryDungeon.Core.Extensions;
+﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.Xna.Framework;
 
 namespace MysteryDungeon.Core.Components
 {
@@ -61,7 +55,7 @@ namespace MysteryDungeon.Core.Components
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        public Vector2 GetGlobalCellCenter(Vector2 position) 
+        public Vector2 GetGlobalCellCenter(Vector2 position)
             => GetGlobalCellPosition(position) + CellSize / 2;
     }
 }

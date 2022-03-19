@@ -2,7 +2,6 @@
 using MysteryDungeon.Core.Tiles;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace MysteryDungeon.Core.Map
@@ -344,44 +343,42 @@ namespace MysteryDungeon.Core.Map
             int x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
             int y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
-            _dungeon.Tilemap.Tiles[x, y] = new WonderTile();
+            _dungeon.Tilemap.TileGrid.SetElement(x, y, new WonderTile());
 
             room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
 
             x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
             y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
-            _dungeon.Tilemap.Tiles[x, y] = new StairsTile(StairsTile.StairDirection.Down);
+            _dungeon.Tilemap.TileGrid.SetElement(x, y, new StairsTile(StairsTile.StairDirection.Down));
             _dungeon.stairsTilePosition = new Point(x, y);
         }
 
         public void GenerateTilesFromCharMap()
         {
-            _dungeon.Tilemap.Tiles = new Tile[_dungeonWidth, _dungeonHeight];
+            _dungeon.Tilemap.TileGrid.CreateGrid(_dungeonWidth, _dungeonHeight);
 
             Tile borderTile = new Tile(TileType.Walls1_5, TileCollision.Impassable);
 
             foreach (int topBorderX in Enumerable.Range(0, _dungeonWidth)) //top, right, bottom and left tiles are all plain grass
             {
-                _dungeon.Tilemap.Tiles[topBorderX, 0] = borderTile;
+                _dungeon.Tilemap.TileGrid.SetElement(topBorderX, 0, borderTile);
             }
 
             foreach (int bottomBorderX in Enumerable.Range(0, _dungeonWidth))
             {
-                _dungeon.Tilemap.Tiles[bottomBorderX, _dungeonHeight - 1] = borderTile;
+                _dungeon.Tilemap.TileGrid.SetElement(bottomBorderX, _dungeonHeight - 1, borderTile);
             }
 
             foreach (int leftBorderY in Enumerable.Range(0, _dungeonHeight))
             {
-                _dungeon.Tilemap.Tiles[0, leftBorderY] = borderTile;
+                _dungeon.Tilemap.TileGrid.SetElement(0, leftBorderY, borderTile);
             }
 
             foreach (int rightBorderY in Enumerable.Range(0, _dungeonHeight))
             {
-                _dungeon.Tilemap.Tiles[_dungeonWidth - 1, rightBorderY] = borderTile;
+                _dungeon.Tilemap.TileGrid.SetElement(_dungeonWidth - 1, rightBorderY, borderTile);
             }
-
-
 
             _ruleTile = new RuleTile(_dungeon.Charmap);
             CreateRules();
@@ -390,7 +387,7 @@ namespace MysteryDungeon.Core.Map
             {
                 for (int x = 1; x < _dungeonWidth - 1; x++)
                 {
-                    _dungeon.Tilemap.Tiles[x, y] = _ruleTile.Match(x, y);
+                    _dungeon.Tilemap.TileGrid.SetElement(x, y, _ruleTile.Match(x, y));
                 }
             }
         }

@@ -1,9 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MysteryDungeon.Core.Extensions
 {
@@ -13,23 +9,39 @@ namespace MysteryDungeon.Core.Extensions
     /// <typeparam name="T"></typeparam>
     public class Grid<T>
     {
-        public T[,] Elements { get; protected set; }
-        private T[,] _elements;
+        public T[,] Cells { get; protected set; }
 
         public Vector2 Position { get; protected set; }
-        public Vector2 CellSize { get; protected set; }
-        public Vector2 CellGap { get; protected set; }
 
-        public int Width { get { return _elements.GetLength(0); } }
-        public int Height { get { return _elements.GetLength(1); } }
+        public Vector2 CellSize { get { return _cellSize; } set { _cellSize = value; CellDistance = CellSize + CellGap; } }
+        private Vector2 _cellSize;
 
-        public Grid(int width, int height, Vector2 cellSize)
+        public Vector2 CellGap { get { return _cellGap; } set { _cellGap = value; CellDistance = CellSize + CellGap; } }
+        private Vector2 _cellGap;
+
+        public Vector2 CellDistance { get; protected set; }
+
+        public int Width { get { return Cells.GetLength(0); } }
+        public int Height { get { return Cells.GetLength(1); } }
+
+        public Grid()
         {
-            Elements = new T[width, height];
+            Cells = new T[0, 0];
 
             Position = Vector2.Zero;
-            CellSize = cellSize;
+
+            CellSize = Vector2.One;
             CellGap = Vector2.Zero;
+        }
+
+        public Grid(int width, int height, Vector2 cellSize) : this()
+        {
+            Cells = new T[width, height];
+
+            if (cellSize.X != 0 && cellSize.Y != 0)
+                CellSize = cellSize;
+            else
+                CellSize = Vector2.One;
         }
 
         public Grid(int width, int height, Vector2 cellSize, Vector2 cellGap) : this(width, height, cellSize)
@@ -37,37 +49,121 @@ namespace MysteryDungeon.Core.Extensions
             CellGap = cellGap;
         }
 
+        /// <summary>
+        /// Create a new grid with a given width and height
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        public void CreateGrid(int width, int height)
+        {
+            Cells = new T[width, height];
+        }
+
+        /// <summary>
+        /// Resize the grid to the new width and height
+        /// </summary>
+        /// <param name="newWidth"></param>
+        /// <param name="newHeight"></param>
+        public void ResizeGrid(int newWidth, int newHeight)
+        {
+            T[,] newCells = new T[newWidth, newHeight];
+
+            int columns = Math.Min(Width, newWidth);
+            int rows = Math.Min(Height, newHeight);
+
+            for (int y = 0; y < rows; y++)
+                for (int x = 0; x < columns; x++)
+                    newCells[x, y] = Cells[x, y];
+
+            Cells = newCells;
+        }
+
         private bool IsOutOfBounds(int x, int y)
         {
-            return x > 0 && x < Width && y > 0 && y < Height;
+            return !(x > -1 && x < Width && y > -1 && y < Height);
         }
 
-        public T GetObject(int x, int y)
+        public T GetElement(int x, int y)
         {
             if (IsOutOfBounds(x, y))
                 return default;
 
-            return _elements[x, y];
+            return Cells[x, y];
         }
 
-        public Vector2 GetObjectLocalPosition(int x, int y)
+        public T GetElement(Point gridPosition)
+        {
+            int x = gridPosition.X;
+            int y = gridPosition.Y;
+
+            if (IsOutOfBounds(x, y))
+                return default;
+
+            return Cells[x, y];
+        }
+
+        public void SetElement(int x, int y, T value)
+        {
+            if (IsOutOfBounds(x, y))
+                return;
+
+            Cells[x, y] = value;
+        }
+
+        /// <summary>
+        /// Returns the local position of the cell at the given index
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Vector2 CellIndexToLocalPosition(int x, int y)
         {
             if (IsOutOfBounds(x, y))
                 return default;
 
-            return new Vector2(
-                (x - 1) * CellGap.X + x * CellSize.X,
-                (y - 1) * CellGap.Y + y * CellSize.Y);
+            return new Vector2(x * CellDistance.X, y * CellDistance.Y);
         }
 
-        public Vector2 GetObjectWorldPosition(int x, int y)
+        /// <summary>
+        /// Returns the global position of the cell at the given index
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Vector2 CellIndexToGlobalPosition(int x, int y)
         {
             if (IsOutOfBounds(x, y))
                 return default;
 
-            return new Vector2(
-                Position.X + (x - 1) * CellGap.X + x * CellSize.X,
-                Position.Y + (y - 1) * CellGap.Y + y * CellSize.Y);
+            return CellIndexToLocalPosition(x, y) + Position;
+        }
+
+        /// <summary>
+        /// Returns the index of the cell at the given position
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Point LocalPositionToCellIndex(int x, int y)
+        {
+            x = (int)Math.Ceiling(x / CellDistance.X);
+            y = (int)Math.Ceiling(y / CellDistance.Y);
+
+            if (IsOutOfBounds(x, y))
+                return default;
+
+            return new Point(x, y);
+        }
+
+        /// <summary>
+        /// Returns the index of the cell at the given global position
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Point GlobalPositionToCellIndex(int x, int y)
+        {
+            return LocalPositionToCellIndex(x, y);
         }
     }
 }

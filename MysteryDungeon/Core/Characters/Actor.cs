@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
-using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Map;
 using MysteryDungeon.Core.Tiles;
 using System;
@@ -165,7 +164,7 @@ namespace MysteryDungeon.Core.Characters
 
             Vector2 tilePosition = new Vector2((int)Transform.Position.X / UnitSize, (int)Transform.Position.Y / UnitSize) + new Vector2(directionPoint.X, directionPoint.Y);
 
-            if (Level.Dungeon.Tilemap.Tiles[(int)tilePosition.X, (int)tilePosition.Y].TileCollision == TileCollision.Passable)
+            if (Level.Dungeon.Tilemap.TileGrid.GetElement((int)tilePosition.X, (int)tilePosition.Y).TileCollision == TileCollision.Passable)
                 return true;
 
             return false;

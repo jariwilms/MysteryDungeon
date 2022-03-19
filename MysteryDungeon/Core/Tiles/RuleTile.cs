@@ -1,9 +1,4 @@
-﻿using MysteryDungeon.Core.Tiles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Tiles
 {
@@ -11,7 +6,7 @@ namespace MysteryDungeon.Core.Tiles
     {
         private char[,] _charmap;
         private List<Rule> _rules;
-        
+
         public RuleTile(char[,] charmap)
         {
             _charmap = charmap;
@@ -39,7 +34,7 @@ namespace MysteryDungeon.Core.Tiles
                         break;
                     }
                 }
-                
+
                 foreach (var point in rule.NegativeCheckPoints)
                 {
                     if (_charmap[xPos + point.X, yPos + point.Y] != '.')

@@ -41,8 +41,8 @@ namespace MysteryDungeon.Core.Tiles
     /// </summary>
     public enum TileType
     {
-        None, 
-        Floor, 
+        None,
+        Floor,
 
         Walls1_1,
         Walls1_2,
@@ -53,7 +53,7 @@ namespace MysteryDungeon.Core.Tiles
         Walls1_7,
         Walls1_8,
         Walls1_9,
-        
+
         Walls2_1,
         Walls2_2,
         Walls2_3,
@@ -63,13 +63,13 @@ namespace MysteryDungeon.Core.Tiles
         Walls2_7,
         Walls2_8,
         Walls2_9,
-        
+
         Walls3_1,
         Walls3_2,
         Walls3_3,
         Walls3_4,
         Walls3_5,
-        
+
         Walls4_1,
         Walls4_2,
         Walls4_3,

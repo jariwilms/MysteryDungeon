@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MysteryDungeon.Core.Extensions;
 using System;
-using System.Configuration;
 
 namespace MysteryDungeon.Core
 {
@@ -27,14 +25,12 @@ namespace MysteryDungeon.Core
         public Transform Offset;
 
         public static ContentManager Content;
-        public readonly int UnitSize;
+        public const int UnitSize = 24;
 
         public GameObject()
         {
             Transform = new Transform();
             Offset = new Transform();
-
-            UnitSize = Int32.Parse(ConfigurationManager.AppSettings.Get("UnitSize"));
         }
 
         public void SetPosition(Vector2 newPosition)
@@ -45,7 +41,7 @@ namespace MysteryDungeon.Core
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(SpriteBatch spriteBatch);
 
-        public void Dispose()
+        public void Dispose() //die gaat wrs alle content unloaden lol
         {
             Content.Unload();
         }

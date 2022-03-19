@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MysteryDungeon.Core.Map;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +15,17 @@ namespace MysteryDungeon.Core.Extensions
             return rectangle;
         }
 
-        public static char[,] LoadMapFromFile(string DungeonPath)
+        public static Point ToVector2(this Point point, Vector2 vector)
+        {
+            return new Point((int)vector.X, (int)vector.Y);
+        }
+
+        public static Vector2 ToPoint(this Vector2 vector, Point point)
+        {
+            return new Vector2(point.X, point.Y);
+        }
+
+        public static char[,] LoadMapFromFile(string DungeonPath) //move terug naar generator?
         {
             using StreamReader reader = new StreamReader(DungeonPath); //Change to Dungeon name
             List<string> lines = new List<string>();

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Map;
@@ -14,12 +9,12 @@ namespace MysteryDungeon.Core.Characters
     {
         public enum EnemyState
         {
-            Idle, 
-            Sleeping, 
-            
-            Patrolling, 
-            Chasing, 
-            Attacking, 
+            Idle,
+            Sleeping,
+
+            Patrolling,
+            Chasing,
+            Attacking,
         }
 
         public EnemyState State { get; protected set; }
@@ -64,7 +59,7 @@ namespace MysteryDungeon.Core.Characters
 
         protected void Patrol()
         {
-            
+
         }
 
         public override void Update(GameTime gameTime)

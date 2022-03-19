@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MysteryDungeon.Core.Extensions
+﻿namespace MysteryDungeon.Core.Extensions
 {
     //public class Vector2i
     //{
@@ -49,7 +42,7 @@ namespace MysteryDungeon.Core.Extensions
     //public class Vector3i : Vector2i
     //{
     //    public int Z;
-        
+
     //    public Vector3i() : base()
     //    {
     //        Z = 0;
@@ -263,7 +256,7 @@ namespace MysteryDungeon.Core.Extensions
 
         #region operator
         public static Vector2<T> operator +(Vector2<T> v) => v;
-        public static Vector2<T> operator -(Vector2<T> v) => new Vector2<T>( -(dynamic)v.X, -(dynamic)v.Y);
+        public static Vector2<T> operator -(Vector2<T> v) => new Vector2<T>(-(dynamic)v.X, -(dynamic)v.Y);
 
         public static Vector2<T> operator +(Vector2<T> addend, Vector2<T> augend)
             => new Vector2<T>((dynamic)addend.X + (dynamic)augend.X, (dynamic)addend.Y + (dynamic)augend.Y);

@@ -1,45 +1,42 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Characters;
-using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Tiles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MysteryDungeon.Core.Map
 {
     /// <summary>
     /// Stores and handles tile assets for creating 2D levels
     /// </summary>
-    public class Tilemap : GameObject //Convert naar een pure sprite class en zet tiles in aparte grid?
+    public class Tilemap : GameObject
     {
-        public Tile[,] Tiles;
-        //public Grid<Tile> Tiles; 
-        public GridComponent GridComponent;
+        public Grid<Tile> TileGrid;
         public TilemapRenderer TilemapRenderer;
 
-        public int Width { get { return Tiles.GetLength(0); } }
-        public int Height { get { return Tiles.GetLength(1); } }
+        public int Width { get { return TileGrid.Width; } }
+        public int Height { get { return TileGrid.Height; } }
 
         public Tilemap()
         {
-            Tiles = new Tile[0, 0];
-            GridComponent = new GridComponent(24); //declare unitsize ergens
-            TilemapRenderer = new TilemapRenderer(Content, UnitSize);
+            TileGrid = new Grid<Tile>();
+            TileGrid.CellSize = new Vector2(24);
+
+            TilemapRenderer = new TilemapRenderer(Content);
             TilemapRenderer.Render(this);
         }
 
         public void ActivateTile(Level dungeon, Actor actor)
         {
-            Point tilePosition = new Point((int)(actor.Transform.Position.X / 24), (int)(actor.Transform.Position.Y / 24));
-            Tiles[tilePosition.X, tilePosition.Y].Activate(dungeon, actor);
+            Point actorPosition = actor.Transform.Position.ToPoint();
+            Point index = TileGrid.GlobalPositionToCellIndex(actorPosition.X, actorPosition.Y);
+
+            TileGrid.GetElement(index).Activate(dungeon, actor);
         }
 
         public override void Update(GameTime gameTime)
         {
-            TilemapRenderer.Update(gameTime);
+            TilemapRenderer.Update(gameTime); //doet niks atm
         }
 
         public override void Draw(SpriteBatch spriteBatch)

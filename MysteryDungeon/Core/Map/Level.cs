@@ -5,8 +5,6 @@ using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core.Characters;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Interface;
-using MysteryDungeon.Core.Map;
-using System;
 using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Map
