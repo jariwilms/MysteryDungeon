@@ -452,11 +452,10 @@ namespace MysteryDungeon.Core.Map
 
 
 
-
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_1), "---+++-++")); //group 4
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_2), "-+--++-+-"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_3), "-+-++--+-"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_4), "-+-+++---"));
+            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_1), ".-.+++-++")); //group 4
+            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_2), ".+--++.+-"));
+            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_3), "-+.++--+."));
+            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_4), "-+-+++.-."));
 
 
 

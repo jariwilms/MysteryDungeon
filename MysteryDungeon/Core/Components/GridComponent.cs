@@ -14,8 +14,8 @@ namespace MysteryDungeon.Core.Components
     /// </summary>
     public class GridComponent : Component
     {
-        public Vector2 CellGap { get; }
         public Vector2 CellSize { get; }
+        public Vector2 CellGap { get; }
 
         public GridComponent(int cellSize, int cellGap = 0)
         {

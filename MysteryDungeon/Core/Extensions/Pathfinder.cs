@@ -11,9 +11,9 @@ namespace MysteryDungeon.Core.Extensions
     {
         private char[,] _charmap;
 
-        private PathNode[,] _pathNodes;
-        private List<PathNode> _openNodes;
-        private HashSet<PathNode> _closedNodes;
+        public PathNode[,] NodeGrid { get; protected set; }
+        public List<PathNode> OpenNodes { get; protected set; }
+        public HashSet<PathNode> ClosedNodes { get; protected set; }
 
         public Pathfinder()
         {
@@ -29,13 +29,13 @@ namespace MysteryDungeon.Core.Extensions
         {
             _charmap = charmap;
 
-            _pathNodes = new PathNode[_charmap.GetLength(0), _charmap.GetLength(1)];
+            NodeGrid = new PathNode[_charmap.GetLength(0), _charmap.GetLength(1)];
 
             for (int y = 0; y < _charmap.GetLength(1); y++)
             {
                 for (int x = 0; x < _charmap.GetLength(0); x++)
                 {
-                    _pathNodes[x, y] = new PathNode(new Point(x, y));
+                    NodeGrid[x, y] = new PathNode(new Point(x, y));
                 }
             }
         }
@@ -43,24 +43,24 @@ namespace MysteryDungeon.Core.Extensions
         public bool FindPath(Point startPosition, Point endPosition, out List<PathNode> pathNodes)
         {
             pathNodes = new List<PathNode>();
-            _openNodes = new List<PathNode>();
-            _closedNodes = new HashSet<PathNode>();
+            OpenNodes = new List<PathNode>();
+            ClosedNodes = new HashSet<PathNode>();
 
             PathNode currentNode = new PathNode(startPosition);
-            _openNodes.Add(currentNode);
+            OpenNodes.Add(currentNode);
 
-            while (_openNodes.Count > 0)
+            while (OpenNodes.Count > 0)
             {
-                currentNode = _openNodes[0];
+                currentNode = OpenNodes[0];
 
-                for (int i = 1; i < _openNodes.Count; i++)
+                for (int i = 1; i < OpenNodes.Count; i++)
                 {
-                    if (_openNodes[i].F <= currentNode.F && _openNodes[i].H < currentNode.H)
-                        currentNode = _openNodes[i];
+                    if (OpenNodes[i].F <= currentNode.F && OpenNodes[i].H < currentNode.H)
+                        currentNode = OpenNodes[i];
                 }
 
-                _openNodes.Remove(currentNode);
-                _closedNodes.Add(currentNode);
+                OpenNodes.Remove(currentNode);
+                ClosedNodes.Add(currentNode);
 
                 if (currentNode.Position == endPosition)
                 {
@@ -70,17 +70,17 @@ namespace MysteryDungeon.Core.Extensions
 
                 foreach (var neighbourNode in GetNeighbouringNodes(currentNode))
                 {
-                    if (!neighbourNode.Traversable || _closedNodes.Contains(neighbourNode))
+                    if (!neighbourNode.Traversable || ClosedNodes.Contains(neighbourNode))
                         continue;
 
-                    if (currentNode.G + 1 < neighbourNode.G || !_openNodes.Contains(neighbourNode))
+                    if (currentNode.G + 1 < neighbourNode.G || !OpenNodes.Contains(neighbourNode))
                     {
-                        neighbourNode.G = currentNode.G + 1;
+                        neighbourNode.G = currentNode.G + GetDistanceBetweenPoints(currentNode.Position, neighbourNode.Position);
                         neighbourNode.H = GetDistanceBetweenPoints(neighbourNode.Position, endPosition);
 
                         neighbourNode.Parent = currentNode;
 
-                        _openNodes.Add(neighbourNode);
+                        OpenNodes.Add(neighbourNode);
                     }
                 }
             }
@@ -104,25 +104,48 @@ namespace MysteryDungeon.Core.Extensions
             return pathNodes;
         }
 
-        public List<PathNode> GetNeighbouringNodes(PathNode node)
+        public List<PathNode> GetNeighbouringNodes(PathNode node) //Add a check and only return the tiles the player can actually walk on. (floor, water, lava etc.)
         {
             List<PathNode> pathNodes = new List<PathNode>();
             PathNode currentNode;
 
-            for (int y = -1; y < 2; y++)
+            //Get all surrounding nodes 
+
+            //for (int y = -1; y < 2; y++)
+            //{
+            //    for (int x = -1; x < 2; x++)
+            //    {
+            //        Point position = new Point(node.Position.X + x, node.Position.Y + y);
+
+            //        currentNode = _pathNodes[position.X, position.Y];
+            //        currentNode.Traversable = _charmap[position.X, position.Y] == '.' ? true : false;
+
+            //        pathNodes.Add(currentNode);
+            //    }
+            //}
+
+            //pathNodes.RemoveAt(4);
+
+
+
+            //Get up, right, down and left nodes only
+
+            List<Point> points = new List<Point>() 
+            { 
+                new Point(0, 1), 
+                new Point(1, 0), 
+                new Point(0, -1), 
+                new Point(-1, 0) 
+            };
+
+            foreach(var point in points)
             {
-                for (int x = -1; x < 2; x++)
-                {
-                    Point position = new Point(node.Position.X + x, node.Position.Y + y);
-
-                    currentNode = _pathNodes[position.X, position.Y];
-                    currentNode.Traversable = _charmap[position.X, position.Y] == '.' ? true : false;
-
-                    pathNodes.Add(currentNode);
-                }
+                Point position = new Point(node.Position.X, node.Position.Y) + point;
+                currentNode = NodeGrid[position.X, position.Y];
+                currentNode.Traversable = _charmap[position.X, position.Y] == '.' ? true : false;
+                pathNodes.Add(currentNode);
             }
 
-            pathNodes.RemoveAt(4);
             return pathNodes;
         }
 

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Characters;
 using MysteryDungeon.Core.Components;
+using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Tiles;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace MysteryDungeon.Core.Map
     public class Tilemap : GameObject //Convert naar een pure sprite class en zet tiles in aparte grid?
     {
         public Tile[,] Tiles;
+        //public Grid<Tile> Tiles; 
         public GridComponent GridComponent;
         public TilemapRenderer TilemapRenderer;
 
