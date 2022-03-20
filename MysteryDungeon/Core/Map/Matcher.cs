@@ -8,7 +8,7 @@ namespace MysteryDungeon.Core.Map
     /// Matches an object in a grid against it's surrounding nodes, and returns a suitable type
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    class Matcher
+    internal class Matcher
     {
         private Dictionary<string, TileType> TileDictionary;
         private char[,] _map;

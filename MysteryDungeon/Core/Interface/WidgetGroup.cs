@@ -2,7 +2,7 @@
 
 namespace MysteryDungeon.Core.Interface
 {
-    class WidgetGroup
+    internal class WidgetGroup
     {
         public List<Widget> Widgets { get; }
         public bool IsVisible;

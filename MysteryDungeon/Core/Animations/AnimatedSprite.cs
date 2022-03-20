@@ -2,7 +2,7 @@
 
 namespace MysteryDungeon.Core.Animations
 {
-    class AnimatedSprite : Sprite
+    internal class AnimatedSprite : Sprite
     {
         public AnimatedSprite(Texture2D texture, int unitSize) : base(texture, unitSize)
         {

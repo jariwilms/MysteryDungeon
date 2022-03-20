@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
@@ -12,6 +13,10 @@ namespace MysteryDungeon.Core.Input
         private Dictionary<KeyAction, Keys> _keyTable;
 
         private KeyboardState _keyboardState;
+        private KeyboardState _lastKeyboardState;
+
+        private MouseState _mouseState;
+        private MouseState _lastMouseState;
 
         static InputEventHandler()
         {
@@ -28,12 +33,46 @@ namespace MysteryDungeon.Core.Input
 
             _keyTable.Add(KeyAction.Confirm, Keys.None);
             _keyTable.Add(KeyAction.Cancel, Keys.None);
-            _keyTable.Add(KeyAction.Escape, Keys.None);
 
             _keyTable.Add(KeyAction.Up, Keys.W);
             _keyTable.Add(KeyAction.Right, Keys.D);
             _keyTable.Add(KeyAction.Down, Keys.S);
             _keyTable.Add(KeyAction.Left, Keys.A);
+
+            _keyTable.Add(KeyAction.Escape, Keys.Escape);
+            _keyTable.Add(KeyAction.None, Keys.None);
+
+            _keyboardState = Keyboard.GetState();
+            _mouseState = Mouse.GetState();
+
+            RebindKeyAction(KeyAction.Up, Keys.S);
+        }
+
+        /// <summary>
+        /// Rebind a key to a new action
+        /// </summary>
+        /// <param name="keyAction"></param>
+        /// <param name="newKey"></param>
+        public void RebindKeyAction(KeyAction keyAction, Keys newKey, bool swap = true)
+        {
+            KeyAction oldAction = KeyAction.None;
+
+            if (swap)
+            {
+                foreach (var k in _keyTable)
+                {
+                    if (k.Value == newKey)
+                    {
+                        oldAction = k.Key;
+                        break;
+                    }
+                }
+            }
+
+            if (oldAction != KeyAction.None)
+                _keyTable[oldAction] = _keyTable[keyAction];
+
+            _keyTable[keyAction] = newKey;
         }
 
         public void AddEventListener(KeyAction keyAction, Action action)
@@ -53,9 +92,28 @@ namespace MysteryDungeon.Core.Input
 
         }
 
+        public bool IsKeyPressed(Keys key)
+            => _keyboardState.IsKeyDown(key);
+
+        public bool IsKeyPressedOnce(Keys key)
+            => _keyboardState.IsKeyDown(key) && !_lastKeyboardState.IsKeyDown(key);
+
+        public Vector2 GetMousePosition()
+            => new Vector2(_mouseState.X, _mouseState.Y);
+
+        public bool MouseScrollUp()
+            => _mouseState.ScrollWheelValue > _lastMouseState.ScrollWheelValue;
+
+        public bool MouseScrollDown()
+            => _mouseState.ScrollWheelValue < _lastMouseState.ScrollWheelValue;
+
         public void Update()
         {
+            _lastKeyboardState = _keyboardState;
             _keyboardState = Keyboard.GetState();
+
+            _lastMouseState = _mouseState;
+            _mouseState = Mouse.GetState();
 
             _commands.ForEach(command =>
             {

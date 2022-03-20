@@ -3,7 +3,7 @@ using MysteryDungeon.Core.Map;
 
 namespace MysteryDungeon.Core.Tiles
 {
-    class WonderTile : SpecialTile
+    internal class WonderTile : SpecialTile
     {
         public WonderTile() : base(TileType.Floor, SpecialTileType.WonderTile)
         {

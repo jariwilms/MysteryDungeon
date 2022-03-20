@@ -11,5 +11,6 @@
         Left,
 
         Escape,
+        None,
     }
 }

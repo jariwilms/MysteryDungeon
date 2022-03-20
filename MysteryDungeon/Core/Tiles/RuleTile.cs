@@ -2,7 +2,7 @@
 
 namespace MysteryDungeon.Core.Tiles
 {
-    class RuleTile
+    internal class RuleTile
     {
         private char[,] _charmap;
         private List<Rule> _rules;

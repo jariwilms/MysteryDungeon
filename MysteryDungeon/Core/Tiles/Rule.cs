@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Tiles
 {
-    class Rule
+    internal class Rule
     {
         public enum Behaviour
         {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core;
 using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Extensions;
@@ -20,17 +19,11 @@ namespace MysteryDungeon
 
         private double _deltaTime;
 
-        public static KeyboardState KeyboardState;
-        public static KeyboardState LastkeyboardState;
-        public MouseState MouseState;
-        public MouseState LastMouseState;
-
         // ### THE CUM ZONE ###
 
         private Camera _camera;
         private Level _level;
-
-        FrameCounter frameCounter;
+        private FrameCounter _frameCounter;
 
         // ###
 
@@ -67,7 +60,7 @@ namespace MysteryDungeon
             _camera = new Camera(WindowSettings.WindowWidth, WindowSettings.WindowHeight);
             _camera.Follow(_level.Player);
 
-            frameCounter = new FrameCounter();
+            _frameCounter = new FrameCounter();
 
             // #####
 
@@ -83,30 +76,14 @@ namespace MysteryDungeon
 
         protected override void Update(GameTime gameTime)
         {
-            _deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
-
-            KeyboardState = Keyboard.GetState();
-            MouseState = Mouse.GetState();
-
-            // #####
-
             InputEventHandler.Instance.Update();
-
-            if (MouseState.ScrollWheelValue > LastMouseState.ScrollWheelValue)
-                _camera.ZoomIn();
-
-            if (MouseState.ScrollWheelValue < LastMouseState.ScrollWheelValue)
-                _camera.ZoomOut();
 
             _level.Update(gameTime);
             _camera.Update();
 
             GUI.Instance.Update(gameTime);
-            frameCounter.Update(gameTime);
-            // #####
+            //frameCounter.Update(gameTime);
 
-            LastkeyboardState = KeyboardState;
-            LastMouseState = MouseState;
             base.Update(gameTime);
         }
 

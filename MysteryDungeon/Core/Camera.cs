@@ -1,10 +1,11 @@
 ﻿
 using Microsoft.Xna.Framework;
 using MysteryDungeon.Core.Characters;
+using MysteryDungeon.Core.Input;
 
 namespace MysteryDungeon.Core
 {
-    class Camera
+    internal class Camera
     {
         public Matrix TransformMatrix { get; private set; }
 
@@ -61,6 +62,12 @@ namespace MysteryDungeon.Core
 
         public void Update()
         {
+            if (InputEventHandler.Instance.MouseScrollUp())
+                ZoomIn();
+
+            if (InputEventHandler.Instance.MouseScrollDown())
+                ZoomOut();
+
             _position = Matrix.CreateTranslation(
                 (int)(-_target.Transform.Position.X - _target.Sprite.BoundingRectangle.Width / 2),
                 (int)(-_target.Transform.Position.Y - _target.Sprite.BoundingRectangle.Height / 2),

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core.Characters;
 using MysteryDungeon.Core.Extensions;
+using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Interface;
 using System.Collections.Generic;
 
@@ -75,7 +76,7 @@ namespace MysteryDungeon.Core.Map
             Dungeon.Update(gameTime);
             Player.Update(gameTime);
 
-            if (Utility.KeyPressedOnce(Keys.R))
+            if (InputEventHandler.Instance.IsKeyPressedOnce(Keys.R))
             {
                 StairsReached();
             }

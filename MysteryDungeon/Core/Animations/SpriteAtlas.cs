@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Animations
 {
-    class SpriteAtlas<T>
+    internal class SpriteAtlas<T>
     {
         public Texture2D SourceTexture;
         public Rectangle SourceRectangle { get; private set; }

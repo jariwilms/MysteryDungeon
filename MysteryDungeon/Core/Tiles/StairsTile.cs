@@ -4,7 +4,7 @@ using System;
 
 namespace MysteryDungeon.Core.Tiles
 {
-    class StairsTile : SpecialTile
+    internal class StairsTile : SpecialTile
     {
         public enum StairDirection
         {

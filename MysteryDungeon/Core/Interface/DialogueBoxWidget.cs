@@ -4,7 +4,7 @@ using MysteryDungeon.Core.Data;
 
 namespace MysteryDungeon.Core.Interface
 {
-    class DialogueBoxWidget : Widget
+    internal class DialogueBoxWidget : Widget
     {
         public enum DialogueBoxColor
         {

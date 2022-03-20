@@ -18,7 +18,7 @@ namespace MysteryDungeon.Core.Map
     /// <summary>
     /// Generates random Dungeons according to predefined generators
     /// </summary>
-    class DungeonGenerator
+    internal class DungeonGenerator
     {
         #region variables
         private Dungeon _dungeon;

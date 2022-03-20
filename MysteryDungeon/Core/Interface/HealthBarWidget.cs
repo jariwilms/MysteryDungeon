@@ -6,7 +6,7 @@ using MysteryDungeon.Core.Extensions;
 
 namespace MysteryDungeon.Core.Interface
 {
-    class HealthBarWidget : Widget
+    internal class HealthBarWidget : Widget
     {
         protected Player Player;
 
