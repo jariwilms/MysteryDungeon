@@ -6,18 +6,20 @@ namespace MysteryDungeon.Core.Extensions
 {
     public class FrameCounter
     {
-        public FrameCounter()
-        {
-        }
-
         public long TotalFrames { get; private set; }
         public float TotalSeconds { get; private set; }
-        public float AverageFramesPerSecond { get; private set; }
-        public float CurrentFramesPerSecond { get; private set; }
 
-        public const int MAXIMUM_SAMPLES = 100;
+        public float CurrentFramesPerSecond { get; private set; }
+        public float AverageFramesPerSecond { get; private set; }
+
+        public const int MAXIMUM_SAMPLES = 128;
 
         private Queue<float> _sampleBuffer = new Queue<float>();
+
+        public FrameCounter()
+        {
+
+        }
 
         public bool Update(GameTime gameTime)
         {
@@ -38,6 +40,7 @@ namespace MysteryDungeon.Core.Extensions
 
             TotalFrames++;
             TotalSeconds += deltaTime;
+
             return true;
         }
     }

@@ -26,7 +26,7 @@ namespace MysteryDungeon.Core.Map
 
         public Level(ContentManager content) //TODO: clean deze dogshit class up + leer deftig programmeren
         {
-            Player = new Player(content, this);
+            Player = new Player(this);
             Player.OnMoveFinished += () => { Dungeon.Tilemap.ActivateTile(this, Player); };
 
             _pathFinder = new Pathfinder();

@@ -7,6 +7,8 @@
 
         public bool Enabled;
 
+        public const int UnitSize = 24;
+
         public Component()
         {
             Transform = new Transform();

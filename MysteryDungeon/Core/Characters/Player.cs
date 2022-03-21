@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
+using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Map;
@@ -14,28 +15,16 @@ namespace MysteryDungeon.Core.Characters
         public int CurrentHealth;
         public int MaxHealth;
 
+        public List<PathNode> Nodes; //to be removed, dient voor pathfinding 
 
-        public List<PathNode> nodes;
-
-
-        public Player(ContentManager content, Level dungeon) : base()
+        public Player(Level dungeon) : base() //move pokemon name naar ctor
         {
             Level = dungeon;
 
-            Sprite = new Sprite(content.Load<Texture2D>("sprites/chikorita"), UnitSize);
-            CreateAnimations();
+            Sprite = PokemonSpriteData.GetSprite(Pokemon.Chikorita);
             Sprite.AnimationPlayer.PlayAnimation("Idle");
 
             CreateActions();
-        }
-
-        protected override void CreateAnimations() //Move dit naar data class met animation data => verschillende player/enemy models
-        {
-            Sprite.AnimationPlayer.AddAnimation("Idle", new Animation(Sprite.Texture, new Point(98, 20), 1, 0, 16, 21, 1, 2, 0.8f));   //Move spritesheet naar animationplayer? texture verandert niet wrs
-            Sprite.AnimationPlayer.AddAnimation("MoveUp", new Animation(Sprite.Texture, new Point(260, 47), 3, 0, 13, 20, 1, 2, 0.4f));
-            Sprite.AnimationPlayer.AddAnimation("MoveRight", new Animation(Sprite.Texture, new Point(175, 49), 3, 0, 20, 18, 1, 2, 0.4f, true, SpriteEffects.FlipHorizontally));
-            Sprite.AnimationPlayer.AddAnimation("MoveDown", new Animation(Sprite.Texture, new Point(102, 46), 3, 0, 13, 20, 1, 2, 0.4f));
-            Sprite.AnimationPlayer.AddAnimation("MoveLeft", new Animation(Sprite.Texture, new Point(175, 49), 3, 0, 20, 18, 1, 2, 0.4f)); //TODO: mogelijkheid om animation frames te stitchen, extra animation class?
         }
 
         protected override void CreateActions()

@@ -6,6 +6,7 @@ using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Interface;
 using MysteryDungeon.Core.Map;
+using System;
 
 namespace MysteryDungeon
 {
@@ -47,10 +48,14 @@ namespace MysteryDungeon
 
             // #####
 
+            PokemonSpriteData.Content = Content;
+            PokemonSpriteData.CreateDictionary();
+
             GameObject.Content = Content;   //jaja I know dat dit een regel of 28 breekt ma so what
             GuiTextures.Load(Content);      //das hun eigen fout om geen global content load shit te maken aleja
                                             //Like actually wie in zijn right mind gaat de ContentManager instance
                                             //passen door heel de f'in class hierarchy, doe ff normaal
+                                            //Todo: static/singleton content manager idk
 
             GUI.Instance.Initialize(Content);
             Widget.WindowSettings = WindowSettings; //idem

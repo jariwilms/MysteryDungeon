@@ -44,8 +44,6 @@ namespace MysteryDungeon.Core.Input
 
             _keyboardState = Keyboard.GetState();
             _mouseState = Mouse.GetState();
-
-            RebindKeyAction(KeyAction.Up, Keys.S);
         }
 
         /// <summary>
