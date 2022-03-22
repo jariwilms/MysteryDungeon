@@ -34,9 +34,9 @@ namespace MysteryDungeon.Core.Characters
             WalkPoint = new Point();
         }
 
-        public Enemy(Level level, EnemyState enemyState) : this()
+        public Enemy(Dungeon dungeon, EnemyState enemyState) : this()
         {
-            Level = level;
+            Dungeon = dungeon;
 
             State = EnemyState.Patrolling;
         }

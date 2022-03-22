@@ -2,11 +2,14 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MysteryDungeon.Core.Animations;
 using MysteryDungeon.Core.Characters;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Interface;
 using System.Collections.Generic;
+using MysteryDungeon.Core.Data;
+using MysteryDungeon.Core.Components;
 
 namespace MysteryDungeon.Core.Map
 {
@@ -26,24 +29,26 @@ namespace MysteryDungeon.Core.Map
 
         public Level(ContentManager content) //TODO: clean deze dogshit class up + leer deftig programmeren
         {
-            Player = new Player(this);
-            Player.OnMoveFinished += () => { Dungeon.Tilemap.ActivateTile(this, Player); };
+            _dungeonGenerator = new DungeonGenerator(DungeonType.Standard);
+            Dungeon = _dungeonGenerator.Generate();
 
             _pathFinder = new Pathfinder();
             _nodes = new List<PathNode>();
-
-            _dungeonGenerator = new DungeonGenerator(DungeonType.Standard);
-            StairsReached();
-
-            GUI.Instance.Widgets.Add(new HealthBarWidget(Player));
             _redpng = content.Load<Texture2D>("particles/red");
+
+
+
+            Player = new Player(Pokemon.Chikorita, Dungeon);
+            Player.Components.Add(new SpriteRenderer(Player, Player.Sprite));
+            Player.OnMoveFinished += () => { Dungeon.Tilemap.ActivateTile(this, Player); };
+            Player.SetPosition(Dungeon.SpawnPoint);
         }
 
         public void GenerateNewDungeon()
         {
             Dungeon = _dungeonGenerator.Generate();
 
-            Player.Stop();
+            Player.Stop(); //move naar nieuwe function, moet hier niet staan
             Player.SetPosition(Dungeon.SpawnPoint);
         }
 

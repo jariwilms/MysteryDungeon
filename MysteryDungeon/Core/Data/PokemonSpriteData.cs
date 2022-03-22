@@ -28,8 +28,6 @@ namespace MysteryDungeon.Core.Data
         static PokemonSpriteData()
         {
             _textureDictionary = new Dictionary<Pokemon, Texture2D>();
-            
-            Content = new ContentManager(new GameServiceContainer(), "Content");
         }
 
         public static void CreateDictionary()
@@ -53,17 +51,16 @@ namespace MysteryDungeon.Core.Data
                     break;
 
                 case Pokemon.Chikorita:
-                        sprite.AnimationPlayer.AddAnimation("Idle", new Animation(sprite.Texture, new Point(98, 20), 16, 21, 1, 0, 1, 2, 0.8f));
-                        sprite.AnimationPlayer.AddAnimation("MoveUp", new Animation(sprite.Texture, new Point(260, 47), 13, 20, 3, 0, 1, 2, 0.4f));
-                        sprite.AnimationPlayer.AddAnimation("MoveRight", new Animation(sprite.Texture, new Point(175, 49), 20, 18, 3, 0, 1, 2, 0.4f, true, SpriteEffects.FlipHorizontally));
-                        sprite.AnimationPlayer.AddAnimation("MoveDown", new Animation(sprite.Texture, new Point(102, 46), 13, 20, 3, 0, 1, 2, 0.4f));
-                        sprite.AnimationPlayer.AddAnimation("MoveLeft", new Animation(sprite.Texture, new Point(175, 49), 20, 18, 3, 0, 1, 2, 0.4f));
+                        sprite.AnimationPlayer.AddAnimation(new Animation("Idle", _textureDictionary[pokemon], new Point(98, 20), 16, 21, 1, 0, 1, 2, 0.8f));
+                        sprite.AnimationPlayer.AddAnimation(new Animation("MoveUp", _textureDictionary[pokemon], new Point(260, 47), 13, 20, 3, 0, 1, 2, 0.4f));
+                        sprite.AnimationPlayer.AddAnimation(new Animation("MoveRight", _textureDictionary[pokemon], new Point(175, 49), 20, 18, 3, 0, 1, 2, 0.4f, true, SpriteEffects.FlipHorizontally));
+                        sprite.AnimationPlayer.AddAnimation(new Animation("MoveDown", _textureDictionary[pokemon], new Point(102, 46), 13, 20, 3, 0, 1, 2, 0.4f));
+                        sprite.AnimationPlayer.AddAnimation(new Animation("MoveLeft", _textureDictionary[pokemon], new Point(175, 49), 20, 18, 3, 0, 1, 2, 0.4f));
                     break;
 
                 default:
                     break;
             }
-
         }
     }
 }

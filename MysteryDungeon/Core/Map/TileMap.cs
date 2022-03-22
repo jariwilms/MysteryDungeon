@@ -22,7 +22,7 @@ namespace MysteryDungeon.Core.Map
             TileGrid = new Grid<Tile>();
             TileGrid.CellSize = new Vector2(24);
 
-            TilemapRenderer = new TilemapRenderer(Content);
+            TilemapRenderer = new TilemapRenderer();
             TilemapRenderer.Render(this);
         }
 

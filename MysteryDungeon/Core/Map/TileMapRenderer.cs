@@ -14,10 +14,10 @@ namespace MysteryDungeon.Core.Map
         private SpriteAtlas<TileType> _dungeonAtlas;
         private SpriteAtlas<SpecialTileType> _specialAtlas;
 
-        public TilemapRenderer(ContentManager content)
+        public TilemapRenderer()
         {
-            Texture2D dungeonTexture = content.Load<Texture2D>("tiles/tiny_woods");
-            Texture2D specialTexture = content.Load<Texture2D>("tiles/special_tiles");
+            Texture2D dungeonTexture = Content.Load<Texture2D>("tiles/tiny_woods");
+            Texture2D specialTexture = Content.Load<Texture2D>("tiles/special_tiles");
 
             _dungeonAtlas = new SpriteAtlas<TileType>(dungeonTexture, new Point(9, 163), 1, 1, 24);
             _specialAtlas = new SpriteAtlas<SpecialTileType>(specialTexture, new Point(0, 0), 1, 1, 24);
@@ -96,12 +96,12 @@ namespace MysteryDungeon.Core.Map
             Tilemap = tilemap;
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
 
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             Point tilePosition;
 

@@ -5,13 +5,13 @@ namespace MysteryDungeon.Core.Animations
 {
     public class Animation
     {
+        public string Identifier { get; set; }
+
         public Texture2D SourceTexture { get; set; }
+        public Rectangle SourceRectangle;
 
-        public Rectangle SourceRectangle { get { return _sourceRectangle; } private set { _sourceRectangle = value; } }
-        private Rectangle _sourceRectangle;
-
-        private Point _textureOffset; //For sprite sheets that do not start at (0, 0)
         public SpriteEffects SpriteEffects;
+        private Point _textureOffset;
 
         private int _spaceBetweenSpritesX;
         private int _spaceBetweenSpritesY;
@@ -27,12 +27,18 @@ namespace MysteryDungeon.Core.Animations
 
         public bool IsLooping;
 
-        public Animation(Texture2D texture, int rows, int columns, float frameTime = 1.0f, bool isLooping = true)
+        public Animation(
+            string identifier, 
+            Texture2D texture, 
+            int rows, int columns, 
+            float frameTime = 1.0f, bool isLooping = true)
         {
+            Identifier = identifier;
+
             SourceTexture = texture;
 
-            _sourceRectangle.Width = SourceTexture.Width / columns;
-            _sourceRectangle.Height = SourceTexture.Height / rows;
+            SourceRectangle.Width = SourceTexture.Width / columns;
+            SourceRectangle.Height = SourceTexture.Height / rows;
 
             _textureOffset = new Point(0, 0);
             _spaceBetweenSpritesX = 0;
@@ -50,20 +56,21 @@ namespace MysteryDungeon.Core.Animations
         }
 
         public Animation(
+            string identifier, 
             Texture2D texture, Point textureOffset,
-            int spaceBetweenSpritesX, int spaceBetweenSpritesY,
             int spriteWidth, int spriteHeight,
+            int spaceBetweenSpritesX, int spaceBetweenSpritesY,
             int rows, int columns,
             float frameTime = 1.0f,
             bool isLooping = true,
             SpriteEffects spriteEffects = SpriteEffects.None)
-            : this(texture, rows, columns, frameTime)
+            : this(identifier, texture, rows, columns, frameTime)
         {
             _textureOffset = textureOffset;
             SpriteEffects = spriteEffects;
 
-            _sourceRectangle.Width = spriteWidth;
-            _sourceRectangle.Height = spriteHeight;
+            SourceRectangle.Width = spriteWidth;
+            SourceRectangle.Height = spriteHeight;
 
             _spaceBetweenSpritesX = spaceBetweenSpritesX;
             _spaceBetweenSpritesY = spaceBetweenSpritesY;
@@ -107,8 +114,8 @@ namespace MysteryDungeon.Core.Animations
             int column = _currentFrame % _columns;
             int row = _currentFrame / _columns;
 
-            _sourceRectangle.X = _textureOffset.X + column * _sourceRectangle.Width + column * _spaceBetweenSpritesX;
-            _sourceRectangle.Y = _textureOffset.Y + row * _sourceRectangle.Height + row * _spaceBetweenSpritesY;
+            SourceRectangle.X = _textureOffset.X + column * SourceRectangle.Width + column * _spaceBetweenSpritesX;
+            SourceRectangle.Y = _textureOffset.Y + row * SourceRectangle.Height + row * _spaceBetweenSpritesY;
         }
     }
 }

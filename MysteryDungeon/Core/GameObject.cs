@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.Components;
 using System;
+using System.Collections.Generic;
 
 namespace MysteryDungeon.Core
 {
@@ -19,18 +21,22 @@ namespace MysteryDungeon.Core
         }
     }
 
-    public abstract class GameObject : IDisposable
+    public abstract class GameObject
     {
         public Transform Transform;
         public Transform Offset;
 
-        public static ContentManager Content;
-        public const int UnitSize = 24;
+        public List<Component> Components { get; set; }
+
+        public static ContentManager Content { get; set; }
+        protected const int UnitSize = 24;
 
         public GameObject()
         {
             Transform = new Transform();
             Offset = new Transform();
+
+            Components = new List<Component>();
         }
 
         public void SetPosition(Vector2 newPosition)
@@ -40,10 +46,5 @@ namespace MysteryDungeon.Core
 
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(SpriteBatch spriteBatch);
-
-        public void Dispose() //die gaat wrs alle content unloaden lol
-        {
-            Content.Unload();
-        }
     }
 }

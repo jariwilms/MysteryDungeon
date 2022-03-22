@@ -7,24 +7,32 @@ namespace MysteryDungeon.Core.Animations
 {
     public class AnimationPlayer
     {
-        private Animation _animation;
-        private Dictionary<string, Animation> _animationDictionary; //verander naar enum met animationstates?
-        public Rectangle DestinationRectangle;
-
-        private bool _isPlaying;
-
-        public AnimationPlayer()
+        public enum AnimationMode
         {
-            _animationDictionary = new Dictionary<string, Animation>();
-            _isPlaying = true;
+            Single,
+            Multiple,
         }
 
-        public void AddAnimation(string identifier, Animation animation)
-        {
-            if (_animationDictionary.ContainsKey(identifier))
-                throw new Exception(String.Format("An animation with identifier {0} already exists", identifier));
+        public Animation CurrentAnimation { get; protected set; }
+        private Dictionary<string, Animation> _animationDictionary;
+        private AnimationMode _animationMode;
 
-            _animationDictionary.Add(identifier, animation);
+        public bool IsPlaying { get; protected set; }
+
+        public AnimationPlayer(AnimationMode animationMode = AnimationMode.Single)
+        {
+            _animationMode = animationMode;
+            _animationDictionary = new Dictionary<string, Animation>();
+
+            IsPlaying = true;
+        }
+
+        public void AddAnimation(Animation animation)
+        {
+            if (_animationDictionary.ContainsKey(animation.Identifier))
+                throw new Exception(String.Format("An animation with animation.Identifier {0} already exists", animation.Identifier));
+
+            _animationDictionary.Add(animation.Identifier, animation);
         }
 
         public void PlayAnimation(string identifier)
@@ -34,59 +42,40 @@ namespace MysteryDungeon.Core.Animations
             if (!found)
                 throw new Exception(String.Format("An animation with identifier {0} does not exist", identifier));
 
-            _animation = animation;
+            CurrentAnimation = animation;
         }
 
         public void Resume()
         {
-            _isPlaying = true;
+            IsPlaying = true;
         }
 
         public void Pause()
         {
-            _isPlaying = false;
+            IsPlaying = false;
         }
 
         public void TogglePlay()
         {
-            _isPlaying = !_isPlaying;
+            IsPlaying = !IsPlaying;
         }
 
         public void NextFrame()
         {
-            _animation.NextFrame();
+            CurrentAnimation.NextFrame();
         }
 
         public void PreviousFrame()
         {
-            _animation.PreviousFrame();
+            CurrentAnimation.PreviousFrame();
         }
 
         public void Update(GameTime gameTime)
         {
-            if (!_isPlaying)
+            if (!IsPlaying)
                 return;
 
-            _animation.Update(gameTime);
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            if (_animation == null)
-                throw new NullReferenceException("No animation has been set.");
-
-            int leftDiff = (24 - _animation.SourceRectangle.Width) / 2;
-            int bottomDiff = 24 - _animation.SourceRectangle.Height;
-
-            spriteBatch.Draw(
-                _animation.SourceTexture,
-                new Rectangle(DestinationRectangle.X + leftDiff, DestinationRectangle.Y + bottomDiff - 4, _animation.SourceRectangle.Width, _animation.SourceRectangle.Height),
-                _animation.SourceRectangle,
-                Color.White,
-                0.0f,
-                Vector2.Zero,
-                effects: _animation.SpriteEffects,
-                0.0f);
+            CurrentAnimation.Update(gameTime);
         }
     }
 }

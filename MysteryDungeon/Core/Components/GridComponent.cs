@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace MysteryDungeon.Core.Components
@@ -6,7 +7,7 @@ namespace MysteryDungeon.Core.Components
     /// <summary>
     /// Stores dimensional data of the grid layout and provides helper functions to retrieve information about the grid
     /// </summary>
-    public class GridComponent : Component
+    public class GridComponent : Component //not used for now
     {
         public Vector2 CellSize { get; }
         public Vector2 CellGap { get; }
@@ -57,5 +58,15 @@ namespace MysteryDungeon.Core.Components
         /// <returns></returns>
         public Vector2 GetGlobalCellCenter(Vector2 position)
             => GetGlobalCellPosition(position) + CellSize / 2;
+
+        public override void Update(GameTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

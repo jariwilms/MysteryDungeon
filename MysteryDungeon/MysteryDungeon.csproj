@@ -14,6 +14,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>C:\Users\jariw\Documents\Programming\Languages\C#\MysteryDungeon\MysteryDungeon\MysteryDungeon.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Icon.ico" />

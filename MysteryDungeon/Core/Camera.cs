@@ -14,9 +14,9 @@ namespace MysteryDungeon.Core
         private Matrix _zoom;
 
         public float ZoomValue { get; private set; }
-        private float _minZoom;
-        private float _maxZoom;
-        private float _zoomStep;
+        private readonly float _minZoom;
+        private readonly float _maxZoom;
+        private readonly float _zoomStep;
 
         private int _windowWidth;
         private int _windowHeight;
@@ -72,7 +72,7 @@ namespace MysteryDungeon.Core
                 (int)(-_target.Transform.Position.X - _target.Sprite.BoundingRectangle.Width / 2),
                 (int)(-_target.Transform.Position.Y - _target.Sprite.BoundingRectangle.Height / 2),
                 0.0f);
-
+            
             _offset = Matrix.CreateTranslation(
                 _windowWidth / 2,
                 _windowHeight / 2,

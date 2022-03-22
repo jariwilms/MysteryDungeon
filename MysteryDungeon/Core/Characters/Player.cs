@@ -12,22 +12,20 @@ namespace MysteryDungeon.Core.Characters
 {
     public class Player : Actor
     {
-        public int CurrentHealth;
-        public int MaxHealth;
+        public int CurrentHealth { get; set; }
+        public int MaxHealth { get; set; }
 
-        public List<PathNode> Nodes; //to be removed, dient voor pathfinding 
-
-        public Player(Level dungeon) : base() //move pokemon name naar ctor
+        public Player(Pokemon pokemon, Dungeon dungeon) : base() //move pokemon name naar ctor
         {
-            Level = dungeon;
+            Dungeon = dungeon;
 
-            Sprite = PokemonSpriteData.GetSprite(Pokemon.Chikorita);
+            Sprite = PokemonSpriteData.GetSprite(pokemon);
             Sprite.AnimationPlayer.PlayAnimation("Idle");
 
             CreateActions();
         }
 
-        protected override void CreateActions()
+        protected override void CreateActions() //moet eigenlijk voor elke entity gedaan worden, ai stuurt dan deze actions aan... => move uit player class
         {
             MoveUpAction = () => { MoveTo(MovementDirection.North); };
             MoveRightAction = () => { MoveTo(MovementDirection.East); };
@@ -38,16 +36,6 @@ namespace MysteryDungeon.Core.Characters
             InputEventHandler.Instance.AddEventListener(KeyAction.Right, MoveRightAction);
             InputEventHandler.Instance.AddEventListener(KeyAction.Down, MoveDownAction);
             InputEventHandler.Instance.AddEventListener(KeyAction.Left, MoveLeftAction);
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            base.Draw(spriteBatch);
         }
     }
 }

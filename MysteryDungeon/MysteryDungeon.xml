@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MysteryDungeon</name>
+    </assembly>
+    <members>
+        <member name="M:MysteryDungeon.Core.Animations.SpriteAtlas`1.AddSprite(`0,System.Int32,System.Int32)">
+            <summary>
+            Add sprites that are aligned in a grid. Columns and rows are indexed from 0
+            </summary>
+            <param name="identifier"></param>
+            <param name="column"></param>
+            <param name="row"></param>
+        </member>
+        <member name="M:MysteryDungeon.Core.Animations.SpriteAtlas`1.AddSprite(`0,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Add sprites that are not aligned to a grid
+            </summary>
+            <param name="identifier"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="width"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:MysteryDungeon.Core.Characters.Actor.CanMoveInDirection(MysteryDungeon.Core.Characters.MovementDirection)">
+            <summary>
+            Checks if it is possible to move in the given direction
+            </summary>
+            <param name="direction"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MysteryDungeon.Core.Components.GridComponent">
+            <summary>
+            Stores dimensional data of the grid layout and provides helper functions to retrieve information about the grid
+            </summary>
+        </member>
+        <member name="M:MysteryDungeon.Core.Components.GridComponent.GetLocalCellPosition(Microsoft.Xna.Framework.Vector2)">
+             <summary>
+            Returns the cell that is closest to the given position in local space
+             </summary>
+             <param name="position"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MysteryDungeon.Core.Components.GridComponent.GetGlobalCellPosition(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Returns the cell that is closest to the given position in global space
+            </summary>
+            <param name="position"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MysteryDungeon.Core.Components.GridComponent.GetLocalCellCenter(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Returns the center of the cell with the given position in local space
+            </summary>
+            <param name="position"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MysteryDungeon.Core.Components.GridComponent.GetGlobalCellCenter(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Returns the center of the cell with the given position in global space
+            </summary>
+            <param name="position"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MysteryDungeon.Core.Extensions.Grid`1">
+            <summary>
+            Stores object data in a 2-dimensional array 
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:MysteryDungeon.Core.Extensions.Grid`1.CreateGrid(System.Int32,System.Int32)">
+            <summary>
+            Create a new grid with a given width and height
+            </summary>
+            <param name="width"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:MysteryDungeon.Core.Extensions.Grid`1.ResizeGrid(System.Int32,System.Int32)">
+            <summary>
+            Resize the grid to the new width and height
+            </summary>
+            <param name="newWidth"></param>
+            <param name="newHeight"></param>
+        </member>
+        <member name="M:MysteryDungeon.Core.Extensions.Grid`1.CellIndexToLocalPosition(System.Int32,System.Int32)">
+            <summary>
+            Returns the local position of the cell at the given index
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MysteryDungeon.Core.Extensions.Grid`1.CellIndexToGlobalPosition(System.Int32,System.Int32)">
+            <summary>
+            Returns the global position of the cell at the given index
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MysteryDungeon.Core.Extensions.Grid`1.LocalPositionToCellIndex(System.Int32,System.Int32)">
+            <summary>
+            Returns the index of the cell at the given position
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MysteryDungeon.Core.Extensions.Grid`1.GlobalPositionToCellIndex(System.Int32,System.Int32)">
+            <summary>
+            Returns the index of the cell at the given global position
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="P:MysteryDungeon.Core.Extensions.PathNode.G">
+            <summary>
+            Distance from starting node
+            </summary>
+        </member>
+        <member name="P:MysteryDungeon.Core.Extensions.PathNode.H">
+            <summary>
+            Distance from end node
+            </summary>
+        </member>
+        <member name="F:MysteryDungeon.Core.Extensions.PathNode.F">
+            <summary>
+            Sum of G cost and H cost
+            </summary>
+        </member>
+        <member name="M:MysteryDungeon.Core.Input.InputEventHandler.RebindKeyAction(MysteryDungeon.Core.Input.KeyAction,Microsoft.Xna.Framework.Input.Keys,System.Boolean)">
+            <summary>
+            Rebind a key to a new action
+            </summary>
+            <param name="keyAction"></param>
+            <param name="newKey"></param>
+        </member>
+        <member name="T:MysteryDungeon.Core.Interface.WindowSettings">
+            <summary>
+            Holds information about the game window
+            </summary>
+        </member>
+        <member name="T:MysteryDungeon.Core.Map.Dungeon">
+            <summary>
+            Mediator class for interaction between the level and tilemap
+            </summary>
+        </member>
+        <member name="T:MysteryDungeon.Core.Map.DungeonGenerator">
+            <summary>
+            Generates random Dungeons according to predefined generators
+            </summary>
+        </member>
+        <member name="M:MysteryDungeon.Core.Map.DungeonGenerator.GenerateCorridorsInside">
+            <summary>
+            Generates a random Tilemap with a circular pattern
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MysteryDungeon.Core.Map.DungeonGenerator.GenerateCorridorsOutside">
+            <summary>
+            Generates a random Tilemap with a plus pattern
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MysteryDungeon.Core.Map.Matcher">
+            <summary>
+            Matches an object in a grid against it's surrounding nodes, and returns a suitable type
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:MysteryDungeon.Core.Map.Tilemap">
+            <summary>
+            Stores and handles tile assets for creating 2D levels
+            </summary>
+        </member>
+        <member name="T:MysteryDungeon.Core.Tiles.TileType">
+            <summary>
+            Check spritesheet for reference
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -39,8 +39,8 @@ namespace MysteryDungeon.Core.Characters
 
     public abstract class Actor : GameObject
     {
-        public Level Level { get; protected set; }
-        public Sprite Sprite { get; protected set; }
+        public Dungeon Dungeon{ get; protected set; }
+        public Sprite Sprite { get; set; }
 
         public event Action OnSpawn;
         public event Action OnDefeat;
@@ -126,8 +126,6 @@ namespace MysteryDungeon.Core.Characters
             IsLerping = true;
 
             OnMoveStart?.Invoke();
-
-            Sprite.AnimationPlayer.PlayAnimation(animationIdentifier);
         }
 
         protected void LerpToDestination(GameTime gameTime)
@@ -164,7 +162,7 @@ namespace MysteryDungeon.Core.Characters
 
             Vector2 tilePosition = new Vector2((int)Transform.Position.X / UnitSize, (int)Transform.Position.Y / UnitSize) + new Vector2(directionPoint.X, directionPoint.Y);
 
-            if (Level.Dungeon.Tilemap.TileGrid.GetElement((int)tilePosition.X, (int)tilePosition.Y).TileCollision == TileCollision.Passable)
+            if (Dungeon.Tilemap.TileGrid.GetElement((int)tilePosition.X, (int)tilePosition.Y).TileCollision == TileCollision.Passable)
                 return true;
 
             return false;
@@ -175,12 +173,12 @@ namespace MysteryDungeon.Core.Characters
             if (IsLerping) //Gaat niet meer werken wanneer non grid-based movement geimplementeerd wordt
                 LerpToDestination(gameTime);
 
-            Sprite.Update(gameTime, Transform);
+            Components.ForEach(component => component.Update(gameTime));
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Sprite.Draw(spriteBatch);
+            Components.ForEach(component => component.Draw(spriteBatch));
         }
     }
 }
