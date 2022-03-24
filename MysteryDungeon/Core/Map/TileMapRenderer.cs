@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
-using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Tiles;
 
 namespace MysteryDungeon.Core.Map
@@ -14,7 +12,7 @@ namespace MysteryDungeon.Core.Map
         private SpriteAtlas<TileType> _dungeonAtlas;
         private SpriteAtlas<SpecialTileType> _specialAtlas;
 
-        public TilemapRenderer()
+        public TilemapRenderer(GameObject parent) : base(parent)
         {
             Texture2D dungeonTexture = Content.Load<Texture2D>("tiles/tiny_woods");
             Texture2D specialTexture = Content.Load<Texture2D>("tiles/special_tiles");
@@ -109,8 +107,8 @@ namespace MysteryDungeon.Core.Map
             {
                 for (int x = 0; x < Tilemap.Width; x++)
                 {
-                    Tile tile = Tilemap.TileGrid.GetElement(x, y);
-                    tilePosition = Tilemap.TileGrid.CellIndexToGlobalPosition(x, y).ToPoint();
+                    Tile tile = Tilemap.Tilegrid.GetElement(x, y);
+                    tilePosition = Tilemap.Tilegrid.CellIndexToGlobalPosition(x, y).ToPoint();
 
                     if (tile.IsSpecial)
                     {
@@ -125,7 +123,7 @@ namespace MysteryDungeon.Core.Map
                     }
                     else
                     {
-                        TileType tileType = Tilemap.TileGrid.GetElement(x, y).TileType;
+                        TileType tileType = Tilemap.Tilegrid.GetElement(x, y).TileType;
 
                         if (tileType == TileType.None)
                             continue;

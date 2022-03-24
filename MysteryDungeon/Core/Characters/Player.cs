@@ -1,12 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
+using MysteryDungeon.Core.Components;
+using MysteryDungeon.Core.Controllers;
 using MysteryDungeon.Core.Data;
-using MysteryDungeon.Core.Extensions;
-using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Map;
-using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Characters
 {
@@ -15,27 +12,57 @@ namespace MysteryDungeon.Core.Characters
         public int CurrentHealth { get; set; }
         public int MaxHealth { get; set; }
 
-        public Player(Pokemon pokemon, Dungeon dungeon) : base() //move pokemon name naar ctor
+        protected AnimatorController _animatorController;
+        protected GridMovementComponent _gridMovementComponent;
+        protected SpriteRendererComponent _spriteRendererComponent;
+
+        public Player(Pokemon pokemon) : base() //move pokemon name naar ctor
         {
-            Dungeon = dungeon;
-
-            Sprite = PokemonSpriteData.GetSprite(pokemon);
-            Sprite.AnimationPlayer.PlayAnimation("Idle");
-
-            CreateActions();
+            Setup(pokemon);
         }
 
-        protected override void CreateActions() //moet eigenlijk voor elke entity gedaan worden, ai stuurt dan deze actions aan... => move uit player class
+        public void Setup(Pokemon pokemon)
         {
-            MoveUpAction = () => { MoveTo(MovementDirection.North); };
-            MoveRightAction = () => { MoveTo(MovementDirection.East); };
-            MoveDownAction = () => { MoveTo(MovementDirection.South); };
-            MoveLeftAction = () => { MoveTo(MovementDirection.West); };
+            _animatorController = new AnimatorController();
+            _animatorController.SetDefaultState("IdleDown");
 
-            InputEventHandler.Instance.AddEventListener(KeyAction.Up, MoveUpAction);
-            InputEventHandler.Instance.AddEventListener(KeyAction.Right, MoveRightAction);
-            InputEventHandler.Instance.AddEventListener(KeyAction.Down, MoveDownAction);
-            InputEventHandler.Instance.AddEventListener(KeyAction.Left, MoveLeftAction);
+            _animatorController.AddParameter<float>("SpeedX");
+            _animatorController.AddParameter<float>("SpeedY");
+
+            var upState = _animatorController.AddState("IdleUp");
+            var rightState = _animatorController.AddState("IdleRight");
+            var downState = _animatorController.AddState("IdleDown");
+            var leftState = _animatorController.AddState("IdleLeft");
+
+            upState.AddCondition("SpeedY", speed => speed >= 0);
+            downState.AddCondition("SpeedY", speed => speed < 0);
+
+            leftState.AddCondition("SpeedX", speed => speed < 0);
+            rightState.AddCondition("SpeedX", speed => speed > 0); //moet dit nog wat fixen enzo, deze predicates werken niet altijd wrs
+
+            AnimatorComponent animatorComponent = AddComponent<AnimatorComponent>() as AnimatorComponent;
+            animatorComponent.AnimatorController = _animatorController;
+
+            Sprite = PokemonSpriteData.LoadSprite(Pokemon.Chikorita);
+            PokemonSpriteData.LoadAnimations(Pokemon.Chikorita, animatorComponent);
+
+
+
+            _spriteRendererComponent = AddComponent<SpriteRendererComponent>() as SpriteRendererComponent;
+            _spriteRendererComponent.Sprite = Sprite;
+
+
+
+            _gridMovementComponent = AddComponent<GridMovementComponent>() as GridMovementComponent;
+            _gridMovementComponent.Tilegrid = Level.Dungeon.Tilemap.Tilegrid;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            _animatorController.SetParameter("SpeedX", _gridMovementComponent.Speed.X);
+            _animatorController.SetParameter("SpeedY", _gridMovementComponent.Speed.Y);
+
+            base.Update(gameTime);
         }
     }
 }

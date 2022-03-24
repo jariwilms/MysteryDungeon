@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MysteryDungeon.Core.Components;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MysteryDungeon.Core
 {
@@ -24,9 +24,8 @@ namespace MysteryDungeon.Core
     public abstract class GameObject
     {
         public Transform Transform;
-        public Transform Offset;
 
-        public List<Component> Components { get; set; }
+        protected List<Component> Components { get; private set; }
 
         public static ContentManager Content { get; set; }
         protected const int UnitSize = 24;
@@ -34,9 +33,29 @@ namespace MysteryDungeon.Core
         public GameObject()
         {
             Transform = new Transform();
-            Offset = new Transform();
-
             Components = new List<Component>();
+        }
+
+        public Component AddComponent<TComponent>() where TComponent : Component
+        {
+            var component = (TComponent)Activator.CreateInstance(typeof(TComponent), this);
+            Components.Add(component);
+
+            return component;
+        }
+
+        public Component GetComponent<TComponent>() where TComponent : Component
+        {
+            return Components.FirstOrDefault(component => component.GetType() == typeof(TComponent));
+        }
+
+        public void RemoveComponent<TComponent>() where TComponent : Component
+        {
+            Components.ForEach(component =>
+            {
+                if (component.GetType() == typeof(TComponent))
+                    Components.Remove(component);
+            });
         }
 
         public void SetPosition(Vector2 newPosition)

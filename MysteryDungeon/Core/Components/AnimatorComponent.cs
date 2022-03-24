@@ -1,29 +1,23 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.Controllers;
 using System;
 using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Animations
 {
-    public class AnimationPlayer
+    public class AnimatorComponent : Component
     {
-        public enum AnimationMode
-        {
-            Single,
-            Multiple,
-        }
-
         public Animation CurrentAnimation { get; protected set; }
+        public AnimatorController AnimatorController { get; set; }
+
         private Dictionary<string, Animation> _animationDictionary;
-        private AnimationMode _animationMode;
 
         public bool IsPlaying { get; protected set; }
 
-        public AnimationPlayer(AnimationMode animationMode = AnimationMode.Single)
+        public AnimatorComponent(GameObject parent) : base(parent)
         {
-            _animationMode = animationMode;
             _animationDictionary = new Dictionary<string, Animation>();
-
             IsPlaying = true;
         }
 
@@ -70,12 +64,50 @@ namespace MysteryDungeon.Core.Animations
             CurrentAnimation.PreviousFrame();
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (!IsPlaying)
                 return;
 
+            AnimatorController.Update();
+            PlayAnimation(AnimatorController.CurrentState);
+
             CurrentAnimation.Update(gameTime);
         }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+
+        }
+
+        //private void UpdateAnimation() //move naar animatorcomponent
+        //{
+        //    string animationIdentifier;
+
+        //    if (IsMoving)
+        //    {
+        //        animationIdentifier = MovementDirection switch
+        //        {
+        //            Direction.North => "MoveUp",
+        //            Direction.East => "MoveRight",
+        //            Direction.South => "MoveDown",
+        //            Direction.West => "MoveLeft",
+        //            _ => "IdleDown",
+        //        };
+        //    }
+        //    else
+        //    {
+        //        animationIdentifier = ViewDirection switch
+        //        {
+        //            Direction.North => "IdleUp",
+        //            Direction.East => "IdleRight",
+        //            Direction.South => "IdleDown",
+        //            Direction.West => "IdleLeft",
+        //            _ => "IdleDown",
+        //        };
+        //    }
+
+        //    Sprite.AnimationPlayer.PlayAnimation(animationIdentifier);
+        //}
     }
 }

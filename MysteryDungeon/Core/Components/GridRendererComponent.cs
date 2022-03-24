@@ -7,22 +7,22 @@ namespace MysteryDungeon.Core.Components
     /// <summary>
     /// Stores dimensional data of the grid layout and provides helper functions to retrieve information about the grid
     /// </summary>
-    public class GridComponent : Component //not used for now
+    public class GridRendererComponent : Component //not used for now
     {
         public Vector2 CellSize { get; }
         public Vector2 CellGap { get; }
 
-        public GridComponent(int cellSize, int cellGap = 0)
+        public GridRendererComponent(GameObject parent, int cellSize, int cellGap = 0) : base(parent)
         {
             CellSize = new Vector2(cellSize);
             CellGap = new Vector2(cellGap);
         }
-        public GridComponent(Vector2 cellSize)
+        public GridRendererComponent(GameObject parent, Vector2 cellSize) : base(parent)
         {
             CellSize = cellSize;
             CellGap = Vector2.Zero;
         }
-        public GridComponent(Vector2 cellSize, Vector2 cellGap) : this(cellSize)
+        public GridRendererComponent(GameObject parent, Vector2 cellSize, Vector2 cellGap) : this(parent, cellSize)
         {
             CellGap = cellGap;
         }

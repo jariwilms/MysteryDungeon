@@ -2,14 +2,12 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MysteryDungeon.Core.Animations;
 using MysteryDungeon.Core.Characters;
+using MysteryDungeon.Core.Components;
+using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
-using MysteryDungeon.Core.Interface;
 using System.Collections.Generic;
-using MysteryDungeon.Core.Data;
-using MysteryDungeon.Core.Components;
 
 namespace MysteryDungeon.Core.Map
 {
@@ -18,7 +16,7 @@ namespace MysteryDungeon.Core.Map
         public Player Player;
         public List<Enemy> Enemies;
 
-        public Dungeon Dungeon;
+        public static Dungeon Dungeon { get; set; } //temporary om het makkelijker te makken, voorzie getgameobject functies etc
         private DungeonGenerator _dungeonGenerator;
 
         private Pathfinder _pathFinder;
@@ -38,8 +36,7 @@ namespace MysteryDungeon.Core.Map
 
 
 
-            Player = new Player(Pokemon.Chikorita, Dungeon);
-            Player.Components.Add(new SpriteRenderer(Player, Player.Sprite));
+            Player = new Player(Pokemon.Chikorita); //remove deze shit
             Player.OnMoveFinished += () => { Dungeon.Tilemap.ActivateTile(this, Player); };
             Player.SetPosition(Dungeon.SpawnPoint);
         }
@@ -48,7 +45,9 @@ namespace MysteryDungeon.Core.Map
         {
             Dungeon = _dungeonGenerator.Generate();
 
-            Player.Stop(); //move naar nieuwe function, moet hier niet staan
+            var grid = Player.GetComponent<GridMovementComponent>() as GridMovementComponent;
+            grid.Tilegrid = Dungeon.Tilemap.Tilegrid;
+            grid.Stop();
             Player.SetPosition(Dungeon.SpawnPoint);
         }
 

@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core;
-using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Interface;
 using MysteryDungeon.Core.Map;
-using System;
 
 namespace MysteryDungeon
 {
@@ -18,8 +16,6 @@ namespace MysteryDungeon
         private SpriteFont _spriteFont;
 
         public WindowSettings WindowSettings;
-
-        private double _deltaTime;
 
         // ### THE CUM ZONE ###
 
@@ -36,6 +32,8 @@ namespace MysteryDungeon
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            //Test.Run();
         }
 
         protected override void Initialize()
@@ -55,7 +53,7 @@ namespace MysteryDungeon
             PokemonSpriteData.Content = Content;
             PokemonSpriteData.CreateDictionary();
 
-            GuiTextures.Load(Content);    
+            GuiTextures.Load(Content);
             GUI.Instance.Initialize(Content);
 
             Widget.WindowSettings = WindowSettings;
@@ -87,7 +85,6 @@ namespace MysteryDungeon
             _camera.Update();
 
             GUI.Instance.Update(gameTime);
-            //frameCounter.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -115,7 +112,6 @@ namespace MysteryDungeon
 
             if (true) //draw gui debug shit hier
             {
-                //_spriteBatch.DrawString(_spriteFont, "Camera zoom: " + _camera.ZoomValue.ToString(), new Vector2(10, 10), Color.White, 0.0f, Vector2.Zero, 0.1f, SpriteEffects.None, 0.0f);
                 _spriteBatch.DrawString(_spriteFont, _level._pathFound.ToString(), new Vector2(10, 40), Color.White); //drawfps
             }
 

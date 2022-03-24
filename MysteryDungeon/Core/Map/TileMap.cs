@@ -11,27 +11,27 @@ namespace MysteryDungeon.Core.Map
     /// </summary>
     public class Tilemap : GameObject
     {
-        public Grid<Tile> TileGrid;
+        public Grid<Tile> Tilegrid;
         public TilemapRenderer TilemapRenderer;
 
-        public int Width { get { return TileGrid.Width; } }
-        public int Height { get { return TileGrid.Height; } }
+        public int Width { get { return Tilegrid.Width; } }
+        public int Height { get { return Tilegrid.Height; } }
 
         public Tilemap()
         {
-            TileGrid = new Grid<Tile>();
-            TileGrid.CellSize = new Vector2(24);
+            Tilegrid = new Grid<Tile>();
+            Tilegrid.CellSize = new Vector2(24);
 
-            TilemapRenderer = new TilemapRenderer();
+            TilemapRenderer = new TilemapRenderer(this);
             TilemapRenderer.Render(this);
         }
 
         public void ActivateTile(Level dungeon, Actor actor)
         {
             Point actorPosition = actor.Transform.Position.ToPoint();
-            Point index = TileGrid.GlobalPositionToCellIndex(actorPosition.X, actorPosition.Y);
+            Point index = Tilegrid.GlobalPositionToCellIndex(actorPosition.X, actorPosition.Y);
 
-            TileGrid.GetElement(index).Activate(dungeon, actor);
+            Tilegrid.GetElement(index).Activate(dungeon, actor);
         }
 
         public override void Update(GameTime gameTime)

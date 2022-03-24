@@ -72,7 +72,7 @@ namespace MysteryDungeon.Core
                 (int)(-_target.Transform.Position.X - _target.Sprite.BoundingRectangle.Width / 2),
                 (int)(-_target.Transform.Position.Y - _target.Sprite.BoundingRectangle.Height / 2),
                 0.0f);
-            
+
             _offset = Matrix.CreateTranslation(
                 _windowWidth / 2,
                 _windowHeight / 2,

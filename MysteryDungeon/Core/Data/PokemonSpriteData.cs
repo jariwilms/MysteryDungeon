@@ -2,20 +2,16 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MysteryDungeon.Core.Data
 {
     public enum Pokemon
     {
-        Pikachu, 
-        
-        Charmander, 
-        Squirtle, 
+        Pikachu,
+
+        Charmander,
+        Squirtle,
         Chikorita
     }
 
@@ -35,15 +31,12 @@ namespace MysteryDungeon.Core.Data
             _textureDictionary.Add(Pokemon.Chikorita, Content.Load<Texture2D>("sprites/chikorita"));
         }
 
-        public static Sprite GetSprite(Pokemon pokemon)
+        public static Sprite LoadSprite(Pokemon pokemon)
         {
-            Sprite sprite = new Sprite(_textureDictionary[pokemon]);
-            LoadAnimations(pokemon, sprite);
-
-            return sprite;
+            return new Sprite(_textureDictionary[pokemon]);
         }
 
-        private static void LoadAnimations(Pokemon pokemon, Sprite sprite)
+        public static void LoadAnimations(Pokemon pokemon, AnimatorComponent animatorComponent)
         {
             switch (pokemon)
             {
@@ -51,11 +44,16 @@ namespace MysteryDungeon.Core.Data
                     break;
 
                 case Pokemon.Chikorita:
-                        sprite.AnimationPlayer.AddAnimation(new Animation("Idle", _textureDictionary[pokemon], new Point(98, 20), 16, 21, 1, 0, 1, 2, 0.8f));
-                        sprite.AnimationPlayer.AddAnimation(new Animation("MoveUp", _textureDictionary[pokemon], new Point(260, 47), 13, 20, 3, 0, 1, 2, 0.4f));
-                        sprite.AnimationPlayer.AddAnimation(new Animation("MoveRight", _textureDictionary[pokemon], new Point(175, 49), 20, 18, 3, 0, 1, 2, 0.4f, true, SpriteEffects.FlipHorizontally));
-                        sprite.AnimationPlayer.AddAnimation(new Animation("MoveDown", _textureDictionary[pokemon], new Point(102, 46), 13, 20, 3, 0, 1, 2, 0.4f));
-                        sprite.AnimationPlayer.AddAnimation(new Animation("MoveLeft", _textureDictionary[pokemon], new Point(175, 49), 20, 18, 3, 0, 1, 2, 0.4f));
+                    animatorComponent.AddAnimation(new Animation("IdleUp", _textureDictionary[pokemon], new Point(260, 19), 17, 22, 1, 0, 1, 2, 0.8f));
+                    animatorComponent.AddAnimation(new Animation("IdleRight", _textureDictionary[pokemon], new Point(174, 20), 25, 21, 1, 0, 1, 2, 0.8f, true, SpriteEffects.FlipHorizontally));
+                    animatorComponent.AddAnimation(new Animation("IdleDown", _textureDictionary[pokemon], new Point(98, 19), 16, 21, 1, 0, 1, 2, 0.8f));
+                    animatorComponent.AddAnimation(new Animation("IdleLeft", _textureDictionary[pokemon], new Point(174, 20), 25, 21, 1, 0, 1, 2, 0.8f));
+
+                    animatorComponent.AddAnimation(new Animation("MoveUp", _textureDictionary[pokemon], new Point(260, 47), 13, 20, 3, 0, 1, 2, 0.4f));
+                    animatorComponent.AddAnimation(new Animation("MoveRight", _textureDictionary[pokemon], new Point(175, 49), 20, 18, 3, 0, 1, 2, 0.4f, true, SpriteEffects.FlipHorizontally));
+                    animatorComponent.AddAnimation(new Animation("MoveDown", _textureDictionary[pokemon], new Point(102, 46), 13, 20, 3, 0, 1, 2, 0.4f));
+                    animatorComponent.AddAnimation(new Animation("MoveLeft", _textureDictionary[pokemon], new Point(175, 49), 20, 18, 3, 0, 1, 2, 0.4f));
+
                     break;
 
                 default:

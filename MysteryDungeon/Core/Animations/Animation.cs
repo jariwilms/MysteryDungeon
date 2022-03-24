@@ -28,9 +28,9 @@ namespace MysteryDungeon.Core.Animations
         public bool IsLooping;
 
         public Animation(
-            string identifier, 
-            Texture2D texture, 
-            int rows, int columns, 
+            string identifier,
+            Texture2D texture,
+            int rows, int columns,
             float frameTime = 1.0f, bool isLooping = true)
         {
             Identifier = identifier;
@@ -56,7 +56,7 @@ namespace MysteryDungeon.Core.Animations
         }
 
         public Animation(
-            string identifier, 
+            string identifier,
             Texture2D texture, Point textureOffset,
             int spriteWidth, int spriteHeight,
             int spaceBetweenSpritesX, int spaceBetweenSpritesY,

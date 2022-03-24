@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Animations
 {
-    public class SpriteAtlas<T>
+    public class SpriteAtlas<TKey>
     {
         public Texture2D SourceTexture;
         public Rectangle SourceRectangle { get; private set; }
-        public Dictionary<T, Rectangle> SpriteDictionary;
+        public Dictionary<TKey, Rectangle> SpriteDictionary;
 
         private Point _textureOffset;
         private readonly int _spaceBetweenSpritesX;
@@ -19,7 +19,7 @@ namespace MysteryDungeon.Core.Animations
 
         private SpriteAtlas()
         {
-            SpriteDictionary = new Dictionary<T, Rectangle>();
+            SpriteDictionary = new Dictionary<TKey, Rectangle>();
         }
 
         public SpriteAtlas(Texture2D sourceTexture, int spriteSize) : this()
@@ -39,7 +39,7 @@ namespace MysteryDungeon.Core.Animations
             SpriteSize = spriteSize;
         }
 
-        public void SetCurrentSprite(T identifier)
+        public void SetCurrentSprite(TKey identifier)
         {
             bool found = SpriteDictionary.TryGetValue(identifier, out Rectangle source);
 
@@ -55,7 +55,7 @@ namespace MysteryDungeon.Core.Animations
         /// <param name="identifier"></param>
         /// <param name="column"></param>
         /// <param name="row"></param>
-        public void AddSprite(T identifier, int column, int row)
+        public void AddSprite(TKey identifier, int column, int row)
         {
             int xPosition = _textureOffset.X + column * _spaceBetweenSpritesX + column * SpriteSize;
             int yPosition = _textureOffset.Y + row * _spaceBetweenSpritesY + row * SpriteSize;
@@ -71,12 +71,12 @@ namespace MysteryDungeon.Core.Animations
         /// <param name="y"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public void AddSprite(T identifier, int x, int y, int width, int height)
+        public void AddSprite(TKey identifier, int x, int y, int width, int height)
         {
             SpriteDictionary.Add(identifier, new Rectangle(x, y, width, height));
         }
 
-        public void RemoveSprite(T identifier)
+        public void RemoveSprite(TKey identifier)
         {
             SpriteDictionary.Remove(identifier);
         }

@@ -83,7 +83,7 @@ namespace MysteryDungeon.Core.Extensions
             return !(x > -1 && x < Width && y > -1 && y < Height);
         }
 
-        public T GetElement(int x, int y)
+        public T GetElement(int x, int y) //fix nullability voor ref en value types
         {
             if (IsOutOfBounds(x, y))
                 return default;

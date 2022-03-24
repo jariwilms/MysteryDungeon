@@ -1,13 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
-namespace MysteryDungeon.Core.Components
+namespace MysteryDungeon.Core
 {
-    public abstract class Component : IDisposable
+    public abstract class Component
     {
-        public GameObject Parent { get; protected set; }
+        public GameObject Parent { get; set; }
         public Transform Transform { get; set; }
 
         public bool Enabled { get; set; }
@@ -16,22 +15,21 @@ namespace MysteryDungeon.Core.Components
         public static ContentManager Content { get; set; }
         protected const int UnitSize = 24;
 
-        public Component()
+        private Component()
         {
             Transform = new Transform();
+
+            Enabled = true;
+            IsVisible = true;
         }
 
-        public Component(Transform transform) : this()
+        public Component(GameObject parent) : this()
         {
-            Transform = transform;
+            Parent = parent;
+            Transform = parent.Transform;
         }
 
         public abstract void Update(GameTime gameTime);
-        public abstract void Draw(SpriteBatch spriteBatch);
-
-        public void Dispose()
-        {
-            Content.Unload();
-        }
+        public virtual void Draw(SpriteBatch spriteBatch) { }
     }
 }

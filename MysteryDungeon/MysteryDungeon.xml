@@ -22,40 +22,40 @@
             <param name="width"></param>
             <param name="height"></param>
         </member>
-        <member name="M:MysteryDungeon.Core.Characters.Actor.CanMoveInDirection(MysteryDungeon.Core.Characters.MovementDirection)">
+        <member name="M:MysteryDungeon.Core.Components.GridMovementComponent.CanMoveToCell(MysteryDungeon.Core.Components.Direction)">
             <summary>
             Checks if it is possible to move in the given direction
             </summary>
             <param name="direction"></param>
             <returns></returns>
         </member>
-        <member name="T:MysteryDungeon.Core.Components.GridComponent">
+        <member name="T:MysteryDungeon.Core.Components.GridRendererComponent">
             <summary>
             Stores dimensional data of the grid layout and provides helper functions to retrieve information about the grid
             </summary>
         </member>
-        <member name="M:MysteryDungeon.Core.Components.GridComponent.GetLocalCellPosition(Microsoft.Xna.Framework.Vector2)">
+        <member name="M:MysteryDungeon.Core.Components.GridRendererComponent.GetLocalCellPosition(Microsoft.Xna.Framework.Vector2)">
              <summary>
             Returns the cell that is closest to the given position in local space
              </summary>
              <param name="position"></param>
              <returns></returns>
         </member>
-        <member name="M:MysteryDungeon.Core.Components.GridComponent.GetGlobalCellPosition(Microsoft.Xna.Framework.Vector2)">
+        <member name="M:MysteryDungeon.Core.Components.GridRendererComponent.GetGlobalCellPosition(Microsoft.Xna.Framework.Vector2)">
             <summary>
             Returns the cell that is closest to the given position in global space
             </summary>
             <param name="position"></param>
             <returns></returns>
         </member>
-        <member name="M:MysteryDungeon.Core.Components.GridComponent.GetLocalCellCenter(Microsoft.Xna.Framework.Vector2)">
+        <member name="M:MysteryDungeon.Core.Components.GridRendererComponent.GetLocalCellCenter(Microsoft.Xna.Framework.Vector2)">
             <summary>
             Returns the center of the cell with the given position in local space
             </summary>
             <param name="position"></param>
             <returns></returns>
         </member>
-        <member name="M:MysteryDungeon.Core.Components.GridComponent.GetGlobalCellCenter(Microsoft.Xna.Framework.Vector2)">
+        <member name="M:MysteryDungeon.Core.Components.GridRendererComponent.GetGlobalCellCenter(Microsoft.Xna.Framework.Vector2)">
             <summary>
             Returns the center of the cell with the given position in global space
             </summary>
@@ -162,12 +162,6 @@
             Generates a random Tilemap with a plus pattern
             </summary>
             <returns></returns>
-        </member>
-        <member name="T:MysteryDungeon.Core.Map.Matcher">
-            <summary>
-            Matches an object in a grid against it's surrounding nodes, and returns a suitable type
-            </summary>
-            <typeparam name="T"></typeparam>
         </member>
         <member name="T:MysteryDungeon.Core.Map.Tilemap">
             <summary>

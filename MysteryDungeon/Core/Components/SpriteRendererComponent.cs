@@ -1,35 +1,33 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Animations;
-using MysteryDungeon.Core.Characters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MysteryDungeon.Core.Components
 {
-    class SpriteRenderer : Component
+    public class SpriteRendererComponent : Component
     {
-        public Sprite Sprite { get; protected set; }
+        public Sprite Sprite { get; set; }
+        public Color Color { get; set; }
+
         private Rectangle _destinationRectangle;
 
-        public SpriteRenderer(GameObject parent, Sprite sprite)
+        public SpriteRendererComponent(GameObject parent) : base(parent)
         {
-            Parent = parent;
-            Sprite = sprite;
+
         }
 
-        public override void Update(GameTime gameTime) //spaghetti
+        public override void Update(GameTime gameTime)
         {
             _destinationRectangle = new Rectangle((int)Parent.Transform.Position.X, (int)Parent.Transform.Position.Y, UnitSize, UnitSize);
-            Sprite.AnimationPlayer.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Animation currentAnimation = Sprite.AnimationPlayer.CurrentAnimation;
+            return;
+
+            //Animation currentAnimation = Sprite.Animator.CurrentAnimation;
+            Animation currentAnimation = default; //werkt totaal niet maar de return statement fixt dat wel
 
             if (currentAnimation == null)
                 throw new NullReferenceException("No Sprite has been set");
