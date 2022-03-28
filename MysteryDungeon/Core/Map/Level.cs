@@ -2,11 +2,12 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MysteryDungeon.Core.Characters;
 using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Data;
+using MysteryDungeon.Core.Entities;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
+using MysteryDungeon.Core.Interface;
 using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Map
@@ -39,6 +40,8 @@ namespace MysteryDungeon.Core.Map
             Player = new Player(Pokemon.Chikorita); //remove deze shit
             Player.OnMoveFinished += () => { Dungeon.Tilemap.ActivateTile(this, Player); };
             Player.SetPosition(Dungeon.SpawnPoint);
+
+            GUI.Instance.Widgets.Add(new HealthBarWidget(Player));
         }
 
         public void GenerateNewDungeon()

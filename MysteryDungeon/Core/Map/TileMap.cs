@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MysteryDungeon.Core.Characters;
+using MysteryDungeon.Core.Entities;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Tiles;
 
@@ -26,7 +26,7 @@ namespace MysteryDungeon.Core.Map
             TilemapRenderer.Render(this);
         }
 
-        public void ActivateTile(Level dungeon, Actor actor)
+        public void ActivateTile(Level dungeon, Entity actor)
         {
             Point actorPosition = actor.Transform.Position.ToPoint();
             Point index = Tilegrid.GlobalPositionToCellIndex(actorPosition.X, actorPosition.Y);

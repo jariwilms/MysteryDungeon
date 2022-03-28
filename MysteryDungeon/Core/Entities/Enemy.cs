@@ -1,42 +1,15 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MysteryDungeon.Core.Map;
+using MysteryDungeon.Core.Data;
 
-namespace MysteryDungeon.Core.Characters
+namespace MysteryDungeon.Core.Entities
 {
-    public class Enemy : Actor //abstract prob
+    public class Enemy : LivingEntity
     {
-        public enum EnemyState
+        public Enemy(Pokemon pokemon)
         {
-            Idle,
-            Sleeping,
-
-            Patrolling,
-            Chasing,
-            Attacking,
-        }
-
-        public EnemyState State { get; protected set; }
-        public Actor Target;
-
-        public Point Destination;
-        public Point WalkPoint;
-        public bool WalkPointSet;
-
-        public float SightRange;
-        public float AttackRange;
-        public bool PlayerInSightRange;
-
-        private Enemy()
-        {
-            Destination = new Point();
-            WalkPoint = new Point();
-        }
-
-        public Enemy(Dungeon dungeon, EnemyState enemyState) : this()
-        {
-            State = EnemyState.Patrolling;
+            //State = EnemyState.Patrolling;
         }
 
         public void Tick() //AI actions, updated once per turn
@@ -69,6 +42,7 @@ namespace MysteryDungeon.Core.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+
 
             base.Draw(spriteBatch);
         }

@@ -13,7 +13,8 @@ namespace MysteryDungeon
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private SpriteFont _spriteFont;
+        private SpriteBatch _spriteBatchGUI;
+        public static SpriteFont _spriteFont;
 
         public WindowSettings WindowSettings;
 
@@ -45,16 +46,19 @@ namespace MysteryDungeon
 
             _graphics.ApplyChanges();
 
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatchGUI = new SpriteBatch(GraphicsDevice);
+
             // #####
 
-            GameObject.Content = Content;
+            //GameObject.Content = new ContentManager(new GameServiceContainer(), "Content");
             Component.Content = Content;
 
             PokemonSpriteData.Content = Content;
             PokemonSpriteData.CreateDictionary();
 
             GuiTextures.Load(Content);
-            GUI.Instance.Initialize(Content);
+            GUI.Instance.Initialize(Content, _spriteBatchGUI);
 
             Widget.WindowSettings = WindowSettings;
 
@@ -72,9 +76,7 @@ namespace MysteryDungeon
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
             _spriteFont = Content.Load<SpriteFont>("font");
-            // #####
         }
 
         protected override void Update(GameTime gameTime)
@@ -93,11 +95,7 @@ namespace MysteryDungeon
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(
-                SpriteSortMode.Deferred,
-                BlendState.AlphaBlend,
-                SamplerState.PointClamp,
-                transformMatrix: _camera.TransformMatrix);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: _camera.TransformMatrix);
 
             _level.Draw(_spriteBatch);
 
@@ -105,19 +103,9 @@ namespace MysteryDungeon
 
 
 
-            _spriteBatch.Begin(
-                SpriteSortMode.Deferred,
-                BlendState.AlphaBlend,
-                SamplerState.PointClamp);
+            GUI.Instance.Draw();
 
-            if (true) //draw gui debug shit hier
-            {
-                _spriteBatch.DrawString(_spriteFont, _level._pathFound.ToString(), new Vector2(10, 40), Color.White); //drawfps
-            }
 
-            GUI.Instance.DrawWidgets(_spriteBatch);
-
-            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

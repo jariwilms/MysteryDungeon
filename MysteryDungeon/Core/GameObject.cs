@@ -21,19 +21,21 @@ namespace MysteryDungeon.Core
         }
     }
 
-    public abstract class GameObject
+    public abstract class GameObject : IDisposable
     {
         public Transform Transform;
 
         protected List<Component> Components { get; private set; }
 
-        public static ContentManager Content { get; set; }
+        public ContentManager Content { get; set; }
         protected const int UnitSize = 24;
 
         public GameObject()
         {
             Transform = new Transform();
             Components = new List<Component>();
+
+            Content = new ContentManager(new GameServiceContainer(), "Content");
         }
 
         public Component AddComponent<TComponent>() where TComponent : Component
@@ -63,7 +65,28 @@ namespace MysteryDungeon.Core
             Transform.Position = newPosition * new Vector2(UnitSize, UnitSize);
         }
 
-        public abstract void Update(GameTime gameTime);
-        public abstract void Draw(SpriteBatch spriteBatch);
+        public virtual void Update(GameTime gameTime)
+        {
+            Components.ForEach(component =>
+            {
+                if (component.IsEnabled)
+                    component.Update(gameTime);
+            });
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+            Components.ForEach(component =>
+            {
+                if (component.IsVisible)
+                    component.Draw(spriteBatch);
+            });
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            Content.Unload();
+        }
     }
 }

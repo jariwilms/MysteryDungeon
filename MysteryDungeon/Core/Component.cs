@@ -9,7 +9,7 @@ namespace MysteryDungeon.Core
         public GameObject Parent { get; set; }
         public Transform Transform { get; set; }
 
-        public bool Enabled { get; set; }
+        public bool IsEnabled { get; set; }
         public bool IsVisible { get; set; }
 
         public static ContentManager Content { get; set; }
@@ -17,9 +17,7 @@ namespace MysteryDungeon.Core
 
         private Component()
         {
-            Transform = new Transform();
-
-            Enabled = true;
+            IsEnabled = true;
             IsVisible = true;
         }
 
@@ -29,7 +27,7 @@ namespace MysteryDungeon.Core
             Transform = parent.Transform;
         }
 
-        public abstract void Update(GameTime gameTime);
+        public virtual void Update(GameTime gameTime) { }
         public virtual void Draw(SpriteBatch spriteBatch) { }
     }
 }

@@ -1,44 +1,8 @@
-﻿using MysteryDungeon.Core.Characters;
+﻿using MysteryDungeon.Core.Entities;
 using MysteryDungeon.Core.Map;
 
 namespace MysteryDungeon.Core.Tiles
 {
-    //public enum TileType
-    //{
-    //    None,
-
-    //    Floor,
-    //    Wall,
-    //    Block,
-    //    Pillar,
-
-    //    LedgeTop,
-    //    LedgeRight,
-    //    LedgeBottom,
-    //    LedgeLeft,
-
-    //    CornerTopLeft,
-    //    CornerTopRight,
-    //    CornerBottomRight,
-    //    CornerBottomLeft,
-
-    //    RidgeTopLeft,
-    //    RidgeTopRight,
-    //    RidgeBottomRight,
-    //    RidgeBottomLeft,
-
-    //    ConnectorHorizontal,
-    //    ConnectorVertical,
-
-    //    TopCap,
-    //    RightCap,
-    //    BottomCap,
-    //    LeftCap,
-    //}
-
-    /// <summary>
-    /// Check spritesheet for reference
-    /// </summary>
     public enum TileType
     {
         None,
@@ -141,7 +105,7 @@ namespace MysteryDungeon.Core.Tiles
             IsSpecial = false;
         }
 
-        public virtual void Activate(Level dungeon, Actor actor)
+        public virtual void Activate(Level dungeon, Entity actor)
         {
 
         }

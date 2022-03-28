@@ -12,7 +12,11 @@ namespace MysteryDungeon.Core.Interface
 
         private ContentManager _content;
 
-        public List<Widget> Widgets;
+        public SpriteBatch SpriteBatch { get; set; }
+        private SpriteFont _spriteFont;
+
+        public List<Widget> Widgets { get; set; }
+        public List<(string, Vector2)> Strings { get; set; }
 
         static GUI()
         {
@@ -22,11 +26,34 @@ namespace MysteryDungeon.Core.Interface
         private GUI()
         {
             Widgets = new List<Widget>();
+            Strings = new List<(string, Vector2)>();
         }
 
-        public void Initialize(ContentManager content)
+        public void Initialize(ContentManager content, SpriteBatch spriteBatch)
         {
             _content = content;
+
+            SpriteBatch = spriteBatch;
+            _spriteFont = content.Load<SpriteFont>("font");
+        }
+
+
+        private void DrawWidgets()
+        {
+            Widgets.ForEach(widget =>
+            {
+                widget.Draw(SpriteBatch);
+            });
+        }
+
+        public void QueueStringDraw(string text, Vector2 position)
+        {
+            Strings.Add(new(text, position));
+        }
+
+        private void DrawStrings()
+        {
+            Strings.ForEach(s => SpriteBatch.DrawString(_spriteFont, s.Item1, s.Item2, Color.White));
         }
 
         public void Update(GameTime gameTime)
@@ -37,12 +64,19 @@ namespace MysteryDungeon.Core.Interface
             });
         }
 
-        public void DrawWidgets(SpriteBatch spriteBatch)
+        public void Draw()
         {
-            Widgets.ForEach(widget =>
-            {
-                widget.Draw(spriteBatch);
-            });
+            SpriteBatch.Begin(
+                SpriteSortMode.Deferred,
+                BlendState.AlphaBlend,
+                SamplerState.PointClamp);
+
+            DrawWidgets();
+            DrawStrings();
+
+            Strings.Clear();
+
+            SpriteBatch.End();
         }
 
         public void Dispose()

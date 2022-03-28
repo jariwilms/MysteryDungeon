@@ -1,4 +1,4 @@
-﻿using MysteryDungeon.Core.Characters;
+﻿using MysteryDungeon.Core.Entities;
 using MysteryDungeon.Core.Map;
 using System;
 
@@ -24,7 +24,7 @@ namespace MysteryDungeon.Core.Tiles
             IsVisible = true;
         }
 
-        public override void Activate(Level level, Actor actor)
+        public override void Activate(Level level, Entity actor)
         {
             level.StairsReached();
         }

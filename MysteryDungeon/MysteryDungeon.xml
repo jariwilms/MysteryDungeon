@@ -24,7 +24,7 @@
         </member>
         <member name="M:MysteryDungeon.Core.Components.GridMovementComponent.CanMoveToCell(MysteryDungeon.Core.Components.Direction)">
             <summary>
-            Checks if it is possible to move in the given direction
+            Check if it is possible to move in the given direction
             </summary>
             <param name="direction"></param>
             <returns></returns>
@@ -166,11 +166,6 @@
         <member name="T:MysteryDungeon.Core.Map.Tilemap">
             <summary>
             Stores and handles tile assets for creating 2D levels
-            </summary>
-        </member>
-        <member name="T:MysteryDungeon.Core.Tiles.TileType">
-            <summary>
-            Check spritesheet for reference
             </summary>
         </member>
     </members>

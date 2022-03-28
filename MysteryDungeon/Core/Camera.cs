@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.Xna.Framework;
-using MysteryDungeon.Core.Characters;
+using MysteryDungeon.Core.Entities;
 using MysteryDungeon.Core.Input;
 
 namespace MysteryDungeon.Core
@@ -21,7 +21,7 @@ namespace MysteryDungeon.Core
         private int _windowWidth;
         private int _windowHeight;
 
-        private Actor _target;
+        private Entity _target;
 
         public Camera(int windowWidth, int windowHeight)
         {
@@ -40,7 +40,7 @@ namespace MysteryDungeon.Core
             _windowHeight = windowHeight;
         }
 
-        public void Follow(Actor target)
+        public void Follow(Entity target)
         {
             _target = target;
         }
@@ -69,8 +69,8 @@ namespace MysteryDungeon.Core
                 ZoomOut();
 
             _position = Matrix.CreateTranslation(
-                (int)(-_target.Transform.Position.X - _target.Sprite.BoundingRectangle.Width / 2),
-                (int)(-_target.Transform.Position.Y - _target.Sprite.BoundingRectangle.Height / 2),
+                (int)(-_target.Transform.Position.X - 12), //fix
+                (int)(-_target.Transform.Position.Y - 12),
                 0.0f);
 
             _offset = Matrix.CreateTranslation(

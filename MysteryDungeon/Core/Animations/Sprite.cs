@@ -5,12 +5,16 @@ namespace MysteryDungeon.Core.Animations
 {
     public class Sprite
     {
-        public Texture2D Texture { get; set; }
+        public Transform Transform;
+
+        public Texture2D SourceTexture { get; set; }
+        public Rectangle SourceRectangle { get; set; }
+
+        public SpriteEffects SpriteEffects { get; set; }
         public Rectangle BoundingRectangle { get; set; }
 
-        public Sprite(Texture2D texture)
+        public Sprite()
         {
-            Texture = texture;
             BoundingRectangle = new Rectangle(0, 0, 24, 24);
         }
     }
