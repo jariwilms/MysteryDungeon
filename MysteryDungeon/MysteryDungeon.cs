@@ -4,7 +4,7 @@ using MysteryDungeon.Core;
 using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
-using MysteryDungeon.Core.Interface;
+using MysteryDungeon.Core.UI;
 using MysteryDungeon.Core.Map;
 
 namespace MysteryDungeon
@@ -14,7 +14,6 @@ namespace MysteryDungeon
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private SpriteBatch _spriteBatchGUI;
-        public static SpriteFont _spriteFont;
 
         public WindowSettings WindowSettings;
 
@@ -33,8 +32,6 @@ namespace MysteryDungeon
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
-            //Test.Run();
         }
 
         protected override void Initialize()
@@ -42,7 +39,6 @@ namespace MysteryDungeon
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             _graphics.PreferredBackBufferWidth = WindowSettings.WindowWidth;
             _graphics.PreferredBackBufferHeight = WindowSettings.WindowHeight;
-            _graphics.PreferMultiSampling = false;
 
             _graphics.ApplyChanges();
 
@@ -72,11 +68,6 @@ namespace MysteryDungeon
             // #####
 
             base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            _spriteFont = Content.Load<SpriteFont>("font");
         }
 
         protected override void Update(GameTime gameTime)

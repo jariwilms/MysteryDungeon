@@ -78,11 +78,6 @@ namespace MysteryDungeon.Core.Extensions
             Cells = newCells;
         }
 
-        private bool IsOutOfBounds(int x, int y)
-        {
-            return !(x > -1 && x < Width && y > -1 && y < Height);
-        }
-
         public T GetElement(int x, int y) //fix nullability voor ref en value types
         {
             if (IsOutOfBounds(x, y))
@@ -165,5 +160,13 @@ namespace MysteryDungeon.Core.Extensions
         {
             return LocalPositionToCellIndex(x, y);
         }
+
+        public Point GlobalPositionToCellIndex(Vector2 position)
+        {
+            return LocalPositionToCellIndex((int)position.X, (int)position.Y);
+        }
+
+        private bool IsOutOfBounds(int x, int y)
+            => !(x > -1 && x < Width && y > -1 && y < Height);
     }
 }

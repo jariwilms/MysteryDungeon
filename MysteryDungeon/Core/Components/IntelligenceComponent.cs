@@ -1,5 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.Behaviour;
 using MysteryDungeon.Core.Entities;
+using MysteryDungeon.Core.Extensions;
+using System;
 
 namespace MysteryDungeon.Core.Components
 {
@@ -15,17 +18,16 @@ namespace MysteryDungeon.Core.Components
 
     public class IntelligenceComponent : Component
     {
-        public LivingEntity Target { get; set; }
+        public EnemyBehaviour EnemyBehaviour { get; set; }
 
-        public Point Destination;
-        public Point WalkPoint;
+        public IntelligenceComponent(GameObject parent) : base(parent)
+        {
 
-        public float SightRange;
-        public float AttackRange;
-        public bool PlayerInSightRange;
+        }
 
-        public EnemyState State { get; protected set; }
-
-        public IntelligenceComponent(GameObject parent) : base(parent) { }
+        public override void Update(GameTime gameTime)
+        {
+            EnemyBehaviour.Update(gameTime);
+        }
     }
 }

@@ -4,7 +4,7 @@ using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Entities;
 using MysteryDungeon.Core.Extensions;
 
-namespace MysteryDungeon.Core.Interface
+namespace MysteryDungeon.Core.UI
 {
     internal class HealthBarWidget : Widget
     {

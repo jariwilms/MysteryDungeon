@@ -21,7 +21,7 @@ namespace MysteryDungeon.Core
         }
     }
 
-    public abstract class GameObject : IDisposable
+    public abstract class GameObject : Contracts.IUpdatable, Contracts.IDrawable, IDisposable
     {
         public Transform Transform;
 
@@ -38,7 +38,7 @@ namespace MysteryDungeon.Core
             Content = new ContentManager(new GameServiceContainer(), "Content");
         }
 
-        public Component AddComponent<TComponent>() where TComponent : Component
+        public TComponent AddComponent<TComponent>() where TComponent : Component
         {
             var component = (TComponent)Activator.CreateInstance(typeof(TComponent), this);
             Components.Add(component);
@@ -46,9 +46,9 @@ namespace MysteryDungeon.Core
             return component;
         }
 
-        public Component GetComponent<TComponent>() where TComponent : Component
+        public TComponent GetComponent<TComponent>() where TComponent : Component
         {
-            return Components.FirstOrDefault(component => component.GetType() == typeof(TComponent));
+            return Components.FirstOrDefault(component => component.GetType() == typeof(TComponent)) as TComponent;
         }
 
         public void RemoveComponent<TComponent>() where TComponent : Component

@@ -22,13 +22,6 @@
             <param name="width"></param>
             <param name="height"></param>
         </member>
-        <member name="M:MysteryDungeon.Core.Components.GridMovementComponent.CanMoveToCell(MysteryDungeon.Core.Components.Direction)">
-            <summary>
-            Check if it is possible to move in the given direction
-            </summary>
-            <param name="direction"></param>
-            <returns></returns>
-        </member>
         <member name="T:MysteryDungeon.Core.Components.GridRendererComponent">
             <summary>
             Stores dimensional data of the grid layout and provides helper functions to retrieve information about the grid
@@ -136,11 +129,6 @@
             <param name="keyAction"></param>
             <param name="newKey"></param>
         </member>
-        <member name="T:MysteryDungeon.Core.Interface.WindowSettings">
-            <summary>
-            Holds information about the game window
-            </summary>
-        </member>
         <member name="T:MysteryDungeon.Core.Map.Dungeon">
             <summary>
             Mediator class for interaction between the level and tilemap
@@ -166,6 +154,11 @@
         <member name="T:MysteryDungeon.Core.Map.Tilemap">
             <summary>
             Stores and handles tile assets for creating 2D levels
+            </summary>
+        </member>
+        <member name="T:MysteryDungeon.Core.UI.WindowSettings">
+            <summary>
+            Holds information about the game window
             </summary>
         </member>
     </members>

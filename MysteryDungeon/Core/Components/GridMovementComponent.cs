@@ -3,6 +3,9 @@ using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Tiles;
 using System;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.UI;
 
 namespace MysteryDungeon.Core.Components
 {
@@ -25,61 +28,52 @@ namespace MysteryDungeon.Core.Components
     {
         public Grid<Tile> Tilegrid { get; set; }
 
-        public float LerpDuration
-        {
-            get { return _lerpDuration; }
-            set { if (value > 0) _lerpDuration = value; }
-        }
-        private float _lerpDuration;
-
+        public float LerpDuration { get; set; }
         protected float DeltaTime { get; set; }
 
-        public Point ViewDirection { get; protected set; }
-        public Vector2 Speed { get; protected set; }
+        protected Vector2 Origin;                                           //Starting position of movement
+        protected Vector2 Destination;                                      //Destination position of movement
 
-        protected Vector2 StartPosition;
-        protected Vector2 EndPosition;
+        public Vector2 Velocity { get; protected set; }                     //Velocity of the parent
+        protected Vector2 CurrentPosition { get; set; }                     //Current position of parent
+        protected Vector2 PreviousPosition { get; set; }                    //Previous position of parent
 
-        protected Vector2 CurrentPosition { get; set; }
-        protected Vector2 LastPosition { get; set; }
+        public Point ViewDirection { get; protected set; }                  
 
-        public bool IsMoving => Math.Abs(Speed.X) > 0.0f || Math.Abs(Speed.Y) > 0.0f;
-        public bool CanMove = true;
-        public bool IsLerping = false;
+        public bool AllowMovement { get; set; }
+        public bool MovementLocked { get; set; }
+        public bool MovementInProgress { get; set; }
 
+        public Action QueuedAction { get; set; }                            //Every frame, if a MoveAction input is done => set QueuedAction to last input
         public Action MoveUpAction { get; set; }
         public Action MoveRightAction { get; set; }
         public Action MoveDownAction { get; set; }
         public Action MoveLeftAction { get; set; }
+
+        public event Action OnMoveStart;
+        public event Action OnMoveFinished;
 
         public GridMovementComponent(GameObject parent) : base(parent)
         {
             LerpDuration = 0.2f;
             DeltaTime = 0.0f;
 
-            Speed = new Vector2();
             ViewDirection = new Point();
 
             CurrentPosition = new Vector2();
-            LastPosition = new Vector2();
+            PreviousPosition = new Vector2();
+            Velocity = new Vector2();
 
-            MoveUpAction += () => { MoveToCell(Direction.North); };
-            MoveRightAction += () => { MoveToCell(Direction.East); };
-            MoveDownAction += () => { MoveToCell(Direction.South); };
-            MoveLeftAction += () => { MoveToCell(Direction.West); };
+            AllowMovement = true;
+            MovementLocked = false;
+            MovementInProgress = false;
 
-            //move uit component, gaat elke actor laten bewegen on keypress
-            InputEventHandler.Instance.AddEventListener(KeyAction.Up, MoveUpAction);
-            InputEventHandler.Instance.AddEventListener(KeyAction.Right, MoveRightAction);
-            InputEventHandler.Instance.AddEventListener(KeyAction.Down, MoveDownAction);
-            InputEventHandler.Instance.AddEventListener(KeyAction.Left, MoveLeftAction);
+            MoveUpAction    += () => { QueuedAction = () => { SetDestinationCell(Direction.North); }; };
+            MoveRightAction += () => { QueuedAction = () => { SetDestinationCell(Direction.East); }; };
+            MoveDownAction  += () => { QueuedAction = () => { SetDestinationCell(Direction.South); }; };
+            MoveLeftAction  += () => { QueuedAction = () => { SetDestinationCell(Direction.West); }; };
         }
 
-        /// <summary>
-        /// Check if it is possible to move in the given direction
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <returns></returns>
         private bool CanMoveToCell(Direction direction) //Verander direction naar point
         {
             Point directionPoint = direction switch
@@ -94,64 +88,85 @@ namespace MysteryDungeon.Core.Components
             ViewDirection = directionPoint;
             Vector2 tilePosition = new Vector2((int)Transform.Position.X / UnitSize, (int)Transform.Position.Y / UnitSize) + new Vector2(directionPoint.X, directionPoint.Y);
 
-            if (Tilegrid.GetElement((int)tilePosition.X, (int)tilePosition.Y).TileCollision == TileCollision.Passable)
+            if (Tilegrid.GetElement((int)tilePosition.X, (int)tilePosition.Y)?.TileCollision == TileCollision.Passable)
                 return true;
 
             return false;
         }
 
-        private void MoveToCell(Direction movementDirection)
+        private void SetDestinationCell(Direction movementDirection)
         {
-            if (!CanMove)
-                return;
-
             if (!CanMoveToCell(movementDirection)) //check apart zodat viewDirection niet constant geset wordt
                 return;
 
-            StartPosition = Parent.Transform.Position;
-            EndPosition = StartPosition + movementDirection switch
+            Point offsetIndex = movementDirection switch
             {
-                Direction.North => new Vector2(0, -UnitSize), //gebruik grid CellToWorld hiervoor, makkelijker
-                Direction.East => new Vector2(UnitSize, 0),
-                Direction.South => new Vector2(0, UnitSize),
-                Direction.West => new Vector2(-UnitSize, 0),
-                _ => throw new Exception("The requested direction does not exist"),
+                Direction.North => new Point(0, -1), 
+                Direction.East => new Point(1, 0), 
+                Direction.South => new Point(0, 1), 
+                Direction.West => new Point(-1, 0),
+                _ => throw new Exception("The requested direction does not exist"), 
             };
 
-            CanMove = false;
-            IsLerping = true;
-        }
+            Origin = Parent.Transform.Position;
+            var startIndex = Tilegrid.GlobalPositionToCellIndex(Parent.Transform.Position);
+            var endIndex = startIndex + offsetIndex;
+            Destination = Tilegrid.CellIndexToGlobalPosition(endIndex.X, endIndex.Y);
 
-        private void LerpToDestination(GameTime gameTime) //parent position moet niet per se gebruikt worden => base transform heeft reference naar parent
+            AllowMovement = false;
+            MovementInProgress = true;
+
+            OnMoveStart?.Invoke();
+        }
+        
+        private void MoveToDestinationCell(GameTime gameTime)
         {
-            if (DeltaTime >= LerpDuration)
+            if (DeltaTime < LerpDuration)
+            {
+                DeltaTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Parent.Transform.Position = Vector2.Lerp(Origin, Destination, DeltaTime / LerpDuration);
+            }
+            else
             {
                 Stop();
-                return;
-            }
+                OnMoveFinished?.Invoke();
 
-            DeltaTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Parent.Transform.Position = Vector2.Lerp(StartPosition, EndPosition, DeltaTime / LerpDuration);
+                if (!MovementLocked) QueuedAction?.Invoke();
+                if (MovementInProgress) MoveToDestinationCell(gameTime);
+            }
+        }
+
+        public void CalculateSpeed(GameTime gameTime)
+        {
+            PreviousPosition = CurrentPosition;
+            CurrentPosition = Parent.Transform.Position;
+            Velocity = Vector2.Divide((CurrentPosition - PreviousPosition), (float)gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         public void Stop()
         {
-            Parent.Transform.Position = EndPosition;
+            Origin = Destination;
+            Parent.Transform.Position = Destination;
 
-            CanMove = true;
-            IsLerping = false;
-
+            Velocity = Vector2.Zero;
             DeltaTime = 0.0f;
+            
+            AllowMovement = true;
+            MovementInProgress = false;
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (IsLerping)
-                LerpToDestination(gameTime);
+            if (AllowMovement && !MovementInProgress && !MovementLocked) QueuedAction?.Invoke();
+            if (MovementInProgress) MoveToDestinationCell(gameTime);
 
-            LastPosition = CurrentPosition;
-            CurrentPosition = Parent.Transform.Position;
-            Speed = Vector2.Divide((CurrentPosition - LastPosition), (float)gameTime.ElapsedGameTime.TotalSeconds);
+            CalculateSpeed(gameTime);
+            QueuedAction = null;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
         }
     }
 }

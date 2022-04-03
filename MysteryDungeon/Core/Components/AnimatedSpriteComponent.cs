@@ -10,6 +10,7 @@ namespace MysteryDungeon.Core.Components
     {
         public AnimatorController AnimatorController { get; set; }
         public Animation CurrentAnimation { get; protected set; }
+        public string CurrentAnimationIdentifier { get; protected set; }
 
         public Dictionary<string, Animation> AnimationDictionary;
 
@@ -31,12 +32,18 @@ namespace MysteryDungeon.Core.Components
 
         public void PlayAnimation(string identifier)
         {
+            if (identifier == CurrentAnimationIdentifier)
+                return;
+
             bool found = AnimationDictionary.TryGetValue(identifier, out Animation animation);
 
             if (!found)
                 throw new Exception(String.Format("An animation with identifier {0} does not exist", identifier));
 
-            CurrentAnimation = animation;
+            CurrentAnimation?.Reset(); //Reset previous animation
+
+            CurrentAnimation = animation; //assign requested animation as new animation
+            CurrentAnimationIdentifier = identifier; //set identifier to new animation
         }
 
         public void Resume()

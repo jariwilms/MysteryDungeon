@@ -1,50 +1,93 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Data;
+using MysteryDungeon.Core.Input;
+using MysteryDungeon.Core.UI;
+using MysteryDungeon.Core.Map;
+using System;
+using MysteryDungeon.Core.Contracts;
+using System.Collections.Generic;
+using MysteryDungeon.Core.Extensions;
 
 namespace MysteryDungeon.Core.Entities
 {
-    public class Enemy : LivingEntity
+    public class Enemy : LivingEntity, ITurnActor
     {
-        public Enemy(Pokemon pokemon)
+        private readonly GridMovementComponent _gridMovementComponent;
+
+        public event Action OnTurnStart;
+        public event Action OnTurnFinished;
+
+        public bool IsPerforming { get => _isPerforming; set => _isPerforming = value; }
+        private bool _isPerforming;
+
+        private int _turnsLeft;
+
+        public Enemy(Pokemon pokemon) : base(pokemon)
         {
-            //State = EnemyState.Patrolling;
-        }
+            MaxHealth = 30;
+            CurrentHealth = 20;
 
-        public void Tick() //AI actions, updated once per turn
-        {
-            //If we are sleeping and not attacked => Sleep
-            //If we are sleeping and attacked => Attacking
+            _gridMovementComponent = new GridMovementComponent(this);
+            _gridMovementComponent.Tilegrid = Level.Dungeon.Tilemap.Tilegrid;
+            _gridMovementComponent.OnMoveFinished += () => _turnsLeft--;
 
-            //If we are patrolling and spot target => Chasing
-            //If we are patrolling and reach destination => Patrol to new point
-            //If we are patrolling and can't reach destination => Patrol to new point
-
-            //If we are chasing and target < 2 tiles away => Attacking
-            //If we are chasing and target > 2 tiles away => Chasing
-
-            //If we are attacking and kill the target => Idle
-            //If we are attacking and die => Stop
-        }
-
-        protected void Patrol()
-        {
-
+            Components.Insert(0, _gridMovementComponent); //maak components list niet visible
         }
 
         public override void Update(GameTime gameTime)
         {
+            AnimatorController.SetParameter("VelocityX", _gridMovementComponent.Velocity.X);
+            AnimatorController.SetParameter("VelocityY", _gridMovementComponent.Velocity.Y);
+            AnimatorController.SetParameter("ViewDirectionX", _gridMovementComponent.ViewDirection.X);
+            AnimatorController.SetParameter("ViewDirectionY", _gridMovementComponent.ViewDirection.Y);
 
+            if (IsPerforming)
+                if (_turnsLeft == 0)
+                    EndTurn();
 
             base.Update(gameTime);
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        private int _nodeIndex;
+        public List<PathNode> Nodes;
+        public void StartTurn()
         {
+            OnTurnStart?.Invoke();
+            IsPerforming = true;
 
+            _turnsLeft = 1;
+            _gridMovementComponent.MovementLocked = false;
 
-            base.Draw(spriteBatch);
+            if (_nodeIndex < Nodes.Count - 1) //temp btw, ff testen
+            {
+                _nodeIndex++;
+
+                var moveDirection = Nodes[_nodeIndex].Position - Nodes[_nodeIndex - 1].Position;
+                var grid = _gridMovementComponent;
+
+                Action a = moveDirection switch
+                {
+                    Point(0, -1) => grid.MoveUpAction,
+                    Point(1, 0) => grid.MoveRightAction,
+                    Point(0, 1) => grid.MoveDownAction,
+                    Point(-1, 0) => grid.MoveLeftAction,
+                    _ => throw new Exception()
+                };
+
+                a?.Invoke();
+            }
+            else
+                EndTurn();
+        }
+
+        public void EndTurn()
+        {
+            _gridMovementComponent.MovementLocked = true;
+
+            IsPerforming = false;
+            OnTurnFinished?.Invoke();
         }
     }
 }

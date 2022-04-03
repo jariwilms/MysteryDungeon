@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace MysteryDungeon.Core.Interface
+namespace MysteryDungeon.Core.UI
 {
     /// <summary>
     /// Holds information about the game window

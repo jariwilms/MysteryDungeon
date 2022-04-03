@@ -86,6 +86,12 @@ namespace MysteryDungeon.Core.Animations
             UpdateSprite();
         }
 
+        public void Reset()
+        {
+            _currentFrame = 0;
+            UpdateSprite();
+        }
+
         public void Update(GameTime gameTime)
         {
             if (_frameTime <= 0)

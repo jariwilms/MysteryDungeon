@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core.Interface
+namespace MysteryDungeon.Core.UI
 {
     public abstract class Widget
     {

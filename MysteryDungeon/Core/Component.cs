@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MysteryDungeon.Core
 {
-    public abstract class Component
+    public abstract class Component : Contracts.IUpdatable, Contracts.IDrawable
     {
         public GameObject Parent { get; set; }
         public Transform Transform { get; set; }
