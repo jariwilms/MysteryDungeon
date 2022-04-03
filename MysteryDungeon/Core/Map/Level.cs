@@ -7,8 +7,6 @@ using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Entities;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
-using MysteryDungeon.Core.UI;
-using System;
 using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Map
@@ -20,7 +18,7 @@ namespace MysteryDungeon.Core.Map
         public List<Enemy> Enemies;
 
         public static Dungeon Dungeon { get; set; } //temporary om het makkelijker te makken, voorzie getgameobject functies etc
-        private DungeonGenerator _dungeonGenerator;
+        private readonly DungeonGenerator _dungeonGenerator;
 
         private Pathfinder _pathFinder;
         private List<PathNode> _nodes;
@@ -64,14 +62,14 @@ namespace MysteryDungeon.Core.Map
             enemygrid.Tilegrid = Dungeon.Tilemap.Tilegrid;
             enemygrid.Stop();
 
-            Player.SetPosition(Dungeon.SpawnPoint);
-            Enemy.SetPosition(Dungeon.SpawnPoint);
+            Player.Transform.Position = Dungeon.Tilemap.Tilegrid.CellIndexToGlobalPosition(Dungeon.SpawnPoint.X, Dungeon.SpawnPoint.Y);
+            Enemy.Transform.Position = Dungeon.Tilemap.Tilegrid.CellIndexToGlobalPosition(Dungeon.SpawnPoint.X, Dungeon.SpawnPoint.Y);
         }
 
         private void FindPath()
         {
             _pathFinder.SetCharmap(Dungeon.Charmap);
-            Point start = new Point((int)Dungeon.SpawnPoint.X, (int)Dungeon.SpawnPoint.Y);
+            Point start = new Point(Dungeon.SpawnPoint.X, Dungeon.SpawnPoint.Y);
             Point destination = new Point(Dungeon.stairsTilePosition.X, Dungeon.stairsTilePosition.Y);
 
             _pathFound = _pathFinder.FindPath(start, destination, out List<PathNode> nodes);

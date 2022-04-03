@@ -75,6 +75,22 @@
             <param name="newWidth"></param>
             <param name="newHeight"></param>
         </member>
+        <member name="M:MysteryDungeon.Core.Extensions.Grid`1.GetElement(System.Int32,System.Int32)">
+            <summary>
+            Get the element at the given index
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MysteryDungeon.Core.Extensions.Grid`1.SetElement(System.Int32,System.Int32,`0)">
+            <summary>
+            Set the element at the given index to a specified value
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="value"></param>
+        </member>
         <member name="M:MysteryDungeon.Core.Extensions.Grid`1.CellIndexToLocalPosition(System.Int32,System.Int32)">
             <summary>
             Returns the local position of the cell at the given index

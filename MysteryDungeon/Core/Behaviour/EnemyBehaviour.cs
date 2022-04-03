@@ -1,12 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Entities;
 using MysteryDungeon.Core.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MysteryDungeon.Core.Behaviour
 {
@@ -20,9 +15,8 @@ namespace MysteryDungeon.Core.Behaviour
 
         private Pathfinder _pathFinder;
         private Random _random;
-
-        int _lastHealth;
-        int _turnsPassedSinceTargetSeen;
+        private int _lastHealth;
+        private int _turnsPassedSinceTargetSeen;
 
         public EnemyBehaviour(LivingEntity parent, LivingEntity target) : base(parent, target)
         {

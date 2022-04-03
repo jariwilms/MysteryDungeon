@@ -101,14 +101,14 @@ namespace MysteryDungeon.Core.Map
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Point tilePosition;
+            Point position;
 
             for (int y = 0; y < Tilemap.Height; y++)
             {
                 for (int x = 0; x < Tilemap.Width; x++)
                 {
                     Tile tile = Tilemap.Tilegrid.GetElement(x, y);
-                    tilePosition = Tilemap.Tilegrid.CellIndexToGlobalPosition(x, y).ToPoint();
+                    position = tile.Position.ToPoint();
 
                     if (tile.IsSpecial)
                     {
@@ -117,7 +117,7 @@ namespace MysteryDungeon.Core.Map
 
                         spriteBatch.Draw(
                             _specialAtlas.SourceTexture,
-                            new Rectangle(tilePosition.X, tilePosition.Y, _specialAtlas.SourceRectangle.Width, _specialAtlas.SourceRectangle.Height),
+                            new Rectangle(position.X, position.Y, _specialAtlas.SourceRectangle.Width, _specialAtlas.SourceRectangle.Height),
                             _specialAtlas.SourceRectangle,
                             Color.White);
                     }
@@ -132,7 +132,7 @@ namespace MysteryDungeon.Core.Map
 
                         spriteBatch.Draw(
                             _dungeonAtlas.SourceTexture,                                                                                                //Sprite sheet
-                            new Rectangle(tilePosition.X, tilePosition.Y, _dungeonAtlas.SourceRectangle.Width, _dungeonAtlas.SourceRectangle.Height),   //Adjusted position, width and height of tile
+                            new Rectangle(position.X, position.Y, _dungeonAtlas.SourceRectangle.Width, _dungeonAtlas.SourceRectangle.Height),           //Adjusted position, width and height of tile
                             _dungeonAtlas.SourceRectangle,                                                                                              //Current position of chosen sprite in sprite sheet
                             Color.White);
                     }

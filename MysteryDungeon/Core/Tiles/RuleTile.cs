@@ -18,7 +18,7 @@ namespace MysteryDungeon.Core.Tiles
             _rules.Add(rule);
         }
 
-        public Tile Match(int xPos, int yPos)
+        public TileType Match(int xPos, int yPos)
         {
             bool matches;
 
@@ -45,10 +45,10 @@ namespace MysteryDungeon.Core.Tiles
                 }
 
                 if (matches)
-                    return rule.Tile;
+                    return rule.TileType;
             }
 
-            return new Tile(TileType.None, TileCollision.Impassable);
+            return TileType.None;
         }
     }
 }

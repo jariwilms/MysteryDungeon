@@ -13,7 +13,6 @@ namespace MysteryDungeon.Core
         public bool IsVisible { get; set; }
 
         public static ContentManager Content { get; set; }
-        protected const int UnitSize = 24;
 
         private Component()
         {

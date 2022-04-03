@@ -24,11 +24,8 @@ namespace MysteryDungeon.Core
     public abstract class GameObject : Contracts.IUpdatable, Contracts.IDrawable, IDisposable
     {
         public Transform Transform;
-
         protected List<Component> Components { get; private set; }
-
         public ContentManager Content { get; set; }
-        protected const int UnitSize = 24;
 
         public GameObject()
         {
@@ -58,11 +55,6 @@ namespace MysteryDungeon.Core
                 if (component.GetType() == typeof(TComponent))
                     Components.Remove(component);
             });
-        }
-
-        public void SetPosition(Vector2 newPosition)
-        {
-            Transform.Position = newPosition * new Vector2(UnitSize, UnitSize);
         }
 
         public virtual void Update(GameTime gameTime)

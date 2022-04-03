@@ -13,8 +13,9 @@ namespace MysteryDungeon.Core.Tiles
             Ignore
         }
 
-        public Tile Tile;
-        public List<Point> PositiveCheckPoints;
+        //public Tile Tile;
+        public TileType TileType { get; set; }
+        public List<Point> PositiveCheckPoints; //change name
         public List<Point> NegativeCheckPoints;
 
         private Rule()
@@ -23,12 +24,12 @@ namespace MysteryDungeon.Core.Tiles
             NegativeCheckPoints = new List<Point>();
         }
 
-        public Rule(Tile tile, string conditions) : this()
+        public Rule(TileType tileType, string conditions) : this()
         {
             if (conditions.Length != 9)
                 throw new ArgumentException("The given conditions are not complete.");
 
-            Tile = tile;
+            TileType = tileType;
 
             int counter = 0;
             for (int y = -1; y < 2; y++)

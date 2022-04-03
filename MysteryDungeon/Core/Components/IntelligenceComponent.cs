@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using MysteryDungeon.Core.Behaviour;
-using MysteryDungeon.Core.Entities;
-using MysteryDungeon.Core.Extensions;
-using System;
 
 namespace MysteryDungeon.Core.Components
 {

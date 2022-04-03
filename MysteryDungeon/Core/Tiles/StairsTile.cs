@@ -1,4 +1,5 @@
-﻿using MysteryDungeon.Core.Entities;
+﻿using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.Entities;
 using MysteryDungeon.Core.Map;
 using System;
 
@@ -12,9 +13,9 @@ namespace MysteryDungeon.Core.Tiles
             Down,
         }
 
-        public StairsTile(StairDirection stairDirection) : base(TileType.Floor, SpecialTileType.StairsDown)
+        public StairsTile(TileType tileType, Vector2 position, StairDirection stairsDirection) : base(tileType, position, TileCollision.Passable)
         {
-            SpecialTileType = stairDirection switch
+            SpecialTileType = stairsDirection switch
             {
                 StairDirection.Up => SpecialTileType.StairsUp,
                 StairDirection.Down => SpecialTileType.StairsDown,

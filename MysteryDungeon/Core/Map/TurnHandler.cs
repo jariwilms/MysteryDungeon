@@ -1,11 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using MysteryDungeon.Core.Contracts;
-using MysteryDungeon.Core.Entities;
-using System;
+﻿using MysteryDungeon.Core.Contracts;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MysteryDungeon.Core.Map
 {

@@ -332,7 +332,7 @@ namespace MysteryDungeon.Core.Map
             int x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
             int y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
-            _dungeon.SpawnPoint = new Vector2(x, y);
+            _dungeon.SpawnPoint = new Point(x, y);
         }
 
         private void GenerateSpecialTiles()
@@ -343,14 +343,14 @@ namespace MysteryDungeon.Core.Map
             int x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
             int y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
-            _dungeon.Tilemap.Tilegrid.SetElement(x, y, new WonderTile());
+            _dungeon.Tilemap.Tilegrid.SetElement(x, y, new WonderTile(TileType.Floor, new Vector2(x * 24, y * 24)));
 
             room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
 
             x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
             y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
-            _dungeon.Tilemap.Tilegrid.SetElement(x, y, new StairsTile(StairsTile.StairDirection.Down));
+            _dungeon.Tilemap.Tilegrid.SetElement(x, y, new StairsTile(TileType.Floor, new Vector2(x * 24, y * 24), StairsTile.StairDirection.Down));
             _dungeon.stairsTilePosition = new Point(x, y);
         }
 
@@ -358,27 +358,17 @@ namespace MysteryDungeon.Core.Map
         {
             _dungeon.Tilemap.Tilegrid.CreateGrid(_dungeonWidth, _dungeonHeight);
 
-            Tile borderTile = new Tile(TileType.Walls1_5, TileCollision.Impassable);
-
-            foreach (int topBorderX in Enumerable.Range(0, _dungeonWidth)) //top, right, bottom and left tiles are all plain grass
-            {
-                _dungeon.Tilemap.Tilegrid.SetElement(topBorderX, 0, borderTile);
-            }
+            foreach (int topBorderX in Enumerable.Range(0, _dungeonWidth))
+                _dungeon.Tilemap.Tilegrid.SetElement(topBorderX, 0, new Tile(TileType.Walls1_5, new Vector2(topBorderX * 24, 0), TileCollision.Impassable));
 
             foreach (int bottomBorderX in Enumerable.Range(0, _dungeonWidth))
-            {
-                _dungeon.Tilemap.Tilegrid.SetElement(bottomBorderX, _dungeonHeight - 1, borderTile);
-            }
+                _dungeon.Tilemap.Tilegrid.SetElement(bottomBorderX, _dungeonHeight - 1, new Tile(TileType.Walls1_5, new Vector2(bottomBorderX * 24, 0), TileCollision.Impassable));
 
             foreach (int leftBorderY in Enumerable.Range(0, _dungeonHeight))
-            {
-                _dungeon.Tilemap.Tilegrid.SetElement(0, leftBorderY, borderTile);
-            }
+                _dungeon.Tilemap.Tilegrid.SetElement(0, leftBorderY, new Tile(TileType.Walls1_5, new Vector2(0, leftBorderY * 24), TileCollision.Impassable));
 
             foreach (int rightBorderY in Enumerable.Range(0, _dungeonHeight))
-            {
-                _dungeon.Tilemap.Tilegrid.SetElement(_dungeonWidth - 1, rightBorderY, borderTile);
-            }
+                _dungeon.Tilemap.Tilegrid.SetElement(_dungeonWidth - 1, rightBorderY, new Tile(TileType.Walls1_5, new Vector2(0, rightBorderY * 24), TileCollision.Impassable));
 
             _ruleTile = new RuleTile(_dungeon.Charmap);
             CreateRules();
@@ -387,7 +377,11 @@ namespace MysteryDungeon.Core.Map
             {
                 for (int x = 1; x < _dungeonWidth - 1; x++)
                 {
-                    _dungeon.Tilemap.Tilegrid.SetElement(x, y, _ruleTile.Match(x, y));
+                    TileType type = _ruleTile.Match(x, y);
+                    if (type == TileType.Floor)
+                        _dungeon.Tilemap.Tilegrid.SetElement(x, y, new Tile(type, new Vector2(x * 24, y * 24), TileCollision.Passable));
+                    else
+                        _dungeon.Tilemap.Tilegrid.SetElement(x, y, new Tile(type, new Vector2(x * 24, y * 24), TileCollision.Impassable));
                 }
             }
         }
@@ -395,83 +389,82 @@ namespace MysteryDungeon.Core.Map
         private void CreateRules() //Visueel zou dit een pak gemakkelijker zijn honestly
         {
             //order is important, rules take precedence in order of declaration
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Floor, TileCollision.Passable), "....-....")); //+ means solid tile, - means walkable tile
-
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls1_5), "+++++++++")); //block
-
-
-
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls2_1), "--.-++.+-")); //group 2 corners
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls2_3), ".--++--+."));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls2_6), ".+--++--."));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls2_7), "-+.++-.--"));
-
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls2_2), ".-.+++.-.")); //group 2 walls
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls2_4), ".+.-+-.+."));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls2_5), "----+----"));
+            _ruleTile.AddRule(new Rule(TileType.Floor, "....-....")); //+ means solid tile, - means walkable tile
+            _ruleTile.AddRule(new Rule(TileType.Walls1_5, "+++++++++")); //block
 
 
 
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls9_1), "-+-+++-++")); //group 9
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls9_2), "-+-+++++-"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls9_3), "-+++++-+-"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls9_4), "++-+++-+-"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls9_5), "-+++++++-"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls9_6), "++-+++-++"));
+            _ruleTile.AddRule(new Rule(TileType.Walls2_1, "--.-++.+-")); //group 2 corners
+            _ruleTile.AddRule(new Rule(TileType.Walls2_3, ".--++--+."));
+            _ruleTile.AddRule(new Rule(TileType.Walls2_6, ".+--++--."));
+            _ruleTile.AddRule(new Rule(TileType.Walls2_7, "-+.++-.--"));
+
+            _ruleTile.AddRule(new Rule(TileType.Walls2_2, ".-.+++.-.")); //group 2 walls
+            _ruleTile.AddRule(new Rule(TileType.Walls2_4, ".+.-+-.+."));
+            _ruleTile.AddRule(new Rule(TileType.Walls2_5, "----+----"));
 
 
 
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls8_1), ".-.+++++-")); //group 8
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls8_2), ".-.+++-++"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls8_3), "++-+++.-."));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls8_4), "-+++++.-."));
+            _ruleTile.AddRule(new Rule(TileType.Walls9_1, "-+-+++-++")); //group 9
+            _ruleTile.AddRule(new Rule(TileType.Walls9_2, "-+-+++++-"));
+            _ruleTile.AddRule(new Rule(TileType.Walls9_3, "-+++++-+-"));
+            _ruleTile.AddRule(new Rule(TileType.Walls9_4, "++-+++-+-"));
+            _ruleTile.AddRule(new Rule(TileType.Walls9_5, "-+++++++-"));
+            _ruleTile.AddRule(new Rule(TileType.Walls9_6, "++-+++-++"));
 
 
 
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls7_1), ".++-++.+-")); //group 7
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls7_2), "++.++--+."));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls7_3), ".+--++.++"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls7_4), "-+.++-++."));
+            _ruleTile.AddRule(new Rule(TileType.Walls8_1, ".-.+++++-")); //group 8
+            _ruleTile.AddRule(new Rule(TileType.Walls8_2, ".-.+++-++"));
+            _ruleTile.AddRule(new Rule(TileType.Walls8_3, "++-+++.-."));
+            _ruleTile.AddRule(new Rule(TileType.Walls8_4, "-+++++.-."));
 
 
 
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls6_1), "++++++++-")); //group 6
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls6_2), "++++++-++"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls6_3), "++-++++++"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls6_4), "-++++++++"));
+            _ruleTile.AddRule(new Rule(TileType.Walls7_1, ".++-++.+-")); //group 7
+            _ruleTile.AddRule(new Rule(TileType.Walls7_2, "++.++--+."));
+            _ruleTile.AddRule(new Rule(TileType.Walls7_3, ".+--++.++"));
+            _ruleTile.AddRule(new Rule(TileType.Walls7_4, "-+.++-++."));
 
 
 
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls5_1), "++++++-+-")); //group 5
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls5_2), "++-+++++-"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls5_3), "-+++++-++"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls5_4), "-+-++++++"));
+            _ruleTile.AddRule(new Rule(TileType.Walls6_1, "++++++++-")); //group 6
+            _ruleTile.AddRule(new Rule(TileType.Walls6_2, "++++++-++"));
+            _ruleTile.AddRule(new Rule(TileType.Walls6_3, "++-++++++"));
+            _ruleTile.AddRule(new Rule(TileType.Walls6_4, "-++++++++"));
 
 
 
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_1), ".-.+++-++")); //group 4
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_2), ".+--++.+-"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_3), "-+.++--+."));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls4_4), "-+-+++.-."));
+            _ruleTile.AddRule(new Rule(TileType.Walls5_1, "++++++-+-")); //group 5
+            _ruleTile.AddRule(new Rule(TileType.Walls5_2, "++-+++++-"));
+            _ruleTile.AddRule(new Rule(TileType.Walls5_3, "-+++++-++"));
+            _ruleTile.AddRule(new Rule(TileType.Walls5_4, "-+-++++++"));
 
 
 
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls3_1), "----+-.+.")); //group 3
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls3_2), "--.-++--."));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls3_4), ".--++-.--"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls3_5), ".+.-+----"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls3_3), "-+-+++-+-")); //wall cap center
+            _ruleTile.AddRule(new Rule(TileType.Walls4_1, ".-.+++-++")); //group 4
+            _ruleTile.AddRule(new Rule(TileType.Walls4_2, ".+--++.+-"));
+            _ruleTile.AddRule(new Rule(TileType.Walls4_3, "-+.++--+."));
+            _ruleTile.AddRule(new Rule(TileType.Walls4_4, "-+-+++.-."));
 
 
 
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls1_1), "--.-++.++")); //corners
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls1_3), ".--++-++."));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls1_7), ".++-++--."));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls1_9), "++.++-.--"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls1_2), "...++++++")); //walls
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls1_4), ".++.++.++"));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls1_6), "++.++.++."));
-            _ruleTile.AddRule(new Rule(new Tile(TileType.Walls1_8), "++++++..."));
+            _ruleTile.AddRule(new Rule(TileType.Walls3_1, "----+-.+.")); //group 3
+            _ruleTile.AddRule(new Rule(TileType.Walls3_2, "--.-++--."));
+            _ruleTile.AddRule(new Rule(TileType.Walls3_4, ".--++-.--"));
+            _ruleTile.AddRule(new Rule(TileType.Walls3_5, ".+.-+----"));
+            _ruleTile.AddRule(new Rule(TileType.Walls3_3, "-+-+++-+-")); //wall cap center
+
+
+
+            _ruleTile.AddRule(new Rule(TileType.Walls1_1, "--.-++.++")); //corners
+            _ruleTile.AddRule(new Rule(TileType.Walls1_3, ".--++-++."));
+            _ruleTile.AddRule(new Rule(TileType.Walls1_7, ".++-++--."));
+            _ruleTile.AddRule(new Rule(TileType.Walls1_9, "++.++-.--"));
+            _ruleTile.AddRule(new Rule(TileType.Walls1_2, "...++++++")); //walls
+            _ruleTile.AddRule(new Rule(TileType.Walls1_4, ".++.++.++"));
+            _ruleTile.AddRule(new Rule(TileType.Walls1_6, "++.++.++."));
+            _ruleTile.AddRule(new Rule(TileType.Walls1_8, "++++++..."));
         }
     }
 }

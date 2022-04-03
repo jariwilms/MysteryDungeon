@@ -13,13 +13,13 @@ namespace MysteryDungeon.Core.Extensions
 
         public Vector2 Position { get; protected set; }
 
-        public Vector2 CellSize { get { return _cellSize; } set { _cellSize = value; CellDistance = CellSize + CellGap; } }
+        public Vector2 CellSize { get { return _cellSize; } set { _cellSize = value; TotalCellDistance = CellSize + CellGap; } }
         private Vector2 _cellSize;
 
-        public Vector2 CellGap { get { return _cellGap; } set { _cellGap = value; CellDistance = CellSize + CellGap; } }
+        public Vector2 CellGap { get { return _cellGap; } set { _cellGap = value; TotalCellDistance = CellSize + CellGap; } }
         private Vector2 _cellGap;
 
-        public Vector2 CellDistance { get; protected set; }
+        public Vector2 TotalCellDistance { get; protected set; }
 
         public int Width { get { return Cells.GetLength(0); } }
         public int Height { get { return Cells.GetLength(1); } }
@@ -33,7 +33,6 @@ namespace MysteryDungeon.Core.Extensions
             CellSize = Vector2.One;
             CellGap = Vector2.Zero;
         }
-
         public Grid(int width, int height, Vector2 cellSize) : this()
         {
             Cells = new T[width, height];
@@ -43,7 +42,6 @@ namespace MysteryDungeon.Core.Extensions
             else
                 CellSize = Vector2.One;
         }
-
         public Grid(int width, int height, Vector2 cellSize, Vector2 cellGap) : this(width, height, cellSize)
         {
             CellGap = cellGap;
@@ -58,7 +56,6 @@ namespace MysteryDungeon.Core.Extensions
         {
             Cells = new T[width, height];
         }
-
         /// <summary>
         /// Resize the grid to the new width and height
         /// </summary>
@@ -78,18 +75,23 @@ namespace MysteryDungeon.Core.Extensions
             Cells = newCells;
         }
 
-        public T GetElement(int x, int y) //fix nullability voor ref en value types
+        /// <summary>
+        /// Get the element at the given index
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public T GetElement(int x, int y)
         {
             if (IsOutOfBounds(x, y))
                 return default;
 
             return Cells[x, y];
         }
-
-        public T GetElement(Point gridPosition)
+        public T GetElement(Point index)
         {
-            int x = gridPosition.X;
-            int y = gridPosition.Y;
+            int x = index.X;
+            int y = index.Y;
 
             if (IsOutOfBounds(x, y))
                 return default;
@@ -97,12 +99,22 @@ namespace MysteryDungeon.Core.Extensions
             return Cells[x, y];
         }
 
+        /// <summary>
+        /// Set the element at the given index to a specified value
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="value"></param>
         public void SetElement(int x, int y, T value)
         {
             if (IsOutOfBounds(x, y))
                 return;
 
             Cells[x, y] = value;
+        }
+        public void SetElement(Point index, T value)
+        {
+            SetElement(index.X, index.Y, value);
         }
 
         /// <summary>
@@ -116,7 +128,11 @@ namespace MysteryDungeon.Core.Extensions
             if (IsOutOfBounds(x, y))
                 return default;
 
-            return new Vector2(x * CellDistance.X, y * CellDistance.Y);
+            return new Vector2(x * TotalCellDistance.X, y * TotalCellDistance.Y);
+        }
+        public Vector2 CellIndexToLocalPosition(Point index)
+        {
+            return CellIndexToLocalPosition(index.X, index.Y);
         }
 
         /// <summary>
@@ -132,6 +148,10 @@ namespace MysteryDungeon.Core.Extensions
 
             return CellIndexToLocalPosition(x, y) + Position;
         }
+        public Vector2 CellIndexToGlobalPosition(Point index)
+        {
+            return CellIndexToGlobalPosition(index.X, index.Y);
+        }
 
         /// <summary>
         /// Returns the index of the cell at the given position
@@ -141,13 +161,17 @@ namespace MysteryDungeon.Core.Extensions
         /// <returns></returns>
         public Point LocalPositionToCellIndex(int x, int y)
         {
-            x = (int)Math.Ceiling(x / CellDistance.X);
-            y = (int)Math.Ceiling(y / CellDistance.Y);
+            x = (int)Math.Ceiling(x / TotalCellDistance.X);
+            y = (int)Math.Ceiling(y / TotalCellDistance.Y);
 
             if (IsOutOfBounds(x, y))
                 return default;
 
             return new Point(x, y);
+        }
+        public Point LocalPositionToCellIndex(Vector2 position)
+        {
+            return LocalPositionToCellIndex((int)position.X, (int)position.Y);
         }
 
         /// <summary>
@@ -160,7 +184,6 @@ namespace MysteryDungeon.Core.Extensions
         {
             return LocalPositionToCellIndex(x, y);
         }
-
         public Point GlobalPositionToCellIndex(Vector2 position)
         {
             return LocalPositionToCellIndex((int)position.X, (int)position.Y);

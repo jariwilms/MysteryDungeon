@@ -7,6 +7,8 @@ namespace MysteryDungeon.Core.Components
     public class SpriteRendererComponent : Component
     {
         public Sprite Sprite { get; set; }
+
+
         public Color Color { get; set; }
 
         private Rectangle _destinationRectangle;
@@ -18,13 +20,13 @@ namespace MysteryDungeon.Core.Components
 
         public override void Update(GameTime gameTime)
         {
-            _destinationRectangle = new Rectangle((int)Parent.Transform.Position.X, (int)Parent.Transform.Position.Y, UnitSize, UnitSize); //verander naar sprite location, past niet altijd in een tile
+            _destinationRectangle = new Rectangle((int)Parent.Transform.Position.X, (int)Parent.Transform.Position.Y, Sprite.Width, Sprite.Height); //verander naar sprite location, past niet altijd in een tile
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            int leftDiff = (UnitSize - Sprite.SourceRectangle.Width) / 2;
-            int bottomDiff = (UnitSize - Sprite.SourceRectangle.Height);
+            int leftDiff = (Sprite.Width - Sprite.SourceRectangle.Width) / 2;
+            int bottomDiff = (Sprite.Height - Sprite.SourceRectangle.Height);
 
             spriteBatch.Draw(
                 Sprite.SourceTexture,

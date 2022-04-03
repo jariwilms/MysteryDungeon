@@ -4,8 +4,8 @@ using MysteryDungeon.Core;
 using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
-using MysteryDungeon.Core.UI;
 using MysteryDungeon.Core.Map;
+using MysteryDungeon.Core.UI;
 
 namespace MysteryDungeon
 {
@@ -53,7 +53,6 @@ namespace MysteryDungeon
             PokemonSpriteData.Content = Content;
             PokemonSpriteData.CreateDictionary();
 
-            GuiTextures.Load(Content);
             GUI.Instance.Initialize(Content, _spriteBatchGUI);
 
             Widget.WindowSettings = WindowSettings;

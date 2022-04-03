@@ -1,14 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Components;
+using MysteryDungeon.Core.Contracts;
 using MysteryDungeon.Core.Data;
-using MysteryDungeon.Core.Input;
-using MysteryDungeon.Core.UI;
+using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Map;
 using System;
-using MysteryDungeon.Core.Contracts;
 using System.Collections.Generic;
-using MysteryDungeon.Core.Extensions;
 
 namespace MysteryDungeon.Core.Entities
 {

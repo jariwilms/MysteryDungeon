@@ -20,7 +20,7 @@ namespace MysteryDungeon.Core.Map
         public int HorizontalRooms;
         public int VerticalRooms;
 
-        public Vector2 SpawnPoint;
+        public Point SpawnPoint;
         public bool isComplete;
 
         private Random _random;
@@ -36,8 +36,6 @@ namespace MysteryDungeon.Core.Map
 
             HorizontalRooms = 0;
             VerticalRooms = 0;
-
-            SpawnPoint = new Vector2();
 
             isComplete = false;
 

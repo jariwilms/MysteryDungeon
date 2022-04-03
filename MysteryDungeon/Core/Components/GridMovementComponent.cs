@@ -1,11 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Extensions;
-using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Tiles;
 using System;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Graphics;
-using MysteryDungeon.Core.UI;
 
 namespace MysteryDungeon.Core.Components
 {
@@ -27,6 +24,7 @@ namespace MysteryDungeon.Core.Components
     public class GridMovementComponent : Component
     {
         public Grid<Tile> Tilegrid { get; set; }
+        public int TileSize { get; set; }
 
         public float LerpDuration { get; set; }
         protected float DeltaTime { get; set; }
@@ -38,7 +36,7 @@ namespace MysteryDungeon.Core.Components
         protected Vector2 CurrentPosition { get; set; }                     //Current position of parent
         protected Vector2 PreviousPosition { get; set; }                    //Previous position of parent
 
-        public Point ViewDirection { get; protected set; }                  
+        public Point ViewDirection { get; protected set; }
 
         public bool AllowMovement { get; set; }
         public bool MovementLocked { get; set; }
@@ -55,6 +53,8 @@ namespace MysteryDungeon.Core.Components
 
         public GridMovementComponent(GameObject parent) : base(parent)
         {
+            TileSize = 24;
+
             LerpDuration = 0.2f;
             DeltaTime = 0.0f;
 
@@ -68,10 +68,10 @@ namespace MysteryDungeon.Core.Components
             MovementLocked = false;
             MovementInProgress = false;
 
-            MoveUpAction    += () => { QueuedAction = () => { SetDestinationCell(Direction.North); }; };
+            MoveUpAction += () => { QueuedAction = () => { SetDestinationCell(Direction.North); }; };
             MoveRightAction += () => { QueuedAction = () => { SetDestinationCell(Direction.East); }; };
-            MoveDownAction  += () => { QueuedAction = () => { SetDestinationCell(Direction.South); }; };
-            MoveLeftAction  += () => { QueuedAction = () => { SetDestinationCell(Direction.West); }; };
+            MoveDownAction += () => { QueuedAction = () => { SetDestinationCell(Direction.South); }; };
+            MoveLeftAction += () => { QueuedAction = () => { SetDestinationCell(Direction.West); }; };
         }
 
         private bool CanMoveToCell(Direction direction) //Verander direction naar point
@@ -86,7 +86,7 @@ namespace MysteryDungeon.Core.Components
             };
 
             ViewDirection = directionPoint;
-            Vector2 tilePosition = new Vector2((int)Transform.Position.X / UnitSize, (int)Transform.Position.Y / UnitSize) + new Vector2(directionPoint.X, directionPoint.Y);
+            Vector2 tilePosition = new Vector2((int)Transform.Position.X / TileSize, (int)Transform.Position.Y / TileSize) + new Vector2(directionPoint.X, directionPoint.Y);
 
             if (Tilegrid.GetElement((int)tilePosition.X, (int)tilePosition.Y)?.TileCollision == TileCollision.Passable)
                 return true;
@@ -101,11 +101,11 @@ namespace MysteryDungeon.Core.Components
 
             Point offsetIndex = movementDirection switch
             {
-                Direction.North => new Point(0, -1), 
-                Direction.East => new Point(1, 0), 
-                Direction.South => new Point(0, 1), 
+                Direction.North => new Point(0, -1),
+                Direction.East => new Point(1, 0),
+                Direction.South => new Point(0, 1),
                 Direction.West => new Point(-1, 0),
-                _ => throw new Exception("The requested direction does not exist"), 
+                _ => throw new Exception("The requested direction does not exist"),
             };
 
             Origin = Parent.Transform.Position;
@@ -118,7 +118,7 @@ namespace MysteryDungeon.Core.Components
 
             OnMoveStart?.Invoke();
         }
-        
+
         private void MoveToDestinationCell(GameTime gameTime)
         {
             if (DeltaTime < LerpDuration)
@@ -150,7 +150,7 @@ namespace MysteryDungeon.Core.Components
 
             Velocity = Vector2.Zero;
             DeltaTime = 0.0f;
-            
+
             AllowMovement = true;
             MovementInProgress = false;
         }

@@ -1,9 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using MysteryDungeon.Core.Components;
+﻿using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Controllers;
 using MysteryDungeon.Core.Data;
-using MysteryDungeon.Core.Input;
-using MysteryDungeon.Core.Map;
 
 namespace MysteryDungeon.Core.Entities
 {

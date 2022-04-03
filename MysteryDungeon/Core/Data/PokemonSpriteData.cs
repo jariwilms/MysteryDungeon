@@ -52,7 +52,7 @@ namespace MysteryDungeon.Core.Data
                     animations.Add("MoveRight", new Animation(_textureDictionary[pokemon], new Point(175, 49), 20, 18, 3, 0, 1, 2, 0.4f, true, SpriteEffects.FlipHorizontally));
                     animations.Add("MoveDown", new Animation(_textureDictionary[pokemon], new Point(102, 46), 13, 21, 3, 0, 1, 2, 0.4f));
                     animations.Add("MoveLeft", new Animation(_textureDictionary[pokemon], new Point(175, 49), 20, 18, 3, 0, 1, 2, 0.4f));
-                    
+
                     break;
                 case Pokemon.Charmander:
                     animations.Add("IdleUp", new Animation(_textureDictionary[pokemon], new Point(83, 58), 15, 22, 0, 0, 1, 1));

@@ -1,4 +1,5 @@
-﻿using MysteryDungeon.Core.Entities;
+﻿using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.Entities;
 using MysteryDungeon.Core.Map;
 
 namespace MysteryDungeon.Core.Tiles
@@ -66,7 +67,6 @@ namespace MysteryDungeon.Core.Tiles
         Walls9_5,
         Walls9_6,
     }
-
     public enum SpecialTileType //wordt wrs ge-removed
     {
         WonderTile,         //Resets all stats, regardless if they are positive or negative
@@ -85,7 +85,6 @@ namespace MysteryDungeon.Core.Tiles
         StairsUp,           //Stairs with upwards model
         StairsDown,         //Stairs with downwards model
     }
-
     public enum TileCollision
     {
         Passable = 0,
@@ -96,13 +95,23 @@ namespace MysteryDungeon.Core.Tiles
     {
         public TileType TileType;
         public TileCollision TileCollision;
+
+        public Vector2 Position;
+
         public bool IsSpecial;
 
-        public Tile(TileType tileType, TileCollision tileCollision = TileCollision.Impassable)
+        public Tile(TileType tileType)
         {
             TileType = tileType;
-            TileCollision = tileCollision;
+            Position = Vector2.Zero;
+            TileCollision = TileCollision.Passable;
             IsSpecial = false;
+        }
+
+        public Tile(TileType tileType, Vector2 position, TileCollision tileCollision = TileCollision.Impassable) : this(tileType)
+        {
+            Position = position;
+            TileCollision = tileCollision;
         }
 
         public virtual void Activate(Level dungeon, Entity actor)

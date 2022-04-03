@@ -1,13 +1,14 @@
-﻿namespace MysteryDungeon.Core.Tiles
+﻿using Microsoft.Xna.Framework;
+
+namespace MysteryDungeon.Core.Tiles
 {
     public abstract class SpecialTile : Tile
     {
         public SpecialTileType SpecialTileType;
         public bool IsVisible;
 
-        protected SpecialTile(TileType tileType, SpecialTileType specialTileType) : base(tileType, TileCollision.Passable)
+        protected SpecialTile(TileType tileType, Vector2 position, TileCollision tileCollision = TileCollision.Passable) : base(tileType, position, tileCollision)
         {
-            SpecialTileType = specialTileType;
             IsSpecial = true;
         }
     }
