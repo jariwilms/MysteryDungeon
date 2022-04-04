@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using MysteryDungeon.Core.Behaviour;
+using MysteryDungeon.Core.AI;
 
 namespace MysteryDungeon.Core.Components
 {
@@ -15,16 +15,17 @@ namespace MysteryDungeon.Core.Components
 
     public class IntelligenceComponent : Component
     {
-        public EnemyBehaviour EnemyBehaviour { get; set; }
+        public Behaviour Behaviour { get; set; }
+        //public EnemyBehaviour EnemyBehaviour { get; set; }
 
         public IntelligenceComponent(GameObject parent) : base(parent)
         {
 
         }
 
-        public override void Update(GameTime gameTime)
+        public void Act()
         {
-            EnemyBehaviour.Update(gameTime);
+            Behaviour.Act();
         }
     }
 }

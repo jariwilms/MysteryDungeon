@@ -2,7 +2,7 @@
 using MysteryDungeon.Core.Controllers;
 using MysteryDungeon.Core.Data;
 
-namespace MysteryDungeon.Core.Entities
+namespace MysteryDungeon.Core.Actors
 {
     public class LivingEntity : Entity
     {

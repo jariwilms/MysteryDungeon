@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MysteryDungeon.Core.Entities
+namespace MysteryDungeon.Core.Actors
 {
     public abstract class Entity : GameObject
     {

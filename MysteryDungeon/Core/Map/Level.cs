@@ -4,10 +4,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Data;
-using MysteryDungeon.Core.Entities;
+using MysteryDungeon.Core.Actors;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
 using System.Collections.Generic;
+using MysteryDungeon.Core.AI;
+using System;
 
 namespace MysteryDungeon.Core.Map
 {
@@ -35,6 +37,7 @@ namespace MysteryDungeon.Core.Map
 
             Player = new Player(Pokemon.Chikorita);
             Enemy = new Enemy(Pokemon.Chikorita);
+            Enemy.Behaviour.Target = Player;
 
             _pathFinder = new Pathfinder();
             _nodes = new List<PathNode>();
@@ -61,6 +64,8 @@ namespace MysteryDungeon.Core.Map
             var enemygrid = Enemy.GetComponent<GridMovementComponent>();
             enemygrid.Tilegrid = Dungeon.Tilemap.Tilegrid;
             enemygrid.Stop();
+            var b = Enemy.Behaviour as EnemyBehaviour;
+            b.PathFinder.SetCharmap(Dungeon.Charmap);
 
             Player.Transform.Position = Dungeon.Tilemap.Tilegrid.CellIndexToGlobalPosition(Dungeon.SpawnPoint.X, Dungeon.SpawnPoint.Y);
             Enemy.Transform.Position = Dungeon.Tilemap.Tilegrid.CellIndexToGlobalPosition(Dungeon.SpawnPoint.X, Dungeon.SpawnPoint.Y);
@@ -68,6 +73,8 @@ namespace MysteryDungeon.Core.Map
 
         private void FindPath()
         {
+            return;
+
             _pathFinder.SetCharmap(Dungeon.Charmap);
             Point start = new Point(Dungeon.SpawnPoint.X, Dungeon.SpawnPoint.Y);
             Point destination = new Point(Dungeon.stairsTilePosition.X, Dungeon.stairsTilePosition.Y);
@@ -98,6 +105,16 @@ namespace MysteryDungeon.Core.Map
             Dungeon.Draw(spriteBatch);
             Player.Draw(spriteBatch);
             Enemy.Draw(spriteBatch);
+
+            //for (int y = 0; y < Dungeon.Tilemap.Tilegrid.Height; y++)
+            //{
+            //    for (int x = 0; x < Dungeon.Tilemap.Tilegrid.Width; x++)
+            //    {
+            //        var t = Dungeon.Tilemap.Tilegrid.Cells[x, y];
+            //        if (t.Position.Y > 839)
+            //            throw new Exception("fuck2");
+            //    }
+            //}
         }
     }
 }

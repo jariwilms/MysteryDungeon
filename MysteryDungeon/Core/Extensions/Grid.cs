@@ -13,13 +13,9 @@ namespace MysteryDungeon.Core.Extensions
 
         public Vector2 Position { get; protected set; }
 
-        public Vector2 CellSize { get { return _cellSize; } set { _cellSize = value; TotalCellDistance = CellSize + CellGap; } }
-        private Vector2 _cellSize;
-
-        public Vector2 CellGap { get { return _cellGap; } set { _cellGap = value; TotalCellDistance = CellSize + CellGap; } }
-        private Vector2 _cellGap;
-
-        public Vector2 TotalCellDistance { get; protected set; }
+        public Vector2 CellSize { get; set; }
+        public Vector2 CellGap { get; set; }
+        public Vector2 TotalCellDistance => CellSize + CellGap;
 
         public int Width { get { return Cells.GetLength(0); } }
         public int Height { get { return Cells.GetLength(1); } }
@@ -189,7 +185,7 @@ namespace MysteryDungeon.Core.Extensions
             return LocalPositionToCellIndex((int)position.X, (int)position.Y);
         }
 
-        private bool IsOutOfBounds(int x, int y)
+        public bool IsOutOfBounds(int x, int y)
             => !(x > -1 && x < Width && y > -1 && y < Height);
     }
 }

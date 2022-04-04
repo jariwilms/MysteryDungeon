@@ -8,7 +8,7 @@ using MysteryDungeon.Core.Map;
 using MysteryDungeon.Core.UI;
 using System;
 
-namespace MysteryDungeon.Core.Entities
+namespace MysteryDungeon.Core.Actors
 {
     public class Player : LivingEntity, ITurnActor
     {

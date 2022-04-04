@@ -337,6 +337,7 @@ namespace MysteryDungeon.Core.Map
 
         private void GenerateSpecialTiles()
         {
+            //Generate wondertile, move naar eigen functie
             List<Room> bigRooms = _dungeon.Rooms.Where(room => !room.isJunction).ToList();
             Room room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
 
@@ -345,6 +346,7 @@ namespace MysteryDungeon.Core.Map
 
             _dungeon.Tilemap.Tilegrid.SetElement(x, y, new WonderTile(TileType.Floor, new Vector2(x * 24, y * 24)));
 
+            //Generate stairs, move naar eigen functie
             room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
 
             x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
@@ -354,7 +356,7 @@ namespace MysteryDungeon.Core.Map
             _dungeon.stairsTilePosition = new Point(x, y);
         }
 
-        public void GenerateTilesFromCharMap()
+        public void GenerateTilesFromCharMap() //Fix deze '24' shit, again
         {
             _dungeon.Tilemap.Tilegrid.CreateGrid(_dungeonWidth, _dungeonHeight);
 
@@ -362,13 +364,13 @@ namespace MysteryDungeon.Core.Map
                 _dungeon.Tilemap.Tilegrid.SetElement(topBorderX, 0, new Tile(TileType.Walls1_5, new Vector2(topBorderX * 24, 0), TileCollision.Impassable));
 
             foreach (int bottomBorderX in Enumerable.Range(0, _dungeonWidth))
-                _dungeon.Tilemap.Tilegrid.SetElement(bottomBorderX, _dungeonHeight - 1, new Tile(TileType.Walls1_5, new Vector2(bottomBorderX * 24, 0), TileCollision.Impassable));
+                _dungeon.Tilemap.Tilegrid.SetElement(bottomBorderX, _dungeonHeight - 1, new Tile(TileType.Walls1_5, new Vector2(bottomBorderX * 24, (_dungeonHeight - 1) * 24), TileCollision.Impassable));
 
             foreach (int leftBorderY in Enumerable.Range(0, _dungeonHeight))
                 _dungeon.Tilemap.Tilegrid.SetElement(0, leftBorderY, new Tile(TileType.Walls1_5, new Vector2(0, leftBorderY * 24), TileCollision.Impassable));
 
             foreach (int rightBorderY in Enumerable.Range(0, _dungeonHeight))
-                _dungeon.Tilemap.Tilegrid.SetElement(_dungeonWidth - 1, rightBorderY, new Tile(TileType.Walls1_5, new Vector2(0, rightBorderY * 24), TileCollision.Impassable));
+                _dungeon.Tilemap.Tilegrid.SetElement(_dungeonWidth - 1, rightBorderY, new Tile(TileType.Walls1_5, new Vector2((_dungeonWidth - 1) * 24, rightBorderY * 24), TileCollision.Impassable));
 
             _ruleTile = new RuleTile(_dungeon.Charmap);
             CreateRules();
@@ -379,7 +381,7 @@ namespace MysteryDungeon.Core.Map
                 {
                     TileType type = _ruleTile.Match(x, y);
                     if (type == TileType.Floor)
-                        _dungeon.Tilemap.Tilegrid.SetElement(x, y, new Tile(type, new Vector2(x * 24, y * 24), TileCollision.Passable));
+                        _dungeon.Tilemap.Tilegrid.SetElement(x, y, new Tile(type, new Vector2(x * 24, y * 24), TileCollision.Passable)); //fix deze 24 shit, again
                     else
                         _dungeon.Tilemap.Tilegrid.SetElement(x, y, new Tile(type, new Vector2(x * 24, y * 24), TileCollision.Impassable));
                 }

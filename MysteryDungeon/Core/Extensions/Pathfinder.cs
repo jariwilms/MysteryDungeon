@@ -28,6 +28,9 @@ namespace MysteryDungeon.Core.Extensions
 
         public bool FindPath(Point startPosition, Point endPosition, out List<PathNode> pathNodes)
         {
+            if (NodeGrid.IsOutOfBounds(startPosition.X, startPosition.Y) || NodeGrid.IsOutOfBounds(endPosition.X, endPosition.Y))
+                throw new Exception("Invalid node index given");
+
             pathNodes = new List<PathNode>();
             OpenNodes = new List<PathNode>();
             ClosedNodes = new HashSet<PathNode>();
@@ -103,12 +106,12 @@ namespace MysteryDungeon.Core.Extensions
                 new Point(-1, 0)
             };
 
-            foreach (var point in points)
+            points.ForEach(point =>
             {
-                Point position = new Point(node.Position.X, node.Position.Y) + point;
+                Point position = new Point(node.Position.X, node.Position.Y) + point; //fix 24
                 currentNode = NodeGrid.GetElement(position.X, position.Y);
                 pathNodes.Add(currentNode);
-            }
+            });
 
             return pathNodes;
         }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MysteryDungeon.Core.Entities;
+using MysteryDungeon.Core.Actors;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Tiles;
 

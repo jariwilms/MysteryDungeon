@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.AI;
 using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Contracts;
 using MysteryDungeon.Core.Data;
@@ -7,14 +8,17 @@ using MysteryDungeon.Core.Map;
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core.Entities
+namespace MysteryDungeon.Core.Actors
 {
     public class Enemy : LivingEntity, ITurnActor
     {
         private readonly GridMovementComponent _gridMovementComponent;
+        private readonly IntelligenceComponent _intelligenceComponent;
 
         public event Action OnTurnStart;
         public event Action OnTurnFinished;
+
+        public Behaviour Behaviour { get; set; }
 
         public bool IsPerforming { get => _isPerforming; set => _isPerforming = value; }
         private bool _isPerforming;
@@ -31,6 +35,16 @@ namespace MysteryDungeon.Core.Entities
             _gridMovementComponent.OnMoveFinished += () => _turnsLeft--;
 
             Components.Insert(0, _gridMovementComponent); //maak components list niet visible
+
+            var behaviour = new EnemyBehaviour(this);
+            behaviour.MoveUpAction = _gridMovementComponent.MoveUpAction;
+            behaviour.MoveRightAction = _gridMovementComponent.MoveRightAction;
+            behaviour.MoveDownAction = _gridMovementComponent.MoveDownAction;
+            behaviour.MoveLeftAction = _gridMovementComponent.MoveLeftAction;
+            Behaviour = behaviour;
+
+            _intelligenceComponent = AddComponent<IntelligenceComponent>();
+            _intelligenceComponent.Behaviour = Behaviour;
         }
 
         public override void Update(GameTime gameTime)
@@ -56,27 +70,7 @@ namespace MysteryDungeon.Core.Entities
 
             _turnsLeft = 1;
             _gridMovementComponent.MovementLocked = false;
-
-            if (_nodeIndex < Nodes.Count - 1) //temp btw, ff testen
-            {
-                _nodeIndex++;
-
-                var moveDirection = Nodes[_nodeIndex].Position - Nodes[_nodeIndex - 1].Position;
-                var grid = _gridMovementComponent;
-
-                Action a = moveDirection switch
-                {
-                    Point(0, -1) => grid.MoveUpAction,
-                    Point(1, 0) => grid.MoveRightAction,
-                    Point(0, 1) => grid.MoveDownAction,
-                    Point(-1, 0) => grid.MoveLeftAction,
-                    _ => throw new Exception()
-                };
-
-                a?.Invoke();
-            }
-            else
-                EndTurn();
+            _intelligenceComponent.Act();
         }
 
         public void EndTurn()

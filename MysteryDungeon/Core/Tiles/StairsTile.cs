@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using MysteryDungeon.Core.Entities;
+using MysteryDungeon.Core.Actors;
 using MysteryDungeon.Core.Map;
 using System;
 

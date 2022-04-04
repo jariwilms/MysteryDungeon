@@ -1,8 +1,8 @@
-﻿using MysteryDungeon.Core.Entities;
+﻿using MysteryDungeon.Core.Actors;
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core.Behaviour
+namespace MysteryDungeon.Core.AI
 {
     public class Behaviour
     {
@@ -11,12 +11,15 @@ namespace MysteryDungeon.Core.Behaviour
 
         public Stack<Action> ActiveStateStack { get; set; }
 
-        public Behaviour(LivingEntity parent, LivingEntity target)
+        public Behaviour(LivingEntity parent)
         {
             Parent = parent;
-            Target = target;
-
             ActiveStateStack = new Stack<Action>();
+        }
+
+        public void Act()
+        {
+            ActiveStateStack.Peek()?.Invoke();
         }
     }
 }

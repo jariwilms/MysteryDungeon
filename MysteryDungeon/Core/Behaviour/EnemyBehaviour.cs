@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using MysteryDungeon.Core.Entities;
+using MysteryDungeon.Core.Actors;
 using MysteryDungeon.Core.Extensions;
 using System;
+using System.Collections.Generic;
 
-namespace MysteryDungeon.Core.Behaviour
+namespace MysteryDungeon.Core.AI
 {
     public class EnemyBehaviour : Behaviour
     {
@@ -13,17 +14,21 @@ namespace MysteryDungeon.Core.Behaviour
         public float SightRange { get; protected set; }
         public float AttackRange { get; protected set; }
 
-        private Pathfinder _pathFinder;
-        private Random _random;
-        private int _lastHealth;
-        private int _turnsPassedSinceTargetSeen;
+        public Action MoveUpAction { get; set; }
+        public Action MoveRightAction;
+        public Action MoveDownAction;
+        public Action MoveLeftAction;
 
-        public EnemyBehaviour(LivingEntity parent, LivingEntity target) : base(parent, target)
+        public Pathfinder PathFinder { get; set; }
+        private List<PathNode> _pathNodes;
+        private Random _random;
+
+        public EnemyBehaviour(LivingEntity parent) : base(parent)
         {
-            _pathFinder = new Pathfinder();
+            PathFinder = new Pathfinder();
             _random = new Random();
 
-            ActiveStateStack.Push(Wandering);
+            ActiveStateStack.Push(Chasing);
         }
 
         public void Idling()
@@ -35,17 +40,16 @@ namespace MysteryDungeon.Core.Behaviour
         {
             //keep sleeping until random tick or taking damage
 
-            if (_lastHealth > Parent.CurrentHealth) //If damage is taken in any form
-            {
-                ActiveStateStack.Pop();
-                ActiveStateStack.Push(Chasing); //maak startchasing transition om target te zoeken, chasing checkt dan gewoon voor distance etc
-            }
-
-            if (_random.Next(1, 100) > 99)
-            {
-                ActiveStateStack.Pop();
-                ActiveStateStack.Push(Wandering);
-            }
+            //if (_lastHealth > Parent.CurrentHealth) //If damage is taken in any form
+            //{
+            //    ActiveStateStack.Pop();
+            //    ActiveStateStack.Push(Chasing); //maak startchasing transition om target te zoeken, chasing checkt dan gewoon voor distance etc
+            //}
+            //else if (_random.Next(1, 100) > 99)
+            //{
+            //    ActiveStateStack.Pop();
+            //    ActiveStateStack.Push(Wandering);
+            //}
         }
 
         public void Wandering()
@@ -56,6 +60,24 @@ namespace MysteryDungeon.Core.Behaviour
 
         public void Chasing()
         {
+            bool found = PathFinder.FindPath(Vector2.Divide(Parent.Transform.Position, 24).ToPoint(), Vector2.Divide(Target.Transform.Position, 24).ToPoint(), out _pathNodes);
+
+            if (!found || _pathNodes.Count < 2)
+                return;
+
+            var moveDirection = _pathNodes[1].Position - _pathNodes[0].Position;
+
+            Action moveAction = moveDirection switch
+            {
+                Point(0, -1) => MoveUpAction,
+                Point(1, 0) => MoveRightAction,
+                Point(0, 1) => MoveDownAction,
+                Point(-1, 0) => MoveLeftAction,
+                _ => throw new Exception()
+            };
+
+            moveAction?.Invoke();
+
             //if cansee target
             //  move to target
             //if in range with attack
@@ -72,11 +94,6 @@ namespace MysteryDungeon.Core.Behaviour
             //      do attack
             //if not in range with any move
             //  chasing
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            ActiveStateStack.Peek()?.Invoke();
         }
     }
 }
