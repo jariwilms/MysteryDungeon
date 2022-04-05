@@ -126,7 +126,6 @@ namespace MysteryDungeon.Core.Map
             DrawRoomsOnCharMap();           //Draw every room and hallway on the charmap, this means changing every '#' to '.'
             GenerateTilesFromCharMap();     //Generate tile textures according to charmap data
 
-            GenerateSpawnPoint();           //Generate a spawnpoint in a random room
             GenerateSpecialTiles();
 
             return _dungeon;
@@ -286,7 +285,7 @@ namespace MysteryDungeon.Core.Map
                     room.Connectors.ForEach(sourceConnector =>
                     {
                         Room destinationRoom = _dungeon.GetDestinationRoom(room, sourceConnector); //Room apart opvragen is required voor HashSet
-                        Connector destinationConnector = _dungeon.GetDestinationConnector(destinationRoom, sourceConnector);
+                        RoomConnector destinationConnector = _dungeon.GetDestinationRoomConnector(destinationRoom, sourceConnector);
 
                         _dungeon.Connect(sourceConnector, destinationConnector);
 
@@ -324,17 +323,6 @@ namespace MysteryDungeon.Core.Map
             }
         }
 
-        public void GenerateSpawnPoint()
-        {
-            List<Room> bigRooms = _dungeon.Rooms.Where(room => !room.isJunction).ToList();
-            Room room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
-
-            int x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
-            int y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
-
-            _dungeon.SpawnPoint = new Point(x, y);
-        }
-
         private void GenerateSpecialTiles()
         {
             //Generate wondertile, move naar eigen functie
@@ -352,7 +340,7 @@ namespace MysteryDungeon.Core.Map
             x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
             y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
 
-            _dungeon.Tilemap.Tilegrid.SetElement(x, y, new StairsTile(TileType.Floor, new Vector2(x * 24, y * 24), StairsTile.StairDirection.Down));
+            _dungeon.Tilemap.Tilegrid.SetElement(x, y, new StairsTile(TileType.Floor, new Vector2(x * 24, y * 24), StairsTile.StairsDirection.Down));
             _dungeon.stairsTilePosition = new Point(x, y);
         }
 
@@ -373,7 +361,7 @@ namespace MysteryDungeon.Core.Map
                 _dungeon.Tilemap.Tilegrid.SetElement(_dungeonWidth - 1, rightBorderY, new Tile(TileType.Walls1_5, new Vector2((_dungeonWidth - 1) * 24, rightBorderY * 24), TileCollision.Impassable));
 
             _ruleTile = new RuleTile(_dungeon.Charmap);
-            CreateRules();
+            CreateTileRules();
 
             for (int y = 1; y < _dungeonHeight - 1; y++) //Loop over every tile
             {
@@ -388,7 +376,7 @@ namespace MysteryDungeon.Core.Map
             }
         }
 
-        private void CreateRules() //Visueel zou dit een pak gemakkelijker zijn honestly
+        private void CreateTileRules() //Visueel zou dit een pak gemakkelijker zijn honestly
         {
             //order is important, rules take precedence in order of declaration
             _ruleTile.AddRule(new Rule(TileType.Floor, "....-....")); //+ means solid tile, - means walkable tile

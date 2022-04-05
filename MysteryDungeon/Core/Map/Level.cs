@@ -1,15 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MysteryDungeon.Core.Actors;
 using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Data;
-using MysteryDungeon.Core.Actors;
-using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
 using System.Collections.Generic;
-using MysteryDungeon.Core.AI;
-using System;
 
 namespace MysteryDungeon.Core.Map
 {
@@ -17,20 +13,14 @@ namespace MysteryDungeon.Core.Map
     {
         public Player Player;
         public Enemy Enemy;
-        public List<Enemy> Enemies;
+        public List<Enemy> Enemies; //enemy wordt later ge-removed => array 
 
-        public static Dungeon Dungeon { get; set; } //temporary om het makkelijker te makken, voorzie getgameobject functies etc
+        public static Dungeon Dungeon { get; set; }
         private readonly DungeonGenerator _dungeonGenerator;
-
-        private Pathfinder _pathFinder;
-        private List<PathNode> _nodes;
-        public bool _pathFound;
-
-        private Texture2D _redpng;
 
         public TurnHandler TurnHandler { get; set; }
 
-        public Level(ContentManager content) //TODO: clean deze dogshit class up + leer deftig programmeren
+        public Level()
         {
             _dungeonGenerator = new DungeonGenerator(DungeonType.Standard);
             Dungeon = _dungeonGenerator.Generate();
@@ -38,14 +28,9 @@ namespace MysteryDungeon.Core.Map
             Player = new Player(Pokemon.Chikorita);
             Enemy = new Enemy(Pokemon.Chikorita);
             Enemy.Behaviour.Target = Player;
+            Enemy.Behaviour.OnTargetReached = () => { };
 
-            _pathFinder = new Pathfinder();
-            _nodes = new List<PathNode>();
-            _redpng = content.Load<Texture2D>("particles/red");
-
-            StairsReached();
-
-            Enemy.Nodes = _nodes;
+            GenerateNewDungeon();
 
             TurnHandler = new TurnHandler();
             TurnHandler.AddActor(Player);
@@ -64,31 +49,12 @@ namespace MysteryDungeon.Core.Map
             var enemygrid = Enemy.GetComponent<GridMovementComponent>();
             enemygrid.Tilegrid = Dungeon.Tilemap.Tilegrid;
             enemygrid.Stop();
-            var b = Enemy.Behaviour as EnemyBehaviour;
+
+            var b = Enemy.Behaviour;
             b.PathFinder.SetCharmap(Dungeon.Charmap);
 
-            Player.Transform.Position = Dungeon.Tilemap.Tilegrid.CellIndexToGlobalPosition(Dungeon.SpawnPoint.X, Dungeon.SpawnPoint.Y);
-            Enemy.Transform.Position = Dungeon.Tilemap.Tilegrid.CellIndexToGlobalPosition(Dungeon.SpawnPoint.X, Dungeon.SpawnPoint.Y);
-        }
-
-        private void FindPath()
-        {
-            return;
-
-            _pathFinder.SetCharmap(Dungeon.Charmap);
-            Point start = new Point(Dungeon.SpawnPoint.X, Dungeon.SpawnPoint.Y);
-            Point destination = new Point(Dungeon.stairsTilePosition.X, Dungeon.stairsTilePosition.Y);
-
-            _pathFound = _pathFinder.FindPath(start, destination, out List<PathNode> nodes);
-
-            if (_pathFound) _nodes = nodes;
-            else _nodes.Clear();
-        }
-
-        public void StairsReached() //zet om naar LoadNewDungeon voor als de stairs bereikt worden idk
-        {
-            GenerateNewDungeon();
-            FindPath();
+            Player.Transform.Position = Dungeon.Tilemap.Tilegrid.CellIndexToGlobalPosition(Dungeon.GenerateRandomSpawnPoint());
+            Enemy.Transform.Position = Dungeon.Tilemap.Tilegrid.CellIndexToGlobalPosition(Dungeon.GenerateRandomSpawnPoint());
         }
 
         public void Update(GameTime gameTime)
@@ -97,7 +63,7 @@ namespace MysteryDungeon.Core.Map
             Player.Update(gameTime);
             Enemy.Update(gameTime);
 
-            if (InputEventHandler.Instance.IsKeyPressedOnce(Keys.R)) StairsReached();
+            if (InputEventHandler.Instance.IsKeyPressedOnce(Keys.R)) GenerateNewDungeon();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -105,16 +71,6 @@ namespace MysteryDungeon.Core.Map
             Dungeon.Draw(spriteBatch);
             Player.Draw(spriteBatch);
             Enemy.Draw(spriteBatch);
-
-            //for (int y = 0; y < Dungeon.Tilemap.Tilegrid.Height; y++)
-            //{
-            //    for (int x = 0; x < Dungeon.Tilemap.Tilegrid.Width; x++)
-            //    {
-            //        var t = Dungeon.Tilemap.Tilegrid.Cells[x, y];
-            //        if (t.Position.Y > 839)
-            //            throw new Exception("fuck2");
-            //    }
-            //}
         }
     }
 }

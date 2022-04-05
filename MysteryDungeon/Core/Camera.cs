@@ -40,6 +40,11 @@ namespace MysteryDungeon.Core
             _windowHeight = windowHeight;
         }
 
+        public Camera(Entity target, int windowWidth, int windowHeight) : this(windowWidth, windowHeight)
+        {
+            Follow(target);
+        }
+
         public void Follow(Entity target)
         {
             _target = target;

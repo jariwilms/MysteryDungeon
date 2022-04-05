@@ -65,7 +65,7 @@ namespace MysteryDungeon.Core.Actors
 
             AnimatedSpriteComponent animatedSpriteComponent = AddComponent<AnimatedSpriteComponent>();
             animatedSpriteComponent.AnimatorController = AnimatorController;
-            animatedSpriteComponent.AnimationDictionary = PokemonSpriteData.LoadAnimations(pokemon);
+            animatedSpriteComponent.AnimationDictionary = PokemonSpriteData.GetPokemonAnimations(pokemon, Content);
 
             SpriteRendererComponent spriteRendererComponent = AddComponent<SpriteRendererComponent>();
             spriteRendererComponent.Sprite = animatedSpriteComponent.Sprite;

@@ -20,7 +20,7 @@ namespace MysteryDungeon.Core.Map
         public int HorizontalRooms;
         public int VerticalRooms;
 
-        public Point SpawnPoint;
+        //public Point SpawnPoint;
         public bool isComplete;
 
         private Random _random;
@@ -42,7 +42,7 @@ namespace MysteryDungeon.Core.Map
             _random = new Random();
         }
 
-        public Room GetDestinationRoom(Room room, Connector sourceConnector)
+        public Room GetDestinationRoom(Room room, RoomConnector sourceConnector)
         {
             int roomIndex = room.Id;
 
@@ -58,7 +58,7 @@ namespace MysteryDungeon.Core.Map
             return Rooms[roomIndex];
         }
 
-        public Connector GetDestinationConnector(Room adjacentRoom, Connector sourceConnector)
+        public RoomConnector GetDestinationRoomConnector(Room adjacentRoom, RoomConnector sourceConnector)
         {
             Direction inverse = sourceConnector.Direction switch
             {
@@ -74,7 +74,7 @@ namespace MysteryDungeon.Core.Map
             throw new Exception();
         }
 
-        public void Connect(Connector source, Connector destination)
+        public void Connect(RoomConnector source, RoomConnector destination)
         {
             if (source.IsConnected || destination.IsConnected)
                 return;
@@ -193,6 +193,17 @@ namespace MysteryDungeon.Core.Map
                     break;
                 }
             }
+        }
+
+        public Point GenerateRandomSpawnPoint()
+        {
+            List<Room> bigRooms = Rooms.Where(room => !room.isJunction).ToList();
+            Room room = bigRooms[_random.Next(0, bigRooms.Count - 1)];
+
+            int x = _random.Next(0, room.Bounds.Width - 1) + room.Bounds.X;
+            int y = _random.Next(0, room.Bounds.Height - 1) + room.Bounds.Y;
+
+            return new Point(x, y);
         }
 
         public override void Update(GameTime gameTime)

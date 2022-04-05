@@ -12,12 +12,14 @@ namespace MysteryDungeon.Core
         public bool IsEnabled { get; set; }
         public bool IsVisible { get; set; }
 
-        public static ContentManager Content { get; set; }
+        protected readonly ContentManager Content;
 
         private Component()
         {
             IsEnabled = true;
             IsVisible = true;
+
+            Content = new ContentManager(MysteryDungeon.Services, "Content");
         }
 
         public Component(GameObject parent) : this()

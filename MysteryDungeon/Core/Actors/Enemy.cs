@@ -3,10 +3,8 @@ using MysteryDungeon.Core.AI;
 using MysteryDungeon.Core.Components;
 using MysteryDungeon.Core.Contracts;
 using MysteryDungeon.Core.Data;
-using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Map;
 using System;
-using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.Actors
 {
@@ -18,7 +16,7 @@ namespace MysteryDungeon.Core.Actors
         public event Action OnTurnStart;
         public event Action OnTurnFinished;
 
-        public Behaviour Behaviour { get; set; }
+        public EnemyBehaviour Behaviour { get; set; }
 
         public bool IsPerforming { get => _isPerforming; set => _isPerforming = value; }
         private bool _isPerforming;
@@ -36,12 +34,14 @@ namespace MysteryDungeon.Core.Actors
 
             Components.Insert(0, _gridMovementComponent); //maak components list niet visible
 
-            var behaviour = new EnemyBehaviour(this);
-            behaviour.MoveUpAction = _gridMovementComponent.MoveUpAction;
-            behaviour.MoveRightAction = _gridMovementComponent.MoveRightAction;
-            behaviour.MoveDownAction = _gridMovementComponent.MoveDownAction;
-            behaviour.MoveLeftAction = _gridMovementComponent.MoveLeftAction;
-            Behaviour = behaviour;
+            Behaviour = new EnemyBehaviour(this);
+
+            Behaviour.IdleAction += () => _turnsLeft--;
+
+            Behaviour.MoveUpAction = _gridMovementComponent.MoveUpAction;
+            Behaviour.MoveRightAction = _gridMovementComponent.MoveRightAction;
+            Behaviour.MoveDownAction = _gridMovementComponent.MoveDownAction;
+            Behaviour.MoveLeftAction = _gridMovementComponent.MoveLeftAction;
 
             _intelligenceComponent = AddComponent<IntelligenceComponent>();
             _intelligenceComponent.Behaviour = Behaviour;
@@ -61,8 +61,6 @@ namespace MysteryDungeon.Core.Actors
             base.Update(gameTime);
         }
 
-        private int _nodeIndex;
-        public List<PathNode> Nodes;
         public void StartTurn()
         {
             OnTurnStart?.Invoke();

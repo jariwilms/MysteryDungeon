@@ -58,7 +58,7 @@ namespace MysteryDungeon.Core.Actors
         {
             var Speed = _gridMovementComponent.Velocity;
             GUI.Instance.QueueStringDraw($"Position: [{Math.Round(Transform.Position.X, 2)}, {Math.Round(Transform.Position.Y, 2)}]", new Vector2(20, 20));
-            //GUI.Instance.QueueStringDraw($"Speed: [{Math.Round(Speed.X, 2)}, {Math.Round(Speed.Y, 2)}]", new Vector2(20, 50));
+            GUI.Instance.QueueStringDraw($"Speed: [{Math.Round(Speed.X, 2)}, {Math.Round(Speed.Y, 2)}]", new Vector2(20, 50));
             GUI.Instance.QueueStringDraw($"MovementLocked?: {_gridMovementComponent.MovementLocked}", new Vector2(20, 80));
 
             base.Draw(spriteBatch);

@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using MysteryDungeon.Core.AI;
+﻿using MysteryDungeon.Core.AI;
 
 namespace MysteryDungeon.Core.Components
 {

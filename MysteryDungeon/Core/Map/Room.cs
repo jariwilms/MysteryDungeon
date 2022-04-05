@@ -21,7 +21,7 @@ namespace MysteryDungeon.Core.Map
         public Rectangle Bounds;
 
         public HashSet<Room> AdjacencyList;
-        public List<Connector> Connectors;
+        public List<RoomConnector> Connectors;
         public bool isJunction;
 
         private readonly Random _random; //Random item generation to be implemented
@@ -31,7 +31,7 @@ namespace MysteryDungeon.Core.Map
             Bounds = new Rectangle();
 
             AdjacencyList = new HashSet<Room>();
-            Connectors = new List<Connector>();
+            Connectors = new List<RoomConnector>();
 
             _random = new Random();
         }
@@ -46,7 +46,7 @@ namespace MysteryDungeon.Core.Map
             Bounds = new Rectangle(x, y, width, height);
         }
 
-        public Room(Rectangle bounds, List<Connector> connectors) : this()
+        public Room(Rectangle bounds, List<RoomConnector> connectors) : this()
         {
             Bounds = bounds;
             Connectors = connectors;
@@ -57,21 +57,21 @@ namespace MysteryDungeon.Core.Map
             Index = new Tuple<int, int>(x, y);
 
             if (x > 0) //Create left connector
-                Connectors.Add(new Connector(Bounds.X, _random.Next(0, Bounds.Height - 1) + Bounds.Y, Direction.Left));
+                Connectors.Add(new RoomConnector(Bounds.X, _random.Next(0, Bounds.Height - 1) + Bounds.Y, Direction.Left));
 
             if (x < xMax - 1) //Create right connector
-                Connectors.Add(new Connector(Bounds.X + Bounds.Width - 1, _random.Next(0, Bounds.Height - 1) + Bounds.Y, Direction.Right));
+                Connectors.Add(new RoomConnector(Bounds.X + Bounds.Width - 1, _random.Next(0, Bounds.Height - 1) + Bounds.Y, Direction.Right));
 
             if (y > 0) //Create top connector
-                Connectors.Add(new Connector(_random.Next(0, Bounds.Width - 1) + Bounds.X, Bounds.Y, Direction.Up));
+                Connectors.Add(new RoomConnector(_random.Next(0, Bounds.Width - 1) + Bounds.X, Bounds.Y, Direction.Up));
 
             if (y < yMax - 1) //Create bottom connector
-                Connectors.Add(new Connector(_random.Next(0, Bounds.Width - 1) + Bounds.X, Bounds.Y + Bounds.Height - 1, Direction.Down));
+                Connectors.Add(new RoomConnector(_random.Next(0, Bounds.Width - 1) + Bounds.X, Bounds.Y + Bounds.Height - 1, Direction.Down));
         }
 
-        public Connector GetConnector(Direction direction)
+        public RoomConnector GetConnector(Direction direction)
         {
-            foreach (Connector c in Connectors)
+            foreach (RoomConnector c in Connectors)
                 if (c.Direction.HasFlag(direction))
                     return c;
 

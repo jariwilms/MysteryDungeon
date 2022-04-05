@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace MysteryDungeon.Core.Tiles
 {
     internal class RuleTile
     {
-        private char[,] _charmap;
-        private List<Rule> _rules;
+        private readonly char[,] _charmap;
+        private readonly List<Rule> _rules;
 
         public RuleTile(char[,] charmap)
         {
@@ -20,32 +21,15 @@ namespace MysteryDungeon.Core.Tiles
 
         public TileType Match(int xPos, int yPos)
         {
-            bool matches;
-
             foreach (var rule in _rules)
             {
-                matches = true;
+                if (rule.PositiveCheckPoints.Any(point => _charmap[xPos + point.X, yPos + point.Y] != '#'))
+                    continue;
 
-                foreach (var point in rule.PositiveCheckPoints)
-                {
-                    if (_charmap[xPos + point.X, yPos + point.Y] != '#')
-                    {
-                        matches = false;
-                        break;
-                    }
-                }
+                if (rule.NegativeCheckPoints.Any(point => _charmap[xPos + point.X, yPos + point.Y] != '.'))
+                    continue;
 
-                foreach (var point in rule.NegativeCheckPoints)
-                {
-                    if (_charmap[xPos + point.X, yPos + point.Y] != '.')
-                    {
-                        matches = false;
-                        break;
-                    }
-                }
-
-                if (matches)
-                    return rule.TileType;
+                return rule.TileType;
             }
 
             return TileType.None;

@@ -14,10 +14,14 @@ namespace MysteryDungeon.Core.AI
         public float SightRange { get; protected set; }
         public float AttackRange { get; protected set; }
 
+        public Action IdleAction { get; set; }
+
         public Action MoveUpAction { get; set; }
         public Action MoveRightAction;
         public Action MoveDownAction;
         public Action MoveLeftAction;
+
+        public Action OnTargetReached;
 
         public Pathfinder PathFinder { get; set; }
         private List<PathNode> _pathNodes;
@@ -31,35 +35,54 @@ namespace MysteryDungeon.Core.AI
             ActiveStateStack.Push(Chasing);
         }
 
+        public EnemyBehaviour(LivingEntity parent, Action defaultAction) : this(parent)
+        {
+            SetNewState(defaultAction);
+        }
+
         public void Idling()
         {
-            //skip turn here
+            var targetIndex = Vector2.Divide(Target.Transform.Position, 24);
+            var enemyIndex = Vector2.Divide(Parent.Transform.Position, 24);
+            var diff = targetIndex - enemyIndex;
+            diff = new Vector2(Math.Abs(diff.X), Math.Abs(diff.Y));
+
+            if (diff.X + diff.Y > 3)
+                SetNewState(Chasing, true);
+            else
+                IdleAction?.Invoke();
         }
 
         public void Sleeping()
         {
-            //keep sleeping until random tick or taking damage
-
-            //if (_lastHealth > Parent.CurrentHealth) //If damage is taken in any form
-            //{
-            //    ActiveStateStack.Pop();
-            //    ActiveStateStack.Push(Chasing); //maak startchasing transition om target te zoeken, chasing checkt dan gewoon voor distance etc
-            //}
-            //else if (_random.Next(1, 100) > 99)
-            //{
-            //    ActiveStateStack.Pop();
-            //    ActiveStateStack.Push(Wandering);
-            //}
+            IdleAction?.Invoke();
         }
 
         public void Wandering()
         {
-            //if cansee target
-            //  stack.push chasing
+            var targetIndex = Vector2.Divide(Target.Transform.Position, 24); //move naar eigen functie ipv dit te copy-paste'en als een retard
+            var parentIndex = Vector2.Divide(Parent.Transform.Position, 24);
+            var diff = targetIndex - parentIndex;
+            diff = new Vector2(Math.Abs(diff.X), Math.Abs(diff.Y));
+
+            var distance = diff.X + diff.Y;
+
+            if (distance < 2)
+                OnTargetReached?.Invoke();
+
+            //SetNewState(Idling, true);
         }
 
         public void Chasing()
         {
+            var targetIndex = Vector2.Divide(Target.Transform.Position, 24);
+            var enemyIndex = Vector2.Divide(Parent.Transform.Position, 24);
+            var diff = targetIndex - enemyIndex;
+            diff = new Vector2(Math.Abs(diff.X), Math.Abs(diff.Y));
+
+            if (diff.X + diff.Y < 3)
+                SetNewState(Idling, true);
+
             bool found = PathFinder.FindPath(Vector2.Divide(Parent.Transform.Position, 24).ToPoint(), Vector2.Divide(Target.Transform.Position, 24).ToPoint(), out _pathNodes);
 
             if (!found || _pathNodes.Count < 2)
@@ -77,23 +100,11 @@ namespace MysteryDungeon.Core.AI
             };
 
             moveAction?.Invoke();
-
-            //if cansee target
-            //  move to target
-            //if in range with attack
-            //  setstate attacking
-            //if cant see target
-            //  popstate
-            //  set state wandering
         }
 
         public void Attacking()
         {
-            //if in range of target
-            //  if any attack in range
-            //      do attack
-            //if not in range with any move
-            //  chasing
+            throw new NotImplementedException();
         }
     }
 }

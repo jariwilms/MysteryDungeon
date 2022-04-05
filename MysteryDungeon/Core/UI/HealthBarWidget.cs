@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Actors;
+using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Extensions;
 
 namespace MysteryDungeon.Core.UI

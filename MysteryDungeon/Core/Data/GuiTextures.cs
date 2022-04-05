@@ -6,7 +6,7 @@ namespace MysteryDungeon.Core.Data
 {
     public static class GuiTextures
     {
-        private static ContentManager _content = new ContentManager(new GameServiceContainer(), "Content");
+        private static readonly ContentManager _content = new ContentManager(new GameServiceContainer(), "Content");
 
         public static readonly Texture2D DialogueTexture = _content.Load<Texture2D>("gui/dialogue");
         public static readonly Texture2D FontTexture = _content.Load<Texture2D>("gui/font");

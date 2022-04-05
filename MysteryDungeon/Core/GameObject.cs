@@ -24,15 +24,17 @@ namespace MysteryDungeon.Core
     public abstract class GameObject : Contracts.IUpdatable, Contracts.IDrawable, IDisposable
     {
         public Transform Transform;
+
         protected List<Component> Components { get; private set; }
-        public ContentManager Content { get; set; }
+
+        protected readonly ContentManager Content;
 
         public GameObject()
         {
             Transform = new Transform();
             Components = new List<Component>();
 
-            Content = new ContentManager(new GameServiceContainer(), "Content");
+            Content = new ContentManager(MysteryDungeon.Services, "Content");
         }
 
         public TComponent AddComponent<TComponent>() where TComponent : Component

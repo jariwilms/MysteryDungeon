@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MysteryDungeon.Core.AI
 {
-    public class Behaviour
+    public abstract class Behaviour
     {
         public LivingEntity Parent { get; set; }
         public LivingEntity Target { get; set; }
@@ -17,7 +17,16 @@ namespace MysteryDungeon.Core.AI
             ActiveStateStack = new Stack<Action>();
         }
 
-        public void Act()
+        protected void SetNewState(Action newState, bool pop = false)
+        {
+            if (pop)
+                ActiveStateStack.Pop();
+
+            ActiveStateStack.Push(newState);
+            ActiveStateStack.Peek()?.Invoke();
+        }
+
+        public virtual void Act()
         {
             ActiveStateStack.Peek()?.Invoke();
         }

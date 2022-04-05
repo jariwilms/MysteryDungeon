@@ -10,39 +10,35 @@ namespace MysteryDungeon.Core.UI
     {
         public static readonly GUI Instance = new GUI();
 
-        private ContentManager _content;
-
-        public SpriteBatch SpriteBatch { get; set; }
+        private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
 
         public List<Widget> Widgets { get; set; }
         public List<(string, Vector2)> Strings { get; set; }
 
-        static GUI()
-        {
+        private readonly ContentManager _content;
 
-        }
+        static GUI() { }
 
         private GUI()
         {
             Widgets = new List<Widget>();
             Strings = new List<(string, Vector2)>();
+
+            _content = new ContentManager(MysteryDungeon.Services, "Content");
         }
 
-        public void Initialize(ContentManager content, SpriteBatch spriteBatch)
+        public void Initialize(SpriteBatch spriteBatch)
         {
-            _content = content;
-
-            SpriteBatch = spriteBatch;
-            _spriteFont = content.Load<SpriteFont>("font");
+            _spriteBatch = spriteBatch;
+            _spriteFont = _content.Load<SpriteFont>("font");
         }
-
 
         private void DrawWidgets()
         {
             Widgets.ForEach(widget =>
             {
-                widget.Draw(SpriteBatch);
+                widget.Draw(_spriteBatch);
             });
         }
 
@@ -53,7 +49,7 @@ namespace MysteryDungeon.Core.UI
 
         private void DrawStrings()
         {
-            Strings.ForEach(s => SpriteBatch.DrawString(_spriteFont, s.Item1, s.Item2, Color.White));
+            Strings.ForEach(s => _spriteBatch.DrawString(_spriteFont, s.Item1, s.Item2, Color.White));
         }
 
         public void Update(GameTime gameTime)
@@ -66,7 +62,7 @@ namespace MysteryDungeon.Core.UI
 
         public void Draw()
         {
-            SpriteBatch.Begin(
+            _spriteBatch.Begin(
                 SpriteSortMode.Deferred,
                 BlendState.AlphaBlend,
                 SamplerState.PointClamp);
@@ -76,7 +72,7 @@ namespace MysteryDungeon.Core.UI
 
             Strings.Clear();
 
-            SpriteBatch.End();
+            _spriteBatch.End();
         }
 
         public void Dispose()

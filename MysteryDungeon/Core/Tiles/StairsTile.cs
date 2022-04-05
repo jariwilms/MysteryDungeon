@@ -7,18 +7,18 @@ namespace MysteryDungeon.Core.Tiles
 {
     internal class StairsTile : SpecialTile
     {
-        public enum StairDirection
+        public enum StairsDirection
         {
             Up,
             Down,
         }
 
-        public StairsTile(TileType tileType, Vector2 position, StairDirection stairsDirection) : base(tileType, position, TileCollision.Passable)
+        public StairsTile(TileType tileType, Vector2 position, StairsDirection stairsDirection) : base(tileType, position, TileCollision.Passable)
         {
             SpecialTileType = stairsDirection switch
             {
-                StairDirection.Up => SpecialTileType.StairsUp,
-                StairDirection.Down => SpecialTileType.StairsDown,
+                StairsDirection.Up => SpecialTileType.StairsUp,
+                StairsDirection.Down => SpecialTileType.StairsDown,
                 _ => throw new Exception("Invalid stair type.")
             };
 
@@ -27,7 +27,7 @@ namespace MysteryDungeon.Core.Tiles
 
         public override void Activate(Level level, Entity actor)
         {
-            level.StairsReached();
+            level.GenerateNewDungeon();
         }
     }
 }

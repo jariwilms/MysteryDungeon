@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core;
-using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Map;
@@ -17,6 +16,8 @@ namespace MysteryDungeon
 
         public WindowSettings WindowSettings;
 
+        public static new GameServiceContainer Services { get; private set; }
+
         // ### THE CUM ZONE ###
 
         private Camera _camera;
@@ -30,8 +31,8 @@ namespace MysteryDungeon
             _graphics = new GraphicsDeviceManager(this);
             WindowSettings = new WindowSettings(800, 600);
 
+            Services = base.Services;
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
         }
 
         protected override void Initialize()
@@ -39,34 +40,24 @@ namespace MysteryDungeon
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             _graphics.PreferredBackBufferWidth = WindowSettings.WindowWidth;
             _graphics.PreferredBackBufferHeight = WindowSettings.WindowHeight;
-
             _graphics.ApplyChanges();
-
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _spriteBatchGUI = new SpriteBatch(GraphicsDevice);
-
-            // #####
-
-            //GameObject.Content = new ContentManager(new GameServiceContainer(), "Content");
-            Component.Content = Content;
-
-            PokemonSpriteData.Content = Content;
-            PokemonSpriteData.CreateDictionary();
-
-            GUI.Instance.Initialize(Content, _spriteBatchGUI);
 
             Widget.WindowSettings = WindowSettings;
 
-            _level = new Level(Content);
-
-            _camera = new Camera(WindowSettings.WindowWidth, WindowSettings.WindowHeight);
-            _camera.Follow(_level.Player);
-
+            _level = new Level();
+            _camera = new Camera(_level.Player, WindowSettings.WindowWidth, WindowSettings.WindowHeight);
             _frameCounter = new FrameCounter();
 
-            // #####
-
             base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatchGUI = new SpriteBatch(GraphicsDevice);
+            GUI.Instance.Initialize(_spriteBatchGUI);
+
+            base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
@@ -76,6 +67,7 @@ namespace MysteryDungeon
             _level.Update(gameTime);
             _camera.Update();
 
+            _frameCounter.Update(gameTime);
             GUI.Instance.Update(gameTime);
 
             base.Update(gameTime);
@@ -86,16 +78,11 @@ namespace MysteryDungeon
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: _camera.TransformMatrix);
-
             _level.Draw(_spriteBatch);
-
             _spriteBatch.End();
 
-
-
+            GUI.Instance.QueueStringDraw(_frameCounter.AverageFramesPerSecond.ToString(), new Vector2(20, 110));
             GUI.Instance.Draw();
-
-
 
             base.Draw(gameTime);
         }
