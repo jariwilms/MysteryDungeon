@@ -38,6 +38,9 @@ namespace MysteryDungeon.Core.Actors
 
             Behaviour.IdleAction += () => _turnsLeft--;
 
+            Behaviour.OnTargetReached += () => Behaviour.TargetPosition = Vector2.Multiply(Level.Dungeon.GenerateRandomSpawnPoint().ToVector2(), 24); //fix dit
+            Behaviour.OnTargetReached?.Invoke();
+
             Behaviour.MoveUpAction = _gridMovementComponent.MoveUpAction;
             Behaviour.MoveRightAction = _gridMovementComponent.MoveRightAction;
             Behaviour.MoveDownAction = _gridMovementComponent.MoveDownAction;

@@ -1,4 +1,5 @@
-﻿using MysteryDungeon.Core.Actors;
+﻿using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.Actors;
 using System;
 using System.Collections.Generic;
 
@@ -8,6 +9,7 @@ namespace MysteryDungeon.Core.AI
     {
         public LivingEntity Parent { get; set; }
         public LivingEntity Target { get; set; }
+        public Vector2 TargetPosition;
 
         public Stack<Action> ActiveStateStack { get; set; }
 

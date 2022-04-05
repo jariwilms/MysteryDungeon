@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using MysteryDungeon.Core.Actors;
 using MysteryDungeon.Core.Extensions;
+using MysteryDungeon.Core.Map;
 using System;
 using System.Collections.Generic;
 
@@ -25,14 +26,12 @@ namespace MysteryDungeon.Core.AI
 
         public Pathfinder PathFinder { get; set; }
         private List<PathNode> _pathNodes;
-        private Random _random;
 
         public EnemyBehaviour(LivingEntity parent) : base(parent)
         {
             PathFinder = new Pathfinder();
-            _random = new Random();
 
-            ActiveStateStack.Push(Chasing);
+            ActiveStateStack.Push(Wandering);
         }
 
         public EnemyBehaviour(LivingEntity parent, Action defaultAction) : this(parent)
@@ -40,14 +39,43 @@ namespace MysteryDungeon.Core.AI
             SetNewState(defaultAction);
         }
 
+        private static int CalculateDistanceInTiles(Vector2 start, Vector2 end)
+        {
+            var startIndex = Vector2.Divide(start, 24);
+            var endIndex = Vector2.Divide(end, 24);
+            var difference = (int)Math.Abs(endIndex.X - startIndex.X) + (int)Math.Abs(endIndex.Y - startIndex.Y);
+
+            return difference;
+        }
+
+        private bool MoveToDestination(Vector2 origin, Vector2 destination)
+        {
+            //Otherwise, find a path to the destination
+            bool found = PathFinder.FindPath(origin.ToPoint(), destination.ToPoint(), out _pathNodes);
+
+            if (!found || _pathNodes.Count < 2)
+                return false;
+
+            var moveDirection = _pathNodes[1].Position - _pathNodes[0].Position;
+
+            Action moveAction = moveDirection switch
+            {
+                Point(0, -1) => MoveUpAction,
+                Point(1, 0) => MoveRightAction,
+                Point(0, 1) => MoveDownAction,
+                Point(-1, 0) => MoveLeftAction,
+                _ => throw new Exception()
+            };
+
+            moveAction?.Invoke();
+            return true;
+        }
+
         public void Idling()
         {
-            var targetIndex = Vector2.Divide(Target.Transform.Position, 24);
-            var enemyIndex = Vector2.Divide(Parent.Transform.Position, 24);
-            var diff = targetIndex - enemyIndex;
-            diff = new Vector2(Math.Abs(diff.X), Math.Abs(diff.Y));
+            var distance = CalculateDistanceInTiles(Parent.Transform.Position, Target.Transform.Position);
 
-            if (diff.X + diff.Y > 3)
+            if (distance > 3)
                 SetNewState(Chasing, true);
             else
                 IdleAction?.Invoke();
@@ -60,27 +88,23 @@ namespace MysteryDungeon.Core.AI
 
         public void Wandering()
         {
-            var targetIndex = Vector2.Divide(Target.Transform.Position, 24); //move naar eigen functie ipv dit te copy-paste'en als een retard
-            var parentIndex = Vector2.Divide(Parent.Transform.Position, 24);
-            var diff = targetIndex - parentIndex;
-            diff = new Vector2(Math.Abs(diff.X), Math.Abs(diff.Y));
+            var distance = CalculateDistanceInTiles(Parent.Transform.Position, TargetPosition);
 
-            var distance = diff.X + diff.Y;
+            if (distance < 2) //If we are within 2 tiles of our destination, fire destination reached and idle one turn
+                TargetPosition = Vector2.Multiply(Level.Dungeon.GenerateRandomSpawnPoint().ToVector2(), 24);
 
-            if (distance < 2)
-                OnTargetReached?.Invoke();
-
-            //SetNewState(Idling, true);
+            if (!MoveToDestination(Vector2.Divide(Parent.Transform.Position, 24), Vector2.Divide(TargetPosition, 24)))
+            {
+                TargetPosition = Vector2.Multiply(Level.Dungeon.GenerateRandomSpawnPoint().ToVector2(), 24);
+                IdleAction?.Invoke();
+            }
         }
 
         public void Chasing()
         {
-            var targetIndex = Vector2.Divide(Target.Transform.Position, 24);
-            var enemyIndex = Vector2.Divide(Parent.Transform.Position, 24);
-            var diff = targetIndex - enemyIndex;
-            diff = new Vector2(Math.Abs(diff.X), Math.Abs(diff.Y));
+            var distance = CalculateDistanceInTiles(Parent.Transform.Position, Target.Transform.Position);
 
-            if (diff.X + diff.Y < 3)
+            if (distance < 3)
                 SetNewState(Idling, true);
 
             bool found = PathFinder.FindPath(Vector2.Divide(Parent.Transform.Position, 24).ToPoint(), Vector2.Divide(Target.Transform.Position, 24).ToPoint(), out _pathNodes);

@@ -33,6 +33,8 @@ namespace MysteryDungeon
 
             Services = base.Services;
             Content.RootDirectory = "Content";
+
+            IsMouseVisible = true;
         }
 
         protected override void Initialize()

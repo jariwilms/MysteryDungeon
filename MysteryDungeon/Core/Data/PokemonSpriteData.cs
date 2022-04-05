@@ -26,7 +26,6 @@ namespace MysteryDungeon.Core.Data
             _textureDictionary = new Dictionary<Pokemon, Texture2D>();
         }
 
-
         //animations.Add("", new Animation(texture, new Point(), , , , , , , f));
         public static Dictionary<string, Animation> GetPokemonAnimations(Pokemon pokemon, ContentManager content)
         {
@@ -37,7 +36,7 @@ namespace MysteryDungeon.Core.Data
             {
                 case Pokemon.Pikachu:
                     break;
-                case Pokemon.Chikorita:                                                         // offset   w   h  sx yx  r  c  time
+                case Pokemon.Chikorita:                                     // offset   w   h  sx yx  r  c  time
                     texture = content.Load<Texture2D>("sprites/chikorita");
 
                     animations.Add("IdleUp", new Animation(texture, new Point(262, 19), 13, 22, 3, 0, 1, 2, 0.8f));
