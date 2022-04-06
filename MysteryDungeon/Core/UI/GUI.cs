@@ -10,16 +10,14 @@ namespace MysteryDungeon.Core.UI
     {
         public static readonly GUI Instance = new GUI();
 
-        private SpriteBatch _spriteBatch;
-        private SpriteFont _spriteFont;
-
         public List<Widget> Widgets { get; set; }
         public List<(string, Vector2)> Strings { get; set; }
 
+        private SpriteBatch _spriteBatch;
+        private SpriteFont _spriteFont;
         private readonly ContentManager _content;
 
         static GUI() { }
-
         private GUI()
         {
             Widgets = new List<Widget>();
@@ -45,6 +43,11 @@ namespace MysteryDungeon.Core.UI
         public void QueueStringDraw(string text, Vector2 position)
         {
             Strings.Add(new(text, position));
+        }
+
+        public void QueueDebugStringDraw(string text)
+        {
+            Strings.Add(new (text, new Vector2(20, (Strings.Count + 1) * 20)));
         }
 
         private void DrawStrings()

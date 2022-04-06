@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.Animations.Particles;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,6 +49,18 @@ namespace MysteryDungeon.Core.Extensions
                     charmap[x, y] = lines[y][x];
 
             return charmap;
+        }
+
+        public static string GetFilename(this ParticleType particleType)
+        {
+            return particleType switch
+            {
+                ParticleType.White => "white", 
+                ParticleType.Red => "red",
+                ParticleType.Green => "green", 
+                ParticleType.Blue => "blue", 
+                _ => throw new Exception("Invalid particle type")
+            };
         }
     }
 }

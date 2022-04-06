@@ -19,19 +19,40 @@ namespace MysteryDungeon.Core
             Rotation = Vector3.Zero;
             Scale = Vector2.One;
         }
+
+        public Transform(Vector2 position, Vector3 rotation, Vector2 scale)
+        {
+            Position = position;
+            Rotation = rotation;
+            Scale = scale;
+        }
+
+        public static Transform operator +(Transform a, Transform b)
+            => new Transform(a.Position + b.Position, a.Rotation + b.Rotation, a.Scale + b.Scale);
     }
 
     public abstract class GameObject : Contracts.IUpdatable, Contracts.IDrawable, IDisposable
     {
-        public Transform Transform;
+        public GameObject Parent { get; set; }
+        public Transform Transform
+        {
+            get => Parent == null ? _transform : _transform + Parent.Transform;
+            set => _transform = value;
+        }
+        private Transform _transform;
+
+        public bool IsEnabled;
+        public bool IsVisible;
 
         protected List<Component> Components { get; private set; }
 
         protected readonly ContentManager Content;
 
-        public GameObject()
+        public GameObject(GameObject parent = null)
         {
+            Parent = parent;
             Transform = new Transform();
+
             Components = new List<Component>();
 
             Content = new ContentManager(MysteryDungeon.Services, "Content");

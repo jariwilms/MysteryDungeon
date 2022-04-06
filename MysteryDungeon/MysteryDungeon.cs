@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MysteryDungeon.Core;
+using MysteryDungeon.Core.Animations.Particles;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Input;
 using MysteryDungeon.Core.Map;
 using MysteryDungeon.Core.UI;
+using System;
 
 namespace MysteryDungeon
 {
@@ -13,6 +16,7 @@ namespace MysteryDungeon
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private SpriteBatch _spriteBatchGUI;
+        private SpriteBatch _spriteBatchParticle;
 
         public WindowSettings WindowSettings;
 
@@ -39,9 +43,10 @@ namespace MysteryDungeon
 
         protected override void Initialize()
         {
-            _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             _graphics.PreferredBackBufferWidth = WindowSettings.WindowWidth;
             _graphics.PreferredBackBufferHeight = WindowSettings.WindowHeight;
+            _graphics.SynchronizeWithVerticalRetrace = false;
+            _graphics.PreferMultiSampling = false;
             _graphics.ApplyChanges();
 
             Widget.WindowSettings = WindowSettings;
@@ -53,11 +58,18 @@ namespace MysteryDungeon
             base.Initialize();
         }
 
+        ParticleEmitter emitter;
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _spriteBatchGUI = new SpriteBatch(GraphicsDevice);
+            _spriteBatchParticle = new SpriteBatch(GraphicsDevice);
+
+            ParticleEngine.Instance.Initialise(_spriteBatchParticle);
             GUI.Instance.Initialize(_spriteBatchGUI);
+
+            emitter = new ParticleEmitter(ParticleType.White, new Vector2(200), 30);
+            ParticleEngine.Instance.Emitters.Add(emitter);
 
             base.LoadContent();
         }
@@ -66,24 +78,30 @@ namespace MysteryDungeon
         {
             InputEventHandler.Instance.Update();
 
-            _level.Update(gameTime);
-            _camera.Update();
+            //_level.Update(gameTime);
+            //_camera.Update();
 
             _frameCounter.Update(gameTime);
+
+            ParticleEngine.Instance.Update(gameTime);
             GUI.Instance.Update(gameTime);
+
+            emitter.Position = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: _camera.TransformMatrix);
-            _level.Draw(_spriteBatch);
-            _spriteBatch.End();
+            //_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: _camera.TransformMatrix);
+            //_level.Draw(_spriteBatch);
+            //_spriteBatch.End();
 
-            GUI.Instance.QueueStringDraw(_frameCounter.AverageFramesPerSecond.ToString(), new Vector2(20, 110));
+            ParticleEngine.Instance.Draw();
+            GUI.Instance.QueueDebugStringDraw("FPS " + Math.Round(_frameCounter.AverageFramesPerSecond).ToString());
+            GUI.Instance.QueueDebugStringDraw("MS  " + Math.Round(_frameCounter.ElapsedMilliseconds, 2).ToString());
             GUI.Instance.Draw();
 
             base.Draw(gameTime);
