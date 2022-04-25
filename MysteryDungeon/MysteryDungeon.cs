@@ -13,15 +13,12 @@ namespace MysteryDungeon
 {
     public class MysteryDungeon : Game
     {
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private SpriteBatch _spriteBatchGUI;
         private SpriteBatch _spriteBatchParticle;
 
-        public WindowSettings WindowSettings;
-
         public static new GameServiceContainer Services { get; private set; }
-
         // ### THE CUM ZONE ###
 
         private Camera _camera;
@@ -33,7 +30,6 @@ namespace MysteryDungeon
         public MysteryDungeon()
         {
             _graphics = new GraphicsDeviceManager(this);
-            WindowSettings = new WindowSettings(800, 600);
 
             Services = base.Services;
             Content.RootDirectory = "Content";
@@ -43,16 +39,14 @@ namespace MysteryDungeon
 
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = WindowSettings.WindowWidth;
-            _graphics.PreferredBackBufferHeight = WindowSettings.WindowHeight;
+            _graphics.PreferredBackBufferWidth = Core.UI.Window.WindowWidth;
+            _graphics.PreferredBackBufferHeight = Core.UI.Window.WindowHeight;
             _graphics.SynchronizeWithVerticalRetrace = false;
             _graphics.PreferMultiSampling = false;
             _graphics.ApplyChanges();
-
-            Widget.WindowSettings = WindowSettings;
-
+            
             _level = new Level();
-            _camera = new Camera(_level.Player, WindowSettings.WindowWidth, WindowSettings.WindowHeight);
+            _camera = new Camera(_level.Player, Core.UI.Window.WindowWidth, Core.UI.Window.WindowHeight);
             _frameCounter = new FrameCounter();
 
             base.Initialize();
@@ -68,7 +62,9 @@ namespace MysteryDungeon
             ParticleEngine.Instance.Initialise(_spriteBatchParticle);
             GUI.Instance.Initialize(_spriteBatchGUI);
 
-            emitter = new ParticleEmitter(ParticleType.White, new Vector2(200), 30);
+            emitter = new ParticleEmitter(ParticleType.White, new Vector2(400, 300), 10, 20000);
+            emitter.IsLooping = false;
+
             ParticleEngine.Instance.Emitters.Add(emitter);
 
             base.LoadContent();
@@ -81,12 +77,19 @@ namespace MysteryDungeon
             //_level.Update(gameTime);
             //_camera.Update();
 
-            _frameCounter.Update(gameTime);
+            if (InputEventHandler.Instance.IsKeyPressedOnce(Keys.D))
+                ParticleEngine.Instance.Pause();
+
+            if (InputEventHandler.Instance.IsKeyPressedOnce(Keys.A))
+                ParticleEngine.Instance.Resume();
+
+            if (InputEventHandler.Instance.IsKeyPressedOnce(Keys.S))
+                ParticleEngine.Instance.Stop();
+
+            //emitter.IsEmitting = !emitter.IsEmitting;
 
             ParticleEngine.Instance.Update(gameTime);
             GUI.Instance.Update(gameTime);
-
-            emitter.Position = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
 
             base.Update(gameTime);
         }
@@ -99,9 +102,12 @@ namespace MysteryDungeon
             //_level.Draw(_spriteBatch);
             //_spriteBatch.End();
 
+            _frameCounter.Update(gameTime);
+
             ParticleEngine.Instance.Draw();
             GUI.Instance.QueueDebugStringDraw("FPS " + Math.Round(_frameCounter.AverageFramesPerSecond).ToString());
             GUI.Instance.QueueDebugStringDraw("MS  " + Math.Round(_frameCounter.ElapsedMilliseconds, 2).ToString());
+            GUI.Instance.QueueDebugStringDraw("MOUSE [" + Mouse.GetState().Position.X + ", " + Mouse.GetState().Position.Y + "]");
             GUI.Instance.Draw();
 
             base.Draw(gameTime);

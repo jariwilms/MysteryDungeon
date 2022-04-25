@@ -7,11 +7,14 @@ using System.Linq;
 
 namespace MysteryDungeon.Core
 {
+    /// <summary>
+    /// Represents a transformation in space
+    /// </summary>
     public class Transform
     {
-        public Vector2 Position;
-        public Vector3 Rotation;
-        public Vector2 Scale;
+        public Vector2 Position { get; set; }
+        public Vector3 Rotation { get; set; }
+        public Vector2 Scale { get; set; }
 
         public Transform()
         {
@@ -36,7 +39,7 @@ namespace MysteryDungeon.Core
         public GameObject Parent { get; set; }
         public Transform Transform
         {
-            get => Parent == null ? _transform : _transform + Parent.Transform;
+            get => Parent == null ? _transform : Parent.Transform + _transform;
             set => _transform = value;
         }
         private Transform _transform;

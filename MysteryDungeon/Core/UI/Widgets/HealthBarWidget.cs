@@ -4,7 +4,7 @@ using MysteryDungeon.Core.Actors;
 using MysteryDungeon.Core.Data;
 using MysteryDungeon.Core.Extensions;
 
-namespace MysteryDungeon.Core.UI
+namespace MysteryDungeon.Core.UI.Widgets
 {
     internal class HealthBarWidget : Widget
     {
@@ -24,8 +24,8 @@ namespace MysteryDungeon.Core.UI
             HealthBarHealthSource = GuiTextures.HealthBarHealthSource;
             HealthBarDamageSource = GuiTextures.HealthBarDamageSource;
 
-            HealthBarHealthDestination = new Rectangle(WindowSettings.WindowWidth / 2, 10, HealthBarHealthSource.Width, HealthBarHealthSource.Height);
-            HealthBarDamageDestination = new Rectangle(WindowSettings.WindowWidth / 2, 10, HealthBarDamageSource.Width, HealthBarDamageSource.Height);
+            HealthBarHealthDestination = new Rectangle(Window.WindowWidth / 2, 10, HealthBarHealthSource.Width, HealthBarHealthSource.Height);
+            HealthBarDamageDestination = new Rectangle(Window.WindowWidth / 2, 10, HealthBarDamageSource.Width, HealthBarDamageSource.Height);
 
             LocalScale = 2.0f;
         }

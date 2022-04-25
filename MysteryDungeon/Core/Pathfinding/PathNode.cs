@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace MysteryDungeon.Core.Extensions
+namespace MysteryDungeon.Core.Pathfinding
 {
     public class PathNode : IEquatable<PathNode>
     {

@@ -15,10 +15,9 @@ namespace MysteryDungeon.Core.Animations.Particles
 
     public class Particle
     {
-        public Texture2D Texture { get; set; }                  //Particle texture
-
         public Vector2 Position { get; set; }                   //Local position
         public Vector2 Velocity { get; set; }                   //Change in position per second
+        public Vector2 Acceleration { get; set; }               //Change in velocity per second
 
         public float LocalAngle { get; set; }                   //Local angle of rotation
         public float LocalAngularVelocity { get; set; }         //Local angular velocity
@@ -28,48 +27,39 @@ namespace MysteryDungeon.Core.Animations.Particles
         public float GlobalAngularVelocity { get; set; }        //Global angular velocity
         public Vector2 GlobalRotationOrigin { get; set; }       //Global rotation point
 
+        public float Scale { get; set; }                        //Particle size
         public Color Color { get; set; }                        //Particle color
-        public float Size { get; set; }                         //Particle size
 
-        public int TimeToLive { get; set; }                     //Lifetime in milliseconds
+        public float LifeSpan { get; set; }                       //Lifespan in milliseconds
 
-        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, int timeToLive)
+        public Particle(Vector2 position, Vector2 velocity, float lifeSpan)
         {
-            Texture = texture;
-
             Position = position;
             Velocity = velocity;
+            Acceleration = Vector2.Zero;
 
-            LocalAngle = 0.0f;
-            LocalAngularVelocity = 0.0f;
-
+            Scale = 0.01f;
             Color = Color.White;
-            Size = 0.01f;
 
-            TimeToLive = timeToLive;
+            LifeSpan = lifeSpan;
         }
-        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Vector2 rotationOrigin, int timeToLive) : this(texture, position, velocity, timeToLive)
+        public Particle(Vector2 position, Vector2 velocity, Vector2 acceleration, float lifeSpan) : this(position, velocity, lifeSpan)
         {
-            LocalAngle = angle;
-            LocalAngularVelocity = angularVelocity;
-            GlobalRotationOrigin = rotationOrigin;
+            Acceleration = acceleration;
         }
-        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Vector2 rotationOrigin, Color color, float size, int timeToLive) : this(texture, position, velocity, timeToLive)
+        public Particle(Vector2 position, Vector2 velocity, Vector2 acceleration, int scale, Color color, float lifeSpan) : this(position, velocity, acceleration, lifeSpan)
         {
-            LocalAngle = angle;
-            LocalAngularVelocity = angularVelocity;
-            GlobalRotationOrigin = rotationOrigin;
-
+            Scale = scale;
             Color = color;
-            Size = size;
         }
 
         public void Update(GameTime gameTime)
         {
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            TimeToLive -= (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+            LifeSpan -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
             Position += Velocity * deltaTime;
+            Velocity += Acceleration * deltaTime;
             LocalAngle += LocalAngularVelocity * deltaTime;
         }
     }

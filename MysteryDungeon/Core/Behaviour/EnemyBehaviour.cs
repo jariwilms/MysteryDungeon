@@ -2,6 +2,7 @@
 using MysteryDungeon.Core.Actors;
 using MysteryDungeon.Core.Extensions;
 using MysteryDungeon.Core.Map;
+using MysteryDungeon.Core.Pathfinding;
 using System;
 using System.Collections.Generic;
 

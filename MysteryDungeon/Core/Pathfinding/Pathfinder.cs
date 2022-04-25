@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using MysteryDungeon.Core.Extensions;
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core.Extensions
+namespace MysteryDungeon.Core.Pathfinding
 {
     public class Pathfinder
     {

@@ -123,19 +123,9 @@
             <param name="y"></param>
             <returns></returns>
         </member>
-        <member name="P:MysteryDungeon.Core.Extensions.PathNode.G">
+        <member name="T:MysteryDungeon.Core.Transform">
             <summary>
-            Distance from starting node
-            </summary>
-        </member>
-        <member name="P:MysteryDungeon.Core.Extensions.PathNode.H">
-            <summary>
-            Distance from end node
-            </summary>
-        </member>
-        <member name="F:MysteryDungeon.Core.Extensions.PathNode.F">
-            <summary>
-            Sum of G cost and H cost
+            Represents a transformation in space
             </summary>
         </member>
         <member name="M:MysteryDungeon.Core.Input.InputEventHandler.RebindKeyAction(MysteryDungeon.Core.Input.KeyAction,Microsoft.Xna.Framework.Input.Keys,System.Boolean)">
@@ -172,7 +162,22 @@
             Stores and handles tile assets for creating 2D levels
             </summary>
         </member>
-        <member name="T:MysteryDungeon.Core.UI.WindowSettings">
+        <member name="P:MysteryDungeon.Core.Pathfinding.PathNode.G">
+            <summary>
+            Distance from starting node
+            </summary>
+        </member>
+        <member name="P:MysteryDungeon.Core.Pathfinding.PathNode.H">
+            <summary>
+            Distance from end node
+            </summary>
+        </member>
+        <member name="F:MysteryDungeon.Core.Pathfinding.PathNode.F">
+            <summary>
+            Sum of G cost and H cost
+            </summary>
+        </member>
+        <member name="T:MysteryDungeon.Core.UI.Window">
             <summary>
             Holds information about the game window
             </summary>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MysteryDungeon.Core.UI.Widgets;
 using System;
 using System.Collections.Generic;
 
@@ -45,10 +46,12 @@ namespace MysteryDungeon.Core.UI
             Strings.Add(new(text, position));
         }
 
+#if DEBUG
         public void QueueDebugStringDraw(string text)
         {
             Strings.Add(new (text, new Vector2(20, (Strings.Count + 1) * 20)));
         }
+#endif
 
         private void DrawStrings()
         {
@@ -61,6 +64,8 @@ namespace MysteryDungeon.Core.UI
             {
                 widget.Update(gameTime);
             });
+
+            Strings.Clear();
         }
 
         public void Draw()
@@ -72,8 +77,6 @@ namespace MysteryDungeon.Core.UI
 
             DrawWidgets();
             DrawStrings();
-
-            Strings.Clear();
 
             _spriteBatch.End();
         }

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MysteryDungeon.Core.Data;
 
-namespace MysteryDungeon.Core.UI
+namespace MysteryDungeon.Core.UI.Widgets
 {
     internal class DialogueBoxWidget : Widget
     {
@@ -24,8 +24,8 @@ namespace MysteryDungeon.Core.UI
             DialogueBoxBackgroundSourceRectangle = GuiTextures.DialogueBoxBackgroundSource;
 
             DestinationRectangle = new Rectangle(
-                WindowSettings.WindowWidth / 2 - DialogueBoxForegroundSourceRectangle.Width / 2,
-                WindowSettings.WindowHeight - DialogueBoxForegroundSourceRectangle.Height - 10,
+                Window.WindowWidth / 2 - DialogueBoxForegroundSourceRectangle.Width / 2,
+                Window.WindowHeight - DialogueBoxForegroundSourceRectangle.Height - 10,
                 DialogueBoxForegroundSourceRectangle.Width,
                 DialogueBoxForegroundSourceRectangle.Height);
         }

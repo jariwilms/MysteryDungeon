@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace MysteryDungeon.Core.UI
+namespace MysteryDungeon.Core.UI.Widgets
 {
     public abstract class Widget
     {
@@ -19,8 +19,7 @@ namespace MysteryDungeon.Core.UI
         }
 
         public Widget Parent;
-        private List<Widget> _children;
-        public static WindowSettings WindowSettings;
+        private readonly List<Widget> _children;
 
         public Texture2D SourceTexture;                             //Source texture for widget drawing
         public Rectangle DestinationRectangle;
@@ -56,7 +55,6 @@ namespace MysteryDungeon.Core.UI
         {
             IsActive = true;
         }
-
         public virtual void Disable()
         {
             IsActive = false;
@@ -66,7 +64,6 @@ namespace MysteryDungeon.Core.UI
         {
             IsVisible = true;
         }
-
         public virtual void Hide()
         {
             IsVisible = false;

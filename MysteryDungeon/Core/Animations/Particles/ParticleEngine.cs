@@ -18,7 +18,7 @@ namespace MysteryDungeon.Core.Animations.Particles
         {
             get
             {
-                var totalParticles = 0;
+                int totalParticles = 0;
                 Emitters.ForEach(emitter => totalParticles += emitter.Particles.Count);
                 return totalParticles;
             }
@@ -46,18 +46,40 @@ namespace MysteryDungeon.Core.Animations.Particles
             return _content.Load<Texture2D>(filename);
         }
 
+        public void Resume()
+        {
+            Emitters.ForEach(emitter =>
+            {
+                emitter.IsEmitting = true;
+            });
+        }
+        public void Pause()
+        {
+            Emitters.ForEach(emitter =>
+            {
+                emitter.IsEmitting = false;
+            });
+        }
+        public void Stop()
+        {
+            Emitters.ForEach(emitter =>
+            {
+                emitter.IsEmitting = false;
+                emitter.Particles.Clear();
+            });
+        }
+
         public void Update(GameTime gameTime)
         {
             Emitters.ForEach(emitter => emitter.Update(gameTime));
         }
-
         public void Draw()
         {
+            GUI.Instance.QueueDebugStringDraw("TOTAL PARTICLES: " + TotalParticles.ToString());
+
             _spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive);
             Emitters.ForEach(emitter =>  emitter.Draw(_spriteBatch));
             _spriteBatch.End();
-
-            GUI.Instance.QueueDebugStringDraw("Particles: " + TotalParticles.ToString());
         }
 
         public void Dispose()

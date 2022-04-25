@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MysteryDungeon.Core.Extensions;
+using MysteryDungeon.Core.UI;
+using Microsoft.Xna.Framework.Input;
+using System.ComponentModel;
 
 namespace MysteryDungeon.Core.Animations.Particles
 {
@@ -22,9 +25,21 @@ namespace MysteryDungeon.Core.Animations.Particles
 
     public class ParticleEmitter : GameObject
     {
-        public Texture2D Texture { get; private set; }
-        public List<Particle> Particles { get; private set; }
-        public EmissionShape EmissionShape 
+        public Texture2D Texture { get; private set; }                      //Texture of new particles
+        public List<Particle> Particles { get; private set; }               //List of particles
+
+        #region main
+        public int MinLifetime { get; set; }                                //Minimum particle lifetime
+        public int MaxLifetime { get; set; }                                //Maximum particle lifetime
+
+        public float EmissionDuration { get; set; }                         //Duration of new particle emission in seconds
+
+        public bool IsEmitting { get; set; }                                //Emit new particles?
+        public bool IsLooping { get; set; }                                 //Loop emission duration?
+        #endregion
+
+        #region emission
+        public EmissionShape EmissionShape                                  //Resulting shape of emitted particles
         {
             get => _emissionShape;
             set 
@@ -32,85 +47,149 @@ namespace MysteryDungeon.Core.Animations.Particles
                 Particles.Clear(); 
                 _emissionShape = value; 
             } 
-        }
+        }                           
         private EmissionShape _emissionShape;
 
-        public Vector2 Position { get; set; }
+        public int EmissionRate { get; set; }                               //Rate of particle emission
+        public float DeltaTimePerEmission => 1.0f / EmissionRate;           //Seconds per particle emission
+        private int _particlesToGenerate;
+        #endregion
 
-        public int MinTimeToLive { get; set; }
-        public int MaxTimeToLive { get; set; }
+        #region shape
+        public double MinConeAngle { get; set; }                            //Minimum angle of cone emission
+        public double MaxConeAngle { get; set; }                            //Maximum angle of cone emission
+        #endregion
 
-        public Vector2 MinVelocity { get; set; }
-        public Vector2 MaxVelocity { get; set; }
+        #region velocity
+        public Vector2 Velocity { get; set; }                               //Velocity of the emitter
+        public Vector2 Acceleration { get; set; }                           //Acceleration of the emitter
 
-        public int EmissionRate { get; set; }
-        public double DeltaTimePerEmission => (double)1 / EmissionRate;
-        private double _deltaTime;
+        public float SpeedMultiplier { get; set; }                          //Particle speed multiplier
+        #endregion
 
-        private Rectangle _sourceRectangle;
+        private float _deltaTime;
+        private float _totalTime;
 
         private readonly Random _random;
 
-        public ParticleEmitter(ParticleType particleType, Vector2 position, int emissionRate = 1)
+        public ParticleEmitter(ParticleType particleType, Vector2 position, float emissionDuration, int emissionRate = 1)
         {
             Texture = ParticleEngine.Instance.LoadTexture(particleType.GetFilename());
+
             Particles = new List<Particle>();
             EmissionShape = EmissionShape.Sphere;
 
-            Position = position;
+            EmissionDuration = emissionDuration;
 
-            MinTimeToLive = 1000;
-            MaxTimeToLive = 10000;
+            Transform.Position = position;
+            Velocity = new Vector2(10.0f, 2.0f);
+            Acceleration = Vector2.Zero;
 
-            MinVelocity = new Vector2(-10.0f);
-            MaxVelocity = new Vector2(10.0f);
+            SpeedMultiplier = 100.0f;
+
+            MinConeAngle = Math.PI / 4.0f;
+            MaxConeAngle = MinConeAngle * 3;
+
+            MinLifetime = 1000;
+            MaxLifetime = 3000;
 
             EmissionRate = emissionRate;
-            _deltaTime = 0.0f;
 
-            _sourceRectangle = new Rectangle(0, 0, Texture.Width, Texture.Height);
+            _deltaTime = 0.0f;
+            _totalTime = 0.0f;
+
+            IsEmitting = true;
+            IsLooping = true;
 
             _random = new Random();
         }
-
-        private void GenerateParticles(int amount = 1)
+        ~ParticleEmitter()
         {
-            for (int i = 0; i < amount; i++)
-            {
-                double angle = _random.Next(-18000, 18000) / 100 + 180;
-                var velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * 100;
+            ParticleEngine.Instance.Emitters.Remove(this);
+        }
 
-                var particle = new Particle(Texture, Position, velocity, _random.Next(MinTimeToLive, MaxTimeToLive));
-                Particles.Add(particle);
-            }
+        private void GenerateParticles(int amount)
+        {
+            Action generator = EmissionShape switch
+            {
+                EmissionShape.Sphere => SphereGenerator,
+                EmissionShape.Hemisphere => HemisphereGenerator,
+                EmissionShape.Cone => ConeGenerator, 
+                EmissionShape.Box => throw new NotImplementedException(), 
+                EmissionShape.Circle => throw new NotImplementedException(), 
+                EmissionShape.Edge => throw new NotImplementedException(),
+                _ => throw new InvalidEnumArgumentException()
+            };
+
+            for (int i = 0; i < amount; i++)
+                generator?.Invoke(); //i know, shut up. Ben niet zeker of for loop in elke generator for some reason
+        }
+        private void SphereGenerator()
+        {
+            var angle = 2 * Math.PI * _random.Next(0, 10000) / 10000 + Transform.Rotation.X;
+            var velocity = new Vector2((float)Math.Cos(angle), -(float)Math.Sin(angle)) * SpeedMultiplier;
+            var particle = new Particle(Transform.Position, Velocity + velocity, Acceleration, _random.Next(MinLifetime, MaxLifetime));
+            Particles.Add(particle);
+        }
+        private void HemisphereGenerator()
+        {
+            var angle = 2 * Math.PI * _random.Next(-5000, 0) / 10000 + Transform.Rotation.X;
+            var velocity = new Vector2((float)Math.Cos(angle), -(float)Math.Sin(angle)) * SpeedMultiplier;
+            var particle = new Particle(Transform.Position, velocity, _random.Next(MinLifetime, MaxLifetime));
+            Particles.Add(particle);
+        }
+        private void ConeGenerator()
+        {
+            var angle = (MaxConeAngle - MinConeAngle) * _random.Next(0, 10000) / 10000 + MinConeAngle + Transform.Rotation.X;
+            var velocity = new Vector2((float)Math.Cos(angle), -(float)Math.Sin(angle)) * SpeedMultiplier;
+            var particle = new Particle(Transform.Position, velocity, _random.Next(MinLifetime, MaxLifetime));
+            Particles.Add(particle);
         }
 
         public override void Update(GameTime gameTime)
         {
-            _deltaTime += gameTime.ElapsedGameTime.TotalSeconds;
+            _deltaTime += (float)gameTime.ElapsedGameTime.TotalSeconds; //16.67ms on locked
+            _totalTime += _deltaTime;
 
-            if (_deltaTime > DeltaTimePerEmission)
+            if (!IsLooping && _totalTime > EmissionDuration)
+                IsEmitting = false;
+
+            if (IsEmitting)
             {
-                _deltaTime = 0.0f;
-                GenerateParticles(EmissionRate);
+                _particlesToGenerate = (int)(_deltaTime / DeltaTimePerEmission);
+                if (_particlesToGenerate > 0) _deltaTime -= _particlesToGenerate * DeltaTimePerEmission;
+                GenerateParticles(_particlesToGenerate);
             }
 
-            for (int i = 0; i < Particles.Count; i++)
+            for (int index = Particles.Count - 1; index > 0; index--)
             {
-                var particle = Particles[i];
-                particle.Update(gameTime);
+                Particles[index].Update(gameTime);
 
-                if (particle.TimeToLive <= 0)
-                {
-                    Particles.RemoveAt(i);
-                    i--;
-                }
+                if (!(Particles[index].LifeSpan > 0.0f))
+                    Particles.RemoveAt(index);
             }
         }
-
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Particles.ForEach(particle => spriteBatch.Draw(Texture, particle.Position, _sourceRectangle, particle.Color, particle.LocalAngle, particle.GlobalRotationOrigin, particle.Size, SpriteEffects.None, 0.0f));
+#if DEBUG
+            var visibleParticles = 0;
+            Particles.ForEach(particle =>
+            {
+                if (!Window.IsOutOfBounds(particle.Position))
+                {
+                    visibleParticles++;
+                    spriteBatch.Draw(Texture, particle.Position, null, particle.Color, particle.LocalAngle, particle.GlobalRotationOrigin, particle.Scale, SpriteEffects.None, 0.0f);
+                }
+            });
+
+            GUI.Instance.QueueDebugStringDraw("DRAWN PARTICLES " + visibleParticles);
+#else
+            Particles.ForEach(particle =>
+            {
+                if (!Window.IsOutOfBounds(particle.Position))
+                    spriteBatch.Draw(Texture, particle.Position, _sourceRectangle, particle.Color, particle.LocalAngle, particle.GlobalRotationOrigin, particle.Size, SpriteEffects.None, 0.0f);
+            });
+#endif
         }
     }
 }
