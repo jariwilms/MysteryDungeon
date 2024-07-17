@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/jariw/Documents/Programming/Languages/C#/MysteryDungeon/MysteryDungeon/Content/effects/black_rectangle.png</SourceFile>
-  <SourceTime>2022-03-13T21:43:39.0796353+01:00</SourceTime>
-  <DestFile>C:/Users/jariw/Documents/Programming/Languages/C#/MysteryDungeon/MysteryDungeon/Content/bin/DesktopGL/Content/effects/black_rectangle.xnb</DestFile>
-  <DestTime>2022-03-13T21:43:57.3871547+01:00</DestTime>
+  <SourceFile>C:/Users/jariw/Source/Repos/MysteryDungeon/MysteryDungeon/Content/effects/black_rectangle.png</SourceFile>
+  <SourceTime>2024-07-17T21:01:42.8254342+02:00</SourceTime>
+  <DestFile>C:/Users/jariw/Source/Repos/MysteryDungeon/MysteryDungeon/Content/bin/DesktopGL/Content/effects/black_rectangle.xnb</DestFile>
+  <DestTime>2024-07-17T21:17:05.7352245+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T18:17:54+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

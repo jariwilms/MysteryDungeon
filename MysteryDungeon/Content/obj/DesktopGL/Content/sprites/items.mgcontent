@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/jariw/Documents/Programming/Languages/C#/MysteryDungeon/MysteryDungeon/Content/sprites/items.png</SourceFile>
-  <SourceTime>2022-03-09T20:21:11.7933115+01:00</SourceTime>
-  <DestFile>C:/Users/jariw/Documents/Programming/Languages/C#/MysteryDungeon/MysteryDungeon/Content/bin/DesktopGL/Content/sprites/items.xnb</DestFile>
-  <DestTime>2022-03-10T04:21:29.1353301+01:00</DestTime>
+  <SourceFile>C:/Users/jariw/Source/Repos/MysteryDungeon/MysteryDungeon/Content/sprites/items.png</SourceFile>
+  <SourceTime>2024-07-17T21:01:42.8684736+02:00</SourceTime>
+  <DestFile>C:/Users/jariw/Source/Repos/MysteryDungeon/MysteryDungeon/Content/bin/DesktopGL/Content/sprites/items.xnb</DestFile>
+  <DestTime>2024-07-17T21:17:06.1526066+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T18:17:54+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

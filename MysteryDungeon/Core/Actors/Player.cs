@@ -57,9 +57,11 @@ namespace MysteryDungeon.Core.Actors
         public override void Draw(SpriteBatch spriteBatch)
         {
             var Speed = _gridMovementComponent.Velocity;
+#if DEBUG
             GUI.Instance.QueueDebugStringDraw($"Position: [{Math.Round(Transform.Position.X, 2)}, {Math.Round(Transform.Position.Y, 2)}]");
             GUI.Instance.QueueDebugStringDraw($"Speed: [{Math.Round(Speed.X, 2)}, {Math.Round(Speed.Y, 2)}]");
             GUI.Instance.QueueDebugStringDraw($"MovementLocked?: {_gridMovementComponent.MovementLocked}");
+#endif
 
             base.Draw(spriteBatch);
         }

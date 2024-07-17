@@ -171,25 +171,22 @@ namespace MysteryDungeon.Core.Animations.Particles
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-#if DEBUG
-            var visibleParticles = 0;
-            Particles.ForEach(particle =>
-            {
-                if (!Window.IsOutOfBounds(particle.Position))
-                {
-                    visibleParticles++;
-                    spriteBatch.Draw(Texture, particle.Position, null, particle.Color, particle.LocalAngle, particle.GlobalRotationOrigin, particle.Scale, SpriteEffects.None, 0.0f);
-                }
-            });
+            //var visibleParticles = 0;
+            //Particles.ForEach(particle =>
+            //{
+            //    if (!Window.IsOutOfBounds(particle.Position))
+            //    {
+            //        visibleParticles++;
+            //        spriteBatch.Draw(Texture, particle.Position, null, particle.Color, particle.LocalAngle, particle.GlobalRotationOrigin, particle.Scale, SpriteEffects.None, 0.0f);
+            //    }
+            //});
+            //GUI.Instance.QueueStringDraw("DRAWN PARTICLES " + visibleParticles, new Vector2(10, 10));
 
-            GUI.Instance.QueueDebugStringDraw("DRAWN PARTICLES " + visibleParticles);
-#else
-            Particles.ForEach(particle =>
-            {
-                if (!Window.IsOutOfBounds(particle.Position))
-                    spriteBatch.Draw(Texture, particle.Position, _sourceRectangle, particle.Color, particle.LocalAngle, particle.GlobalRotationOrigin, particle.Size, SpriteEffects.None, 0.0f);
-            });
-#endif
+            //Particles.ForEach(particle =>
+            //{
+            //    if (!Window.IsOutOfBounds(particle.Position))
+            //        spriteBatch.Draw(Texture, particle.Position, _sourceRectangle, particle.Color, particle.LocalAngle, particle.GlobalRotationOrigin, particle.Size, SpriteEffects.None, 0.0f);
+            //});
         }
     }
 }

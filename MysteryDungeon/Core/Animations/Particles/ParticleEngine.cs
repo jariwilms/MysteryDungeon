@@ -75,7 +75,7 @@ namespace MysteryDungeon.Core.Animations.Particles
         }
         public void Draw()
         {
-            GUI.Instance.QueueDebugStringDraw("TOTAL PARTICLES: " + TotalParticles.ToString());
+            //GUI.Instance.QueueDebugStringDraw("TOTAL PARTICLES: " + TotalParticles.ToString());
 
             _spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive);
             Emitters.ForEach(emitter =>  emitter.Draw(_spriteBatch));
